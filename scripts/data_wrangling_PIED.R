@@ -1,4 +1,4 @@
-#Data wrangling script - Phase 1 PIPO/PIED
+#Data wrangling script - Phase 1 PIED
 #ARL Feb 2022
 
 #working directory
@@ -6,16 +6,8 @@ setwd("~/Desktop/UofA/HW project/analysis/HeatwaveProject")
 
 #load tidyverse
 library(tidyverse)
-library(dplyr)
 
 #read in data
-Phase1_Chamber1_Dates <- read.csv(file = "data_raw/Phase1_Chamber1_Dates.csv")
-Phase1_InitialData <- read.csv(file = "data_raw/Phase1_InitialData.csv")
-Phase1_PIPO_Dead <- read.csv(file = "data_raw/Phase1_PIPO_Dead.csv")
-Phase1_PIPO_PercentBrown <- read.csv(file = "data_raw/Phase1_PIPO_PercentBrown.csv")
-Phase1_PIPO_Porometer <- read.csv(file = "data_raw/Phase1_PIPO_Porometer.csv")
-Phase1_PIPO_Weight <- read.csv(file = "data_raw/Phase1_PIPO_Weight.csv")
-
 Phase1_PIED_Dead <- read.csv(file = "data_raw/Phase1_PIED_Dead.csv")
 Phase1_PIED_PercentBrown <- read.csv(file = "data_raw/Phase1_PIED_PercentBrown.csv")
 Phase1_PIED_Porometer <- read.csv(file = "data_raw/Phase1_PIED_Porometer.csv")
