@@ -1,4 +1,4 @@
-#Data wrangling script - Phase 1 PIPO
+#Data wrangling script - Phase 1 PSME
 #ARL Feb 2022
 
 #working directory
@@ -8,25 +8,25 @@ setwd("~/Desktop/UofA/HW project/analysis/HeatwaveProject")
 library(tidyverse)
 
 #read in data
-Phase1_PIPO_Dead <- read.csv(file = "data_raw/Phase1_PIPO_Dead.csv")
-Phase1_PIPO_PercentBrown <- read.csv(file = "data_raw/Phase1_PIPO_PercentBrown.csv")
-Phase1_PIPO_Porometer <- read.csv(file = "data_raw/Phase1_PIPO_Porometer.csv")
-Phase1_PIPO_Weight <- read.csv(file = "data_raw/Phase1_PIPO_Weight.csv")
+Phase1_PSME_Dead <- read.csv(file = "data_raw/Phase1_PSME_Dead.csv")
+Phase1_PSME_PercentBrown <- read.csv(file = "data_raw/Phase1_PSME_PercentBrown.csv")
+Phase1_PSME_Porometer <- read.csv(file = "data_raw/Phase1_PSME_Porometer.csv")
+Phase1_PSME_Weight <- read.csv(file = "data_raw/Phase1_PSME_Weight.csv")
 
 
 #view data
-View(Phase1_PIPO_Weight)
+View(Phase1_PSME_Weight)
 
 
-#this PIPO data wrangling is based of of successful PIED wrangling
+#this PSME data wrangling is based of of successful PIED wrangling
 #for more in depth details of my process, start with data_wrangling_PIED
 
 
 
 
-#my first goal is to structurally rearrange PIPO data
+#my first goal is to structurally rearrange PSME data
 #(Dead, PercentBrown, Porometer, Weight)
-#then I want to stitch all PIPO data together for 1 comprehensive PIPO dataframe
+#then I want to stitch all PSME data together for 1 comprehensive PSME dataframe
 
 
 #my data has Xs embedded, and I need to change these to 0 or NA to make R happy
@@ -34,27 +34,27 @@ View(Phase1_PIPO_Weight)
 
 
 ###########WEIGHT
-Phase1_PIPO_Weight<- read.csv(file = "data_raw/Phase1_PIPO_Weight.csv")
+Phase1_PSME_Weight<- read.csv(file = "data_raw/Phase1_PSME_Weight.csv")
 #Replace X with NA in all columns
-Phase1_PIPO_Weight_NA <- Phase1_PIPO_Weight
-Phase1_PIPO_Weight_NA[Phase1_PIPO_Weight_NA == "X"] <- NA
+Phase1_PSME_Weight_NA <- Phase1_PSME_Weight
+Phase1_PSME_Weight_NA[Phase1_PSME_Weight_NA == "X"] <- NA
 
 
 #make sure that columns which previously had X are not characters, but integers instead
 #make changes across all columns using "across()" function
 #eventually I want a way for R to read "week_1.0:week_XXX" based on the last column
 #rather than specifying which week to end on, bc every species is different
-Phase1_PIPO_Weight_NA <- Phase1_PIPO_Weight_NA %>%
-  mutate(across(week_1.0:week_16.0, as.integer))
+Phase1_PSME_Weight_NA <- Phase1_PSME_Weight_NA %>%
+  mutate(across(week_1.0:week_24.0, as.integer))
 
 
 
 #view structure of data, should show all data as int
-str(Phase1_PIPO_Weight_NA)
+str(Phase1_PSME_Weight_NA)
 
 #I want to rearrange my data to have columns represent Week, Species, speciesID,and Variable
 #pivot my data so that weeks become columns.
-Phase1_PIPO_Weight_NA_pivot <- tidyr::pivot_longer(Phase1_PIPO_Weight_NA,
+Phase1_PSME_Weight_NA_pivot <- tidyr::pivot_longer(Phase1_PSME_Weight_NA,
                                                    cols = starts_with("week"),
                                                    names_to = "Week",
                                                    values_to = "Weight_g",
@@ -66,58 +66,58 @@ Phase1_PIPO_Weight_NA_pivot <- tidyr::pivot_longer(Phase1_PIPO_Weight_NA,
 
 ###########POROMETER
 library(tidyverse)
-Phase1_PIPO_Porometer <- read.csv(file = "data_raw/Phase1_PIPO_Porometer.csv")
+Phase1_PSME_Porometer <- read.csv(file = "data_raw/Phase1_PSME_Porometer.csv")
 
 #Replace X with NA in all columns
-Phase1_PIPO_Porometer_NA <- Phase1_PIPO_Porometer
-Phase1_PIPO_Porometer_NA[Phase1_PIPO_Porometer_NA == "X"] <- NA
+Phase1_PSME_Porometer_NA <- Phase1_PSME_Porometer
+Phase1_PSME_Porometer_NA[Phase1_PSME_Porometer_NA == "X"] <- NA
 
 ####IMPORTANT we don't want integers here! because Porometer readings have decimals
 #make sure that columns which previously had X are not characters, but "double" instead
 #make changes across all columns using "across()" function
-Phase1_PIPO_Porometer_NA <- Phase1_PIPO_Porometer_NA %>% 
-  mutate(across(week_1.0:week_16.0, as.double))
+Phase1_PSME_Porometer_NA <- Phase1_PSME_Porometer_NA %>% 
+  mutate(across(week_1.0:week_24.0, as.double))
 
 
 #view structure of data, make sure numbers are not characters
-str(Phase1_PIPO_Porometer_NA)
+str(Phase1_PSME_Porometer_NA)
 
 #I want to rearrange my data to have columns represent Week, Species, speciesID,and Variable
 #pivot my data so that weeks become columns.
-Phase1_PIPO_Porometer_NA_pivot <- tidyr::pivot_longer(Phase1_PIPO_Porometer_NA,
+Phase1_PSME_Porometer_NA_pivot <- tidyr::pivot_longer(Phase1_PSME_Porometer_NA,
                                                       cols = starts_with("week"),
                                                       names_to = "Week",
                                                       values_to = "Porometer",
                                                       names_prefix = "week_")
 
 #round data
-round(Phase1_PIPO_Porometer_NA_pivot$Porometer, digits=1)
+round(Phase1_PSME_Porometer_NA_pivot$Porometer, digits=1)
 
 
 
 ###########PERCENTBROWN
 library(tidyverse)
-Phase1_PIPO_PercentBrown <- read.csv(file = "data_raw/Phase1_PIPO_PercentBrown.csv")
+Phase1_PSME_PercentBrown <- read.csv(file = "data_raw/Phase1_PSME_PercentBrown.csv")
 
 #Replace X with NA in all columns
-Phase1_PIPO_PercentBrown_NA <- Phase1_PIPO_PercentBrown
-Phase1_PIPO_PercentBrown_NA[Phase1_PIPO_PercentBrown_NA == "X"] <- NA
+Phase1_PSME_PercentBrown_NA <- Phase1_PSME_PercentBrown
+Phase1_PSME_PercentBrown_NA[Phase1_PSME_PercentBrown_NA == "X"] <- NA
 
 ####all percents are read in a characters.... Must change this
 #make sure that columns which previously had X are not characters, but "integer" instead
 #make changes across all columns using "across()" function
 
-Phase1_PIPO_PercentBrown_NA <- Phase1_PIPO_PercentBrown_NA %>% 
-  mutate(across(.cols=week_1.0:week_16.0,.fns=str_remove, pattern="%")) %>%
-  mutate(across(week_1.0:week_16.0, as.integer))
+Phase1_PSME_PercentBrown_NA <- Phase1_PSME_PercentBrown_NA %>% 
+  mutate(across(.cols=week_1.0:week_24.0,.fns=str_remove, pattern="%")) %>%
+  mutate(across(week_1.0:week_24.0, as.integer))
 
 
 #view structure of data, make sure numbers are not characters
-str(Phase1_PIPO_PercentBrown_NA)
+str(Phase1_PSME_PercentBrown_NA)
 
 #I want to rearrange my data to have columns represent Week, Species, speciesID,and Variable
 #pivot my data so that weeks become columns.
-Phase1_PIPO_PercentBrown_NA_pivot <- tidyr::pivot_longer(Phase1_PIPO_PercentBrown_NA,
+Phase1_PSME_PercentBrown_NA_pivot <- tidyr::pivot_longer(Phase1_PSME_PercentBrown_NA,
                                                          cols = starts_with("week"),
                                                          names_to = "Week",
                                                          values_to = "PercentBrown",
@@ -125,52 +125,50 @@ Phase1_PIPO_PercentBrown_NA_pivot <- tidyr::pivot_longer(Phase1_PIPO_PercentBrow
 
 ###########DEAD
 library(tidyverse)
-Phase1_PIPO_Dead <- read.csv(file = "data_raw/Phase1_PIPO_Dead.csv")
+Phase1_PSME_Dead <- read.csv(file = "data_raw/Phase1_PSME_Dead.csv")
 
 #No Xs in Dead data, but make new df to manipulate
-Phase1_PIPO_Dead_NA <- Phase1_PIPO_Dead
+Phase1_PSME_Dead_NA <- Phase1_PSME_Dead
 
 #view structure of data, should be characters
-str(Phase1_PIPO_Dead_NA)
+str(Phase1_PSME_Dead_NA)
 
 #I want to rearrange my data to have columns represent Week, Species, speciesID,and Variable
 #pivot my data so that weeks become columns.
-Phase1_PIPO_Dead_NA_pivot <- tidyr::pivot_longer(Phase1_PIPO_Dead_NA,
+Phase1_PSME_Dead_NA_pivot <- tidyr::pivot_longer(Phase1_PSME_Dead_NA,
                                                  cols = starts_with("week"),
                                                  names_to = "Week",
                                                  values_to = "Dead",
                                                  names_prefix = "week_")
 
 #now how can I stitch together these data frames?
-Phase1_PIPO_Dead_NA_pivot
-Phase1_PIPO_PercentBrown_NA_pivot
-Phase1_PIPO_Porometer_NA_pivot
-Phase1_PIPO_Weight_NA_pivot
+Phase1_PSME_Dead_NA_pivot
+Phase1_PSME_PercentBrown_NA_pivot
+Phase1_PSME_Porometer_NA_pivot
+Phase1_PSME_Weight_NA_pivot
 
 
 #start with Weight & Porometer
 #make sure all data gets in, given that only some species have porometer readings
 #verify and make sure all obs are retained for combined data. do this with all=true
-Phase1_PIPO_1 <- merge(Phase1_PIPO_Weight_NA_pivot,
-                       Phase1_PIPO_Porometer_NA_pivot,
+Phase1_PSME_1 <- merge(Phase1_PSME_Weight_NA_pivot,
+                       Phase1_PSME_Porometer_NA_pivot,
                        by=c("Species","SpeciesID","Week"), all=TRUE)
 
 
 #next merge PercentBrown and Dead
 #these have half-weeks recorded, make sure these show up
 #verify and make sure all obs are retained for combined data. do this with all=true
-Phase1_PIPO_2 <- merge(Phase1_PIPO_PercentBrown_NA_pivot,
-                       Phase1_PIPO_Dead_NA_pivot,
+Phase1_PSME_2 <- merge(Phase1_PSME_PercentBrown_NA_pivot,
+                       Phase1_PSME_Dead_NA_pivot,
                        by=c("Species","SpeciesID","Week"))
 
 #now merge all together
 #YAY working!!
-Phase1_PIPO <- merge(Phase1_PIPO_1,
-                     Phase1_PIPO_2,
+Phase1_PSME <- merge(Phase1_PSME_1,
+                     Phase1_PSME_2,
                      by=c("Species","SpeciesID","Week"), all=TRUE)
 
 
 #finally, make a CSV!
-write.csv(Phase1_PIPO, "data_step1/Phase1_PIPO.csv")
-
-
+write.csv(Phase1_PSME, "data_step1/Phase1_PSME.csv")

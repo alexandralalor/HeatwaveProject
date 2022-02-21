@@ -17,7 +17,8 @@ Phase1_PIED_Weight<- read.csv(file = "data_raw/Phase1_PIED_Weight.csv")
 #view data
 View(Phase1_PIED_Weight)
 
-#my first goal is to structurally rearrange PIED data (Dead, PercentBrown, Porometer, Weight)
+#my first goal is to structurally rearrange PIED data
+#(Dead, PercentBrown, Porometer, Weight)
 #then I want to stitch all PIED data together for 1 comprehensive PIED dataframe
 
 
