@@ -14,13 +14,9 @@ Phase1_PSME_Porometer <- read.csv(file = "data_raw/Phase1_PSME_Porometer.csv")
 Phase1_PSME_Weight <- read.csv(file = "data_raw/Phase1_PSME_Weight.csv")
 
 
-#view data
-View(Phase1_PSME_Weight)
-
 
 #this PSME data wrangling is based of of successful PIED wrangling
 #for more in depth details of my process, start with data_wrangling_PIED
-
 
 
 
@@ -34,7 +30,7 @@ View(Phase1_PSME_Weight)
 
 
 ###########WEIGHT
-Phase1_PSME_Weight<- read.csv(file = "data_raw/Phase1_PSME_Weight.csv")
+
 #Replace X with NA in all columns
 Phase1_PSME_Weight_NA <- Phase1_PSME_Weight
 Phase1_PSME_Weight_NA[Phase1_PSME_Weight_NA == "X"] <- NA
@@ -45,12 +41,11 @@ Phase1_PSME_Weight_NA[Phase1_PSME_Weight_NA == "X"] <- NA
 #eventually I want a way for R to read "week_1.0:week_XXX" based on the last column
 #rather than specifying which week to end on, bc every species is different
 Phase1_PSME_Weight_NA <- Phase1_PSME_Weight_NA %>%
-  mutate(across(week_1.0:week_24.0, as.integer))
-
-
+  mutate(across(starts_with("week"), as.integer))
 
 #view structure of data, should show all data as int
 str(Phase1_PSME_Weight_NA)
+
 
 #I want to rearrange my data to have columns represent Week, Species, speciesID,and Variable
 #pivot my data so that weeks become columns.
@@ -60,27 +55,25 @@ Phase1_PSME_Weight_NA_pivot <- tidyr::pivot_longer(Phase1_PSME_Weight_NA,
                                                    values_to = "Weight_g",
                                                    names_prefix = "week_")
 
-
 ###YAY it worked!! Now for all the other protocols! 
 
 
 ###########POROMETER
-library(tidyverse)
-Phase1_PSME_Porometer <- read.csv(file = "data_raw/Phase1_PSME_Porometer.csv")
 
 #Replace X with NA in all columns
 Phase1_PSME_Porometer_NA <- Phase1_PSME_Porometer
 Phase1_PSME_Porometer_NA[Phase1_PSME_Porometer_NA == "X"] <- NA
 
+
 ####IMPORTANT we don't want integers here! because Porometer readings have decimals
 #make sure that columns which previously had X are not characters, but "double" instead
 #make changes across all columns using "across()" function
 Phase1_PSME_Porometer_NA <- Phase1_PSME_Porometer_NA %>% 
-  mutate(across(week_1.0:week_24.0, as.double))
-
+  mutate(across(starts_with("week"), as.double))
 
 #view structure of data, make sure numbers are not characters
 str(Phase1_PSME_Porometer_NA)
+
 
 #I want to rearrange my data to have columns represent Week, Species, speciesID,and Variable
 #pivot my data so that weeks become columns.
@@ -96,24 +89,22 @@ round(Phase1_PSME_Porometer_NA_pivot$Porometer, digits=1)
 
 
 ###########PERCENTBROWN
-library(tidyverse)
-Phase1_PSME_PercentBrown <- read.csv(file = "data_raw/Phase1_PSME_PercentBrown.csv")
 
 #Replace X with NA in all columns
 Phase1_PSME_PercentBrown_NA <- Phase1_PSME_PercentBrown
 Phase1_PSME_PercentBrown_NA[Phase1_PSME_PercentBrown_NA == "X"] <- NA
 
+
 ####all percents are read in a characters.... Must change this
 #make sure that columns which previously had X are not characters, but "integer" instead
 #make changes across all columns using "across()" function
-
 Phase1_PSME_PercentBrown_NA <- Phase1_PSME_PercentBrown_NA %>% 
-  mutate(across(.cols=week_1.0:week_24.0,.fns=str_remove, pattern="%")) %>%
-  mutate(across(week_1.0:week_24.0, as.integer))
-
+  mutate(across(.cols=starts_with("week"),.fns=str_remove, pattern="%")) %>%
+  mutate(across(starts_with("week"), as.integer))
 
 #view structure of data, make sure numbers are not characters
 str(Phase1_PSME_PercentBrown_NA)
+
 
 #I want to rearrange my data to have columns represent Week, Species, speciesID,and Variable
 #pivot my data so that weeks become columns.
@@ -124,14 +115,14 @@ Phase1_PSME_PercentBrown_NA_pivot <- tidyr::pivot_longer(Phase1_PSME_PercentBrow
                                                          names_prefix = "week_")
 
 ###########DEAD
-library(tidyverse)
-Phase1_PSME_Dead <- read.csv(file = "data_raw/Phase1_PSME_Dead.csv")
 
 #No Xs in Dead data, but make new df to manipulate
 Phase1_PSME_Dead_NA <- Phase1_PSME_Dead
 
+
 #view structure of data, should be characters
 str(Phase1_PSME_Dead_NA)
+
 
 #I want to rearrange my data to have columns represent Week, Species, speciesID,and Variable
 #pivot my data so that weeks become columns.
@@ -142,10 +133,10 @@ Phase1_PSME_Dead_NA_pivot <- tidyr::pivot_longer(Phase1_PSME_Dead_NA,
                                                  names_prefix = "week_")
 
 #now how can I stitch together these data frames?
-Phase1_PSME_Dead_NA_pivot
-Phase1_PSME_PercentBrown_NA_pivot
-Phase1_PSME_Porometer_NA_pivot
-Phase1_PSME_Weight_NA_pivot
+#Phase1_PSME_Dead_NA_pivot
+#Phase1_PSME_PercentBrown_NA_pivot
+#Phase1_PSME_Porometer_NA_pivot
+#Phase1_PSME_Weight_NA_pivot
 
 
 #start with Weight & Porometer
@@ -171,4 +162,4 @@ Phase1_PSME <- merge(Phase1_PSME_1,
 
 
 #finally, make a CSV!
-write.csv(Phase1_PSME, "data_step1/Phase1_PSME.csv")
+write.csv(Phase1_PSME, "data_step1/Phase1_PSME.csv", quote=FALSE, row.names = FALSE)
