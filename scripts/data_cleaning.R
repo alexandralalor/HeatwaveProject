@@ -1,4 +1,8 @@
 #data cleaning and checking
+#Allie Lalor
+#allielalor@gmail.com
+#First created: 2022-02
+#Last updated: 2022-03-15
 
 
 #working directory
@@ -40,8 +44,19 @@ Phase1_meta_temp <- merge(Phase1_all_temp,
 
 #Error checking
 #PercentBrown as 10, 25, 50, 75, 90
-#What else?????????
+#I'm not gonna worry if 50% changes to 25% because this isn't a data collection error
+#it's just a subjective human measurement that's likely to change
 
+#look for outliers in weight data
+#For droughted plants, make sure that weights are always decreasing
+
+
+#make sure porometer measurements match what I have
+#If measurements don't match, default to porometer device
+#This means I gotta data wrangle that script too
+
+#Get weather data together and match with the chamber
+#add to meta data?
 
   
 

@@ -1,5 +1,8 @@
 #Data wrangling script - Phase 1 PIED
-#ARL Feb 2022
+#Allie Lalor
+#allielalor@gmail.com
+#First created: 2022-02
+#Last updated: 2022-03-15
 
 #working directory
 setwd("~/Desktop/UofA/HW project/analysis/HeatwaveProject")

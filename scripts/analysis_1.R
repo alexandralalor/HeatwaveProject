@@ -12,8 +12,12 @@ library(survival)
 library(ggplot2)
 library(ggfortify)
 library(ranger)
+install.packages("magick")
+library(magick)
 
 head(Phase1_meta)
+
+image_read()
 
 
 #make dead column logical
