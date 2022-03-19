@@ -2,7 +2,7 @@
 #Allie Lalor
 #allielalor@email.arizona.edu
 #First created: 2022-03-01
-#Last updated: 2022-03-16
+#Last updated: 2022-03-17
 
 #uing existing R package of plant colors
 #I'd like to use this color data to extract plant tissue color from my 
@@ -36,7 +36,13 @@
 #and then go next image and do same thing
 
 
-
+install.packages("tidyverse")
+library(tidyverse)
+install.packages("colorfindr")
+library(colorfindr)
+update.packages(colorfindr)
+install.packages("rlang")
+remove.packages("rlang")
 
 #install Munsell R Package
 #install.packages("devtools")
@@ -52,14 +58,14 @@ library(ggplot2)
 #install.packages("countcolors")
 library(countcolors)
 #install.packages("colorfindr")
-library(colorfindr)
+
 
 #package to load images
 #install.packages("readbitmap")
 library(readbitmap)
 #install.packages("imager")
 #install.packages("magrittr")
-library(imager)
+
 
 
 
@@ -72,11 +78,13 @@ library(imager)
 
 #count colors
 colordistance::plotPixels("November 5 2021/PIED01 Ambient Watered DSC02441.JPG", lower = NULL, upper = NULL, n = 5000)
+colordistance::plotPixels("November 5 2021/PIEN05 Ambient+HW Watered DSC02608.JPG", lower = NULL, upper = NULL, n = 5000)
 
 kmeans.clusters <- colordistance::getKMeanColors("November 5 2021/PIED01 Ambient Watered DSC02441.JPG", n=13, plotting = FALSE)
 colordistance::extractClusters(kmeans.clusters)
 
 image <- jpeg::readJPEG("November 5 2021/PIED01 Ambient Watered DSC02441.JPG")
+image2 <- jpeg::readJPEG("November 5 2021/PIEN05 Ambient+HW Watered DSC02608.JPG")
 
 #isolate grey color
 #lower rectangle is toward black RBG 0,0,0
@@ -88,7 +96,7 @@ upper.rectangular <- c(.97, .97, .97)
 lower.rectangular <- c(0,0,0)
 upper.rectangular <- c(1,1,1)
 
-image.rectangular <- countcolors::rectangularRange(image, 
+image.rectangular <- countcolors::rectangularRange(image2, 
                                                upper=upper.rectangular,
                                                lower=lower.rectangular,
                                                target.color = "white")
@@ -113,7 +121,7 @@ grey.select2 <- countcolors::sphericalRange(image,
 #isolate orange color
 #working
 orange.center <- c(0.80, 0.26, 0.04)
-orange.spherical <- countcolors::sphericalRange(image, 
+orange.spherical <- countcolors::sphericalRange(image1, 
                                                center=orange.center,
                                                radius=0.2,
                                                color.pixels=FALSE,
@@ -150,7 +158,7 @@ countcolors::changePixelColor(image, black.spherical$pixel.idx, target.color = "
 
 #isolate orange, blue, and black colors
 
-three.colors <- countcolors::countColors("November 5 2021/PIED01 Ambient Watered DSC02441.JPG", 
+three.colors <- countcolors::countColors("November 5 2021/PIEN05 Ambient+HW Watered DSC02608.JPG", 
                                          color.range="spherical", 
                                          center = c(orange.center, blue.center, black.center), 
                                          radius = c(0.2, 0.1, 0.06),
@@ -186,6 +194,129 @@ library("dplyr")
 get_colors("November 5 2021/PIED01 Ambient Watered DSC02441.JPG") %>% 
   plot_colors_3d(sample_size = 5000, marker_size = 2.5, color_space = "RGB")
 
-get_colors("November 5 2021/PIED01 Ambient Watered DSC02441.JPG", exclude_col = "black")
+?colorfindr
 
+
+grey_colors <- gray.colors(200, start = 0, end = 1, gamma = 2.2, alpha = NULL, rev = FALSE)
+blue_colors <- rgb(10, 17, 85, maxColorValue=255)
+orange_colors
+
+
+
+
+#a bunch of script for trying to read images in
+#why can't I read images in?
+
+#error message: Error in check_format(img):
+#file does not appear to be a BMP, JPEG, PNG, TIFF, or SVG
+
+#wait is this just it??
+pic1 <- "November 5 2021/PIED01 Ambient Watered DSC02441.JPG"
+get_colors(pic1)
+
+
+
+#wait it think maybe I have the wrong file format? Is JPG the same as JPEG?
+install.packages("rgdal")
+library(rgdal)
+library(jpeg)
+library(tiff)
+
+
+pic1 <- "November 5 2021/PIED01 Ambient Watered DSC02441.JPG"
+get_colors(pic1)
+
+
+       
+#install.packages("BiocManager")
+library(BiocManager)
+BiocManager::install("EBImage")
+library(EBImage)
+
+image3 <- readImage("November 5 2021/PIED01 Ambient Watered DSC02441.JPG")
+
+print(image3)
+get_colors(image3)
+
+
+install.packages('png')
+library('png')
+pngImage=readPNG("November 5 2021/TIFF/PIED01 Ambient Watered DSC02441.png")
+get_colors(image)
+
+#seems like magick package only works for svg (?) images
+library(magick)
+
+image <- image_read("November 5 2021/TIFF/PIED01 Ambient Watered DSC02441.png")
+get_colors(image)
+
+img8 <- readTIFF("November 5 2021/TIFF/PIED01 Ambient Watered DSC02441.tif")
+img2 <- readGDAL("November 5 2021/PIED01 Ambient Watered DSC02441.JPG")
+image <- readJPEG("November 5 2021/PIED01 Ambient Watered DSC02441.JPG")
+img4 <- image_read("November 5 2021/TIFF/PIED01 Ambient Watered DSC02441.jpeg")
+get_colors(img4)
+
+#ok sooo I think this is working for reading images?
+library(imager)
+img3 <- load.image("November 5 2021/PIED01 Ambient Watered DSC02441.jpeg")
+img7 <- load.image("November 5 2021/TIFF/PIED01 Ambient Watered DSC02441.tif")
+#converted JPG to jpeg to see if that makes a difference
+#if I have to convert all my images anyway, which file format is best? TIFF?
+#darn ok so this didn't work... but I still think file formating is the problem
+img5 <- load.image("November 5 2021/TIFF/PIED01 Ambient Watered DSC02441.jpeg")
+get_colors(img8)
+# try this
+#nope
+img6 <- readJPEG("November 5 2021/TIFF/PIED01 Ambient Watered DSC02441.jpeg")
+get_colors(img6)
+
+
+
+
+
+#That's enough image loading stuff
+################################################################################
+# grey colors: 68,189
+# blue colors: 107,124
+
+
+pic1 %>% 
+  get_colors(exclude_col = grey_colors,
+             exclude_rad = 20)
+
+
+#AHHHHHHH YAYAYAYAYA
+
+get_colors("November 5 2021/PIED01 Ambient Watered DSC02441.JPG",
+           exclude_col = grey_colors,
+           exclude_rad = 20) %>% 
+  get_colors("November 5 2021/PIED01 Ambient Watered DSC02441.JPG",
+           exclude_col = blue_colors,
+           exclude_rad = 25)
+
+get_colors("November 5 2021/PIED01 Ambient Watered DSC02441.JPG",
+           exclude_col = grey_colors, 
+           exclude_rad = 20) %>% 
+  plot_colors_3d(sample_size = 5000, marker_size = 2.5, color_space = "RGB")
+  
+  
+get_colors("November 5 2021/PIED01 Ambient Watered DSC02441.JPG",
+           exclude_col = blue_colors,
+           exclude_rad = 25) %>% 
+  plot_colors_3d(sample_size = 5000, marker_size = 2.5, color_space = "RGB")
+
+
+#I'm gonna play around with the exclude_rad for gray to see what's a good threshold
+get_colors("November 5 2021/PIED01 Ambient Watered DSC02441.JPG", 
+           exclude_col = gray_colors,
+           exclude_rad = 10) %>% 
+  plot_colors_3d(sample_size = 5000, marker_size = 2.5, color_space = "RGB")
+
+
+get_colors("November 5 2021/PIED01 Ambient Watered DSC02441.JPG", 
+           exclude_col = gray_colors,
+           exclude_rad = 10)
+
+
+#109,908 rows
 get_colors("November 5 2021/PIED01 Ambient Watered DSC02441.JPG")
