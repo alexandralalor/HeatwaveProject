@@ -39,48 +39,29 @@
 ###############################################################################
 ###############################################################################
 #package installations, potential packages I can use
-install.packages("tidyverse")
 library(tidyverse)
-install.packages("colorfindr")
 library(colorfindr)
 update.packages(colorfindr)
 install.packages("rlang")
 remove.packages("rlang")
-#install Munsell R Package
-#install.packages("devtools")
 library(devtools)
-devtools::install_github("cwickham/munsell")
 library(munsell)
-#install.packages("testthat")
-#install.packages("ggplot2")
 library(testthat)
 library(ggplot2)
-#colors packagea
-#install.packages("countcolors")
 library(countcolors)
-#install.packages("colorfindr")
-#package to load images
-#install.packages("readbitmap")
 library(readbitmap)
-#install.packages("imager")
-#install.packages("magrittr")
-install.packages("phenopix")
 library(phenopix)
 #time series package
 library(xts)
 
 #loading images specifically
-library("jpeg")
-library("tiff")
-library("magick")
-library("dplyr")
-#install.packages("BiocManager")
+library(jpeg)
+library(tiff)
+library(magick)
+library(dplyr)
 library(BiocManager)
-BiocManager::install("EBImage")
 library(EBImage)
-install.packages('png')
-library('png')
-install.packages("rgdal")
+library(png)
 library(rgdal)
 library(jpeg)
 library(tiff)
@@ -101,8 +82,9 @@ library(imager)
 #darn ok so this didn't work... but I still think file formating is the problem
 #not working
 
-
+#this is what I'm using
 img1 <- readJPEG("November 5 2021/PIED01 Ambient Watered DSC02441.JPG")
+#other practice
 img2 <- readJPEG("November 5 2021/TIFF/PIED01 Ambient Watered DSC02441.jpeg")
 img3 <- readTIFF("November 5 2021/TIFF/PIED01 Ambient Watered DSC02441.tif")
 img4 <- readGDAL("November 5 2021/PIED01 Ambient Watered DSC02441.JPG")
@@ -115,7 +97,7 @@ img10 <- readImage("November 5 2021/PIED01 Ambient Watered DSC02441.JPG")
 img11 <- readPNG("November 5 2021/TIFF/PIED01 Ambient Watered DSC02441.png")
 
 
-#test if working
+#test if working for colorfindr specifically
 get_colors(img6)
 #error message: Error in check_format(img):
 #file does not appear to be a BMP, JPEG, PNG, TIFF, or SVG
@@ -135,12 +117,9 @@ get_colors(pic1)
 #phenopix package - spatial green, draw ROI...
 
 #unsupervised image classification R
-install.packages("raster")
-install.packages("rgdal")
 library(raster)
 library(tiff)
 library(rgdal)
-install.packages("RStoolbox")
 library(RStoolbox)
 
 #this is working pretty well...
@@ -229,6 +208,8 @@ grey.select2 <- countcolors::sphericalRange(image,
 #isolate orange color
 #working
 orange.center <- c(0.80, 0.26, 0.04)
+orange1 <- c(0.2, 0, 0)
+orange2 <- c(0.5, 0.1, 0)
 orange.spherical <- countcolors::sphericalRange(image1, 
                                                center=orange.center,
                                                radius=0.2,
@@ -266,12 +247,12 @@ countcolors::changePixelColor(image, black.spherical$pixel.idx, target.color = "
 
 #isolate orange, blue, and black colors
 
-three.colors <- countcolors::countColors("November 5 2021/PIEN05 Ambient+HW Watered DSC02608.JPG", 
+three.colors <- countcolors::countColors(pic1, 
                                          color.range="spherical", 
-                                         center = c(orange.center, blue.center, black.center), 
-                                         radius = c(0.2, 0.1, 0.06),
+                                         center = c(orange.center, orange1, orange2, blue.center, black.center), 
+                                         radius = c(0.2, 0.2, 0.2, 0.1, 0.06),
                                          bg.lower=NULL, bg.upper=NULL, plotting = TRUE,
-                                         target.color=c("white", "white", "white"))
+                                         target.color=c("white", "white", "white", "white", "white"))
 
 
 
