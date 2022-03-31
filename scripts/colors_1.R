@@ -1,4 +1,4 @@
-#color script
+#color script with colorfindr
 #Allie Lalor
 #allielalor@email.arizona.edu
 #First created: 2022-03-17
@@ -19,6 +19,7 @@ library(colorfindr)
 #for viewing image
 library(countcolors)
 library(imager)
+library(jpeg)
 
 im <- load.image(pic1)
 plot(im)
@@ -52,17 +53,21 @@ plot(im)
 
 
 
-
+grey
 #now we need to assign grey, blue, and orange colors
 #is there a way I can save each color with it's own radius?
-grey <- gray.colors(200, start = 0, end = 1, gamma = 2.2, alpha = NULL, rev = FALSE)
+#red blue green
+grey <- gray.colors(256, start = 0, end = 1, gamma = 2.2, alpha = NULL, rev = FALSE)
 blue <- rgb(10, 17, 85, maxColorValue = 255)
-orange <- rgb(220, 76, 15, maxColorValue = 255)
+orange <- rgb(210, 87, 15, maxColorValue = 255)
+
+
 black
 
 grey_blue <- append(grey, blue)
 blue_orange <- append(blue, orange)
 grey_blue_orange <- append(grey_blue, orange)
+grey_orange <- append(grey, orange)
 
 ##################################
 ###found online
@@ -71,6 +76,7 @@ rgb(0, 1, 0)
 rgb((0:15)/15, green = 0, blue = 0, names = paste("red", 0:15, sep = "."))
 
 rgb(0, 0:12, 0, maxColorValue = 255) # integer input
+?rgb
 
 ramp <- colorRamp(c("red", "white"))
 rgb( ramp(seq(0, 1, length.out = 5)), maxColorValue = 255)
@@ -99,33 +105,28 @@ pic1 %>%
              exclude_rad = 20)
 
 
-################################################################################
-#this is working but I want to refine the exclusion radius to be more specific
-
-pic1 %>% 
-  get_colors(exclude_col = grey_blue,
-             exclude_rad = 30) %>% 
-  plot_colors_3d(sample_size = 5000, marker_size = 2.5, color_space = "RGB")
 
 
-pic1 %>% 
-  get_colors(exclude_col = blue_orange,
-             exclude_rad = 30) %>% 
-  plot_colors_3d(sample_size = 5000, marker_size = 2.5, color_space = "RGB")
+########################practice
 
-pic1 %>% 
-  get_colors(exclude_col = grey_blue_orange,
-             exclude_rad = 20) %>% 
+pic1 <- "November 5 2021/PIED01 Ambient Watered DSC02441.JPG"
+img1 <- readJPEG(pic1)
+plot(raster::as.raster(img1))
 
+#crop image
+img1_crop <- img1[1501:3500, 2001:4500, ]
+plot(raster::as.raster(img1_crop))
+pic1_exclude <- pic1 %>% 
+  get_colors(exclude_col = grey,
+             exclude_rad = 20)
 
 
 
 
 #plotting in 3D
-
 pic1 %>% 
   get_colors(exclude_col = grey,
-             exclude_rad = 20) %>% 
+             exclude_rad =10) %>% 
   plot_colors_3d(sample_size = 5000, marker_size = 2.5, color_space = "RGB")
 
 
@@ -136,8 +137,8 @@ pic1 %>%
 
 
 pic1 %>% 
-  get_colors(exclude_col = orange,
-             exclude_rad = 20) %>% 
+  get_colors(exclude_col = grey_orange,
+             exclude_rad = 10) %>% 
   plot_colors_3d(sample_size = 5000, marker_size = 2.5, color_space = "RGB")
 
 
