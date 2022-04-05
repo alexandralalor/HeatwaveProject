@@ -12,9 +12,11 @@
 library(tidyverse)
 library(jpeg)
 library(mclust)
+library(ggplot2)
 #convert array to image
-library(EBImage)
+library(EBImage)#dont think I need this one
 library(imager)
+library(raster)
 
 #read image in as an array
 #create script to run through all image files
@@ -30,7 +32,9 @@ color <- dim(img1)[3]
 img1_matrix <- matrix(img1, prod(dim(img1)[1:2]), dim(img1)[3])
 
 #identify classifications
-img1_gmm <- Mclust(data = img1_matrix, G = 2)
+#python 2 classification working much better
+#I tried 2, 3, and 4 classifications... not working plus takes 30+ mins
+img1_gmm <- Mclust(data = img1_matrix, G = 4)
 #isolate classification column
 img1_class <- img1_gmm$classification
 #create matrix from column
@@ -42,21 +46,9 @@ img1_array_class <- array(c(img1_matrix_class), dim = c(height, width, color))
 
 #mask image, changing background to solid color
 img1_mask <- img1
-img1_mask <- img1_mask[img1_array_class == 2] = c(0,0,0)
+img1_mask[img1_array_class == 3] = 0
+img1_mask[img1_array_class == 1] = 0
+
 
 plot(raster::as.raster(img1_mask))
-
-################################################################################
-
-img1_mask2 <- as.cimg(img1_mask, dim = c(height, width, color))
-
-img1_mask_save <- cimg(img1_mask)
-save.image(img1_mask_save, "output/img1_mask.jpg", quality = 0.7)
-
-writeJPEG(img1_mask, target = raw(), quality = 0.7, color.space = "RGB")
-writeJPEG((img1_mask, ""))
-
-Image.fromarray(img1_array_class)
-
-plot(img1_mask)
 
