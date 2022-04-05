@@ -46,9 +46,9 @@ img1_array_class <- array(c(img1_matrix_class), dim = c(height, width, color))
 
 #mask image, changing background to solid color
 img1_mask <- img1
-img1_mask[img1_array_class == 3] = 0
+img1_mask[img1_array_class == 2] = 0
 img1_mask[img1_array_class == 1] = 0
-
+img1_mask[img1_array_class == 4] = 0
 
 plot(raster::as.raster(img1_mask))
 
