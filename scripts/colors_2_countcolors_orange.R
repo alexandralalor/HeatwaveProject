@@ -1,5 +1,8 @@
 #testing countcolors
-#2022-03-23
+#Alexandra Lalor
+#allielalor@email.arizona.edu
+#First created: 2022-03-23
+#Last updated: 2022-03-23
 
 #radius 0.1
 orange1 <- c(0.80, 0.26, 0.04)

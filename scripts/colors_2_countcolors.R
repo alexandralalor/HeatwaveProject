@@ -1,19 +1,11 @@
-#python practice with Devin Bayly
-
-#pil image open
-
-im = Image.open("PIED01 Ambient Watered.JPG")
-import numpy as np
-arr = np.array(im)
-
-what is the r image library
-Image.fromarray(arr)
-
-filter_res = arr
-arr [arr >80 and arr <120] = 0
+#testing countcolors
+#Alexandra Lalor
+#allielalor@email.arizona.edu
+#First created: 2022-03-23
+#Last updated: 2022-03-23
 
 ################################################################################
-
+library(countcolors)
 pic1 <- "November 5 2021/PIED01 Ambient Watered DSC02441.JPG"
 img1 <- readJPEG(pic1)
 
