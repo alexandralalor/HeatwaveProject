@@ -33,7 +33,8 @@ get_colors("November 5 2021/PIED01 Ambient Watered DSC02441.JPG") %>%
 #read in JPG image
 #took me a surprisingly long time to figure this out
 pic1 <- "November 5 2021/PIED01 Ambient Watered DSC02441.JPG"
-
+pic2 <- "November 5 2021/PIEN01 Ambient+HW Watered DSC05080_segmented.jpg"
+pic3 <- "November 5 2021/PIEN01 Ambient+HW Watered DSC05080_segmented_crop.jpg"
 #check that image read in correctly
 get_colors(pic1)
 
@@ -124,7 +125,7 @@ pic1_exclude <- pic1 %>%
 
 
 #plotting in 3D
-pic1 %>% 
+pic %>% 
   get_colors(exclude_col = grey,
              exclude_rad =10) %>% 
   plot_colors_3d(sample_size = 5000, marker_size = 2.5, color_space = "RGB")
@@ -143,3 +144,13 @@ pic1 %>%
 
 
 
+#segmented
+pic3 %>% 
+  get_colors(exclude_col = "black",
+             exclude_rad = 60) %>% 
+  plot_colors_3d(sample_size = 5000, marker_size = 2.5, color_space = "RGB")
+
+
+pic3 %>% 
+  get_colors(exclude_col = "black",
+             exclude_rad = 60)
