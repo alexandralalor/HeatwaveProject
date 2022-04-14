@@ -15,7 +15,7 @@
 
 #load packages
 library(tidyverse)
-library(colorfindr)
+library(colorfindr) #getcolors
 #for viewing image
 library(countcolors)
 library(imager)
@@ -29,7 +29,7 @@ get_colors("November 5 2021/PIED01 Ambient Watered DSC02441.JPG") %>%
   plot_colors_3d(sample_size = 5000, marker_size = 2.5, color_space = "RGB")
 
 
-#let's make it easier by assining the image as an object first
+#let's make it easier by assinging the image as an object first
 #read in JPG image
 #took me a surprisingly long time to figure this out
 pic1 <- "November 5 2021/PIED01 Ambient Watered DSC02441.JPG"
@@ -152,5 +152,4 @@ pic3 %>%
 
 
 pic3 %>% 
-  get_colors(exclude_col = "black",
-             exclude_rad = 60)
+  get_colors()
