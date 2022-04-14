@@ -2,7 +2,7 @@
 #Alexandra Lalor
 #allielalor@email.arizona.edu
 #First created: 2022-03-23
-#Last updated: 2022-03-23
+#Last updated: 2022-04-14
 
 ################################################################################
 library(countcolors)
@@ -69,9 +69,52 @@ grey.select2 <- countcolors::sphericalRange(image,
                                             plotting=FALSE); names(grey.select2)
 
 
+################################################################################
+#load in segmented image
+#need script that can work on all pictures in a folder
+pic <- "November 5 2021/PIEN01 Ambient+HW Watered DSC05080_segmented.jpg"
+pic <- "November 5 2021/PSME47 Ambient Drought DSC04435_segmented.jpg"
+pic_crop <- "November 5 2021/PIEN01 Ambient+HW Watered DSC05080_segmented_crop.jpg"
 
-grey
-?grey.colors
+
+#plot on 2D using colorcounter
+colordistance::plotPixels(pic, lower = NULL, upper = NULL, n = 5000)
+
+
+#ignore black, orange, and blue (where c(R,G,B))
+orange.lower.1 <- c(0.0, 0.0, 0.0)
+orange.upper.1 <- c(1.0, 0.2, 0.5)
+orange.lower.2 <- c(0.5, 0.2, 0.0)
+orange.upper.2 <- c(1.0, 0.4, 0.5)
+
+orange.lower <- append(orange.lower.1, orange.lower.2)
+orange.upper <- append(orange.upper.1, orange.upper.2)
+black.lower <- c(0,0,0)
+black.upper <- c(0.4, 0.3, 0.3)
+blue.lower <- c(0.0, 0.0, 0.2)
+blue.upper <- c(0.2, 0.2, 0.5)
+
+
+#merge colors to single argument
+background.upper.orange <- append(black.upper, orange.upper)
+background.upper.all <- append(background.upper.orange, blue.upper)
+
+background.lower.orange <- append(black.lower, orange.lower)
+background.lower.all <- append(background.lower.orange, blue.lower)
+
+#rectangular ranges, test each color
+blue.ignore <- countcolors::countColors(pic, color.range = "rectangular",
+                                        upper = blue.upper, lower = blue.lower,
+                                        target.color = "black",
+                                        plotting = TRUE)
+orange.ignore <- countcolors::countColors(pic, color.range="rectangular",
+                                          upper = orange.upper, lower = orange.lower,
+                                          target.color = "black",
+                                          plotting = TRUE)
+black.ignore <- countcolors::countColors(pic, color.range="rectangular",
+                                         upper = black.upper, lower = black.lower,
+                                         target.color = "black",
+                                         plotting = TRUE)
 
 
 

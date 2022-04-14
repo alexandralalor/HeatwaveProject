@@ -150,6 +150,10 @@ pic3 %>%
              exclude_rad = 60) %>% 
   plot_colors_3d(sample_size = 5000, marker_size = 2.5, color_space = "RGB")
 
+pic %>% 
+  get_colors() %>% 
+  plot_colors_3d(sample_size = 10000, marker_size = 2.5, color_space = "RGB")
 
-pic3 %>% 
-  get_colors()
+background.ignore %>% 
+  get_colors() %>% 
+  plot_colors_3d(sample_size = 10000, marker_size = 2.5, color_space = "RGB")
