@@ -1,20 +1,13 @@
 #removing labels from segmented image using countcolors package
 #alternative would be to crop image, but I'd rather just have 1 code than crop 5000+ images
 #Alexandra Lalor
+#allielalor@email.arizona.edu
 #First created: 2022-04-14
 #Last updated: 2022-04-14
 
 library(tidyverse)
 library(countcolors)
 library(colorfindr) #for 3D image
-
-#load in segmented picture
-#perhaps load in folder instead?
-#need script that can work on all pictures in a folder
-pic <- "November 5 2021/PIEN01 Ambient+HW Watered DSC05080_segmented.jpg"
-pic <- "November 5 2021/PSME47 Ambient Drought DSC04435_segmented.jpg"
-pic_crop <- "November 5 2021/PIEN01 Ambient+HW Watered DSC05080_segmented_crop.jpg"
-
 
 #ignore black, orange, and blue (where c(R,G,B))
 orange.lower.1 <- c(0.0, 0.0, 0.0)
@@ -36,6 +29,15 @@ background.upper.all <- append(background.upper.orange, blue.upper)
 
 background.lower.orange <- append(black.lower, orange.lower)
 background.lower.all <- append(background.lower.orange, blue.lower)
+
+
+#load in segmented picture
+#perhaps load in folder instead?
+#need script that can work on all pictures in a folder
+pic <- "November 5 2021/PIEN01 Ambient+HW Watered DSC05080_segmented.jpg"
+pic <- "November 5 2021/PSME47 Ambient Drought DSC04435_segmented.jpg"
+pic_crop <- "November 5 2021/PIEN01 Ambient+HW Watered DSC05080_segmented_crop.jpg"
+
 
 #ignore all background
 background.ignore <- countcolors::countColors(pic, color.range="rectangular",
