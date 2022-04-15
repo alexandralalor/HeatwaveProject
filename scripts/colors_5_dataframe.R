@@ -1,4 +1,4 @@
-#get_colors with countcolors package
+#get_colors with colorfindr package
 #Alexandra Lalor
 #allielalor@email.arizona.edu
 #First created: 2022-04-14
@@ -6,6 +6,8 @@
 
 library(tidyverse)
 library(countcolors)
+library(colorfindr)
+?countcolors
 #library(colorfindr)
 library(sjmisc) #for rotate_df
 
