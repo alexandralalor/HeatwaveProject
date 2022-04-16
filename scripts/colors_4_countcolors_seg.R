@@ -10,13 +10,8 @@ library(countcolors)
 library(colorfindr) #for 3D image
 
 #ignore black, orange, and blue (where c(R,G,B))
-orange.lower.1 <- c(0.0, 0.0, 0.0)
-orange.upper.1 <- c(1.0, 0.2, 0.5)
-orange.lower.2 <- c(0.5, 0.2, 0.0)
-orange.upper.2 <- c(1.0, 0.4, 0.5)
-
-orange.lower <- append(orange.lower.1, orange.lower.2)
-orange.upper <- append(orange.upper.1, orange.upper.2)
+orange.lower <- c(0.0, 0.0, 0.0)
+orange.upper <- c(1.0, 0.4, 0.5)
 black.lower <- c(0,0,0)
 black.upper <- c(0.4, 0.3, 0.3)
 blue.lower <- c(0.0, 0.0, 0.2)
@@ -46,13 +41,14 @@ background.ignore <- countcolors::countColors(pic, color.range="rectangular",
                                               target.color=c("black", "black", "black"),
                                               #plotting = TRUE,
                                               save.indicator = TRUE)
+?countcolors
 
 #plot in 2D using colorcounter
 #colordistance::plotPixels(pic, lower = NULL, upper = NULL, n = 5000)
 
 #plot in 3D using colorfindr
 pic_mask <- "November 5 2021/PSME47 Ambient Drought DSC04435_segmented_masked.png"
-pic_mask %>% 
+pic_mask %>%
   get_colors() %>% 
   plot_colors_3d(sample_size = 5000, marker_size = 2.5, color_space = "RGB")
 

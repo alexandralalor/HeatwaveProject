@@ -1,0 +1,98 @@
+---
+title: "Photo Analysis"
+author: "Alexandra Lalor"
+date: '2022-04-15'
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+#Load correct libraries
+library(knitr)
+library(tidyverse)
+library(colorfindr)
+library(jpeg)
+opts_chunk$set(echo = TRUE)
+```
+
+#once the grey background has been removed by python, we still need to remove the orange label color
+```{r}
+#load image
+image_seg <- "November 5 2021/PSME47 Ambient Drought DSC04435_segmented.jpg"
+
+#define color ranges to remove
+orange.lower.1 <- c(0.0, 0.0, 0.0)
+orange.upper.1 <- c(1.0, 0.2, 0.5)
+orange.lower.2 <- c(0.5, 0.2, 0.0)
+orange.upper.2 <- c(1.0, 0.4, 0.5)
+orange.lower <- append(orange.lower.1, orange.lower.2)
+orange.upper <- append(orange.upper.1, orange.upper.2)
+black.lower <- c(0,0,0)
+black.upper <- c(0.4, 0.3, 0.3)
+blue.lower <- c(0.0, 0.0, 0.2)
+blue.upper <- c(0.2, 0.2, 0.5)
+#merge colors to single argument
+background.upper.orange <- append(black.upper, orange.upper)
+background.upper.all <- append(background.upper.orange, blue.upper)
+background.lower.orange <- append(black.lower, orange.lower)
+background.lower.all <- append(background.lower.orange, blue.lower)
+
+
+#remove all background colors
+countcolors::countColors(image_seg, color.range="rectangular",
+                         upper = background.upper.all,
+                         lower = background.lower.all,
+                         target.color=c("black", "black", "black"),
+                         save.indicator = TRUE)
+
+```
+
+
+View colors in 2D or 3D
+```{r}
+
+image_seg_mask <- "November 5 2021/PSME47 Ambient Drought DSC04435_segmented_masked.png"
+
+#2D
+colordistance::plotPixels(image_seg_mask, lower = NULL, upper = NULL, n = 5000)
+
+#3D
+#image_seg_mask %>% plot_colors_3d(sample_size = 5000, marker_size = 2.5, color_space = "RGB")
+```
+
+Create data frame of colors
+```{r}
+#load in pic_segmented_masked
+image_seg_mask <- "November 5 2021/PSME47 Ambient Drought DSC04435_segmented_masked.png"
+
+#exclude black color: 67,785 rows = working!
+#area = adding col_freq across all rows
+#get_colors(pic_mask, exclude_col = "black")
+
+#save file name information
+file_name <- data.frame(text = image_seg_mask) %>% 
+  separate(text, sep = "/", 
+           into = c("Date","Event")) %>% 
+  separate(Event, sep = " ",
+           into = c("SpeciesID","Treatment_temp","Treatment_water","Suffix")) %>% 
+  separate(Suffix, sep = "_",
+           into = c("PhotoID","Segmented","Suffix")) %>% 
+  separate(Suffix, into = c("Masked", "FileType")) %>% 
+  mutate(FileType = toupper(FileType)) %>% 
+  mutate(Date = parse_datetime(Date,
+                               format = "%B %d %Y"))
+
+file_add <- file_name %>% 
+  select(-c("Treatment_temp", "Treatment_water", "Segmented", "Masked", "PhotoID","FileType"))
+
+
+#create a data frame from get_colors
+tree <- data.frame(get_colors(image_seg_mask, exclude_col = "black"))
+
+#add RGB data into data frame
+rgb <- rotate_df(as.data.frame(col2rgb(tree$col_hex)))
+rownames(rgb) <- c(1:nrow(tree))
+tree_rgb <- cbind(file_add, rgb, tree)
+```
+

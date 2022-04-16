@@ -262,6 +262,9 @@ three.colors <- countcolors::countColors(pic1,
 #didn't get very far here...
 
 plot_mnsl("N 1/0")
+?munsell
+
+load(file = "data_raw/sysdata.rda")
 
 
 
