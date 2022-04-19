@@ -29,9 +29,10 @@ background.lower.all <- append(background.lower.orange, blue.lower)
 #load in segmented picture
 #perhaps load in folder instead?
 #need script that can work on all pictures in a folder
-pic <- "November 5 2021/PIEN01 Ambient+HW Watered DSC05080_segmented.jpg"
 pic <- "November 5 2021/PSME47 Ambient Drought DSC04435_segmented.jpg"
-pic_crop <- "November 5 2021/PIEN01 Ambient+HW Watered DSC05080_segmented_crop.jpg"
+
+#for an entire folder
+#countcolors::countColorsInDirectory(folder, color.range="rectangular"
 
 
 #ignore all background
@@ -44,7 +45,7 @@ background.ignore <- countcolors::countColors(pic, color.range="rectangular",
 ?countcolors
 
 #plot in 2D using colorcounter
-#colordistance::plotPixels(pic, lower = NULL, upper = NULL, n = 5000)
+#colordistance::plotPixels(pic_mask, lower = NULL, upper = NULL, n = 5000)
 
 #plot in 3D using colorfindr
 pic_mask <- "November 5 2021/PSME47 Ambient Drought DSC04435_segmented_masked.png"
@@ -54,7 +55,4 @@ pic_mask %>%
 
   
 
-
-#for an entire folder
-#countcolors::countColorsInDirectory(folder, color.range="rectangular"
 
