@@ -87,28 +87,35 @@ tree_rgb_sum <- tree_rgb %>%
             blue = round(mean(blue)),
             col_freq = sum(col_freq))
 
+#fill in summary df
 #add hex codes to summary df
 hex <- as.data.frame(rgb2hex(r = tree_rgb_sum$red, 
                              g = tree_rgb_sum$green, 
                              b = tree_rgb_sum$blue))
 colnames(hex) <- "col_hex"
 tree_rgb_sum <- cbind(tree_rgb_sum, hex)
-
+#reorder columns
+tree_rgb_sum <- tree_rgb_sum[, c(1,2,3,4,5,6,8,7)]
 #add file ID to summary df
 tree_rgb_sum <- cbind(file_add, tree_rgb_sum)
-
 #calculate total # pixels and percent of each color, add to summary df
 tree_rgb_sum <- tree_rgb_sum %>% 
   mutate(col_total = sum(col_freq)) %>% 
   mutate(col_share = round(100*(col_freq/col_total), digits = 1))
 
 ################################################################################
+
+
 #filter to exclude more grey and to most frequent colors
 #grey colors: r=g=b
 #here we can play around with thresholds for col_freq (# pixels in that bin)
 tree_rgb_sum_filter <- tree_rgb_sum %>% 
   filter(!(red_class == green_class & red_class == blue_class)) %>% 
   filter(col_freq >= 1000)
+
+#remove some columns if you want
+tree_rgb_sum_2 <- tree_rgb_sum %>% 
+  select(-c(red_class, green_class, blue_class))
 
 #colorfindr make_palette
 tree_rgb_sum_filter %>% 
@@ -122,9 +129,10 @@ tree_rgb_sum_filter %>%
   ggplot(aes(x = SpeciesID,
              y = col_share,
              fill = col_hex)) +
-  geom_col(fill = colors)
+  geom_col(fill = colors) +
+  ylab("Color Percent") +
+  xlab("November")
 
 #try to find a way to arrange the y-axis by most frequent colors to least frequent
-
 
 
