@@ -9,14 +9,16 @@ library(tidyverse)
 library(countcolors)
 library(colorfindr) #for 3D image and get_colors
 library(imager) #for autocrop
-update.packages("imager")
 library(jpeg)
 
 #crop photo
 pic <- "November 5 2021/PIED44 Ambient Drought DSC00340_segmented.jpg"
-label <- "November 5 2021/label.jpg"
 pic1 <- load.image(pic)
+label <- "November 5 2021/label.jpg"
 label1 <- load.image(label)
+
+pic_mask <- "November 5 2021/PIED44 Ambient Drought DSC00340_segmented_masked.png"
+pic_mask_1 <- load.image(pic_mask)
 
 #trying to make the label a color so that autocrop recgnizes it
 label_colors <- get_colors(label)
@@ -25,14 +27,18 @@ label_colors_rgb <- col2rgb(label_colors$col_hex)
 autocrop(pic1, label_colors_rgb) %>% plot()
 
 #this works well, except for label
-autocrop(pic1) %>% plot()
+autocrop(pic_mask_1) %>% plot()
 
 
 
 
 #ignore black, orange, and blue (where c(R,G,B))
-orange.lower <- c(0.0, 0.0, 0.0)
-orange.upper <- c(1.0, 0.4, 0.5)
+orange.lower.1 <- c(0.0, 0.0, 0.0)
+orange.upper.1 <- c(0.5, 0.2, 0.5)
+orange.lower.2 <- c(0.5, 0.0, 0.0)
+orange.upper.2 <- c(1.0, 0.4, 0.5)
+orange.lower <- append(orange.lower.1, orange.lower.2)
+orange.upper <- append(orange.upper.1, orange.upper.2)
 black.lower <- c(0,0,0)
 black.upper <- c(0.4, 0.3, 0.3)
 blue.lower <- c(0.0, 0.0, 0.2)
@@ -60,8 +66,8 @@ pic <- "November 5 2021/PIED44 Ambient Drought DSC00340_segmented.jpg"
 background.ignore <- countcolors::countColors(pic, color.range="rectangular",
                                               upper = background.upper.all,
                                               lower = background.lower.all,
-                                              target.color=c("black", "black", "black"),
-                                              #plotting = TRUE,
+                                              target.color=c("black", "black", "black", "black"),
+                                              plotting = TRUE,
                                               save.indicator = TRUE)
 ?countcolors
 
