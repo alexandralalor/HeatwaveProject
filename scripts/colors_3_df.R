@@ -111,7 +111,8 @@ tree_rgb_sum <- tree_rgb_sum %>%
 #here we can play around with thresholds for col_freq (# pixels in that bin)
 tree_rgb_sum_filter <- tree_rgb_sum %>% 
   filter(!(red_class == green_class & red_class == blue_class)) %>% 
-  filter(col_freq >= 1000)
+  filter(col_freq >= 1000) %>% 
+  arrange(desc(col_share))
 
 #remove some columns if you want
 tree_rgb_sum_2 <- tree_rgb_sum %>% 

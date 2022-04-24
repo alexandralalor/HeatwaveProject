@@ -7,7 +7,28 @@
 
 library(tidyverse)
 library(countcolors)
-library(colorfindr) #for 3D image
+library(colorfindr) #for 3D image and get_colors
+library(imager) #for autocrop
+update.packages("imager")
+library(jpeg)
+
+#crop photo
+pic <- "November 5 2021/PIED44 Ambient Drought DSC00340_segmented.jpg"
+label <- "November 5 2021/label.jpg"
+pic1 <- load.image(pic)
+label1 <- load.image(label)
+
+#trying to make the label a color so that autocrop recgnizes it
+label_colors <- get_colors(label)
+label_colors_rgb <- col2rgb(label_colors$col_hex)
+
+autocrop(pic1, label_colors_rgb) %>% plot()
+
+#this works well, except for label
+autocrop(pic1) %>% plot()
+
+
+
 
 #ignore black, orange, and blue (where c(R,G,B))
 orange.lower <- c(0.0, 0.0, 0.0)
@@ -29,7 +50,7 @@ background.lower.all <- append(background.lower.orange, blue.lower)
 #load in segmented picture
 #perhaps load in folder instead?
 #need script that can work on all pictures in a folder
-pic <- "November 5 2021/PSME47 Ambient Drought DSC04435_segmented.jpg"
+pic <- "November 5 2021/PIED44 Ambient Drought DSC00340_segmented.jpg"
 
 #for an entire folder
 #countcolors::countColorsInDirectory(folder, color.range="rectangular"
