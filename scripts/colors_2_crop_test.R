@@ -3,7 +3,7 @@
 #Alexandra Lalor
 #allielalor@email.arizona.edu
 #First created: 2022-04-14
-#Last updated: 2022-04-14
+#Last updated: 2022-04-25
 
 library(tidyverse)
 library(countcolors)
@@ -11,53 +11,57 @@ library(colorfindr) #for 3D image and get_colors
 library(imager) #for autocrop
 library(magick) #
 library(jpeg)
+library(tools) #for file naming
 
-#crop photo
-pic <- "November 5 2021/PIED44 Ambient Drought DSC00340_segmented.jpg"
-pic1 <- load.image(pic)
-label <- "November 5 2021/label.jpg"
-label1 <- load.image(label)
-
-
-pic_mask <- "November 5 2021/PIED44 Ambient Drought DSC00340_segmented_masked.png"
-pic_mask_1 <- load.image(pic_mask) 
-pic_mask_2 <- image_read(pic_mask) #magick
-pic3 <- image_convert(pic_mask_2, "jpeg") #magick
-
-print(pic2)
+#crop photo...
+pic_crop <- "November 5 2021/Crop/PIED44 Ambient Drought DSC00340_segmented_masked.png"
+pic_crop_1 <- load.image(pic_crop)
+pic_crop_2 <- image_read(pic_crop) #magick
+pic3 <- image_convert(pic_crop_2, "jpeg") #magick
+print(pic3)
 image_info(pic3)
 
-
+################################################################################
+#WORKING
 #crop photo using magick
-pic <- "November 5 2021/PIED44 Ambient Drought DSC00340_segmented.jpg"
-pic1 <- image_read(pic)
-pic1_crop <- image_crop(pic1, geometry = "0x3550")
-print(pic1_crop)
-#image_write(pic1_crop, path = "November 5 2021/crop/{file2}_crop.jpg")
+my_path <- "C:/Users/allie/Desktop/UofA/HW project/heatwave_analysis/Phase 1 Photos/November 5 2021/Segmented/"
+my_path_crop <- "C:/Users/allie/Desktop/UofA/HW project/heatwave_analysis/Phase 1 Photos/November 5 2021/Crop/"
+
+file_names_old <- list.files(my_path)
+
+file_names_old_2 <- file_path_sans_ext(file_names_old)
+
+file_names_crop <- paste0(file_names_old_2,"_crop",".jpg")
+
+
+
+
+for (i in 1:length(file_names_old)) {
+  file_name <- file_names_old[i]
+  file_names_new <- file_names_crop[i]
+  pic <- paste0(my_path, file_name)
+  pic1 <- image_read(pic)
+  pic1_crop <- image_crop(pic1, geometry = "0x3550")
+  my_path_final <- paste0(my_path_crop, file_names_new)
+  image_write(pic1_crop, path = my_path_final)
+}
+
+
 
 #question of how to make the saved image have the same naming structure, but add _crop
-file_name <- data.frame(text = pic) %>% 
-  separate(text, sep = "/", 
-           into = c("Date","Event")) %>% 
-  separate(Event, sep = " ",
-           into = c("SpeciesID","Treatment_temp","Treatment_water","Suffix")) %>% 
-  separate(Suffix, sep = "_",
-           into = c("PhotoID","Suffix")) %>% 
-  separate(Suffix, into = c("Segmented", "FileType")) %>% 
-  mutate(FileType = tolower(FileType)) %>% 
-  mutate(Date = parse_datetime(Date,
-                               format = "%B %d %Y"))
+my_path <- "C:/Users/allie/Desktop/UofA/HW project/heatwave_analysis/Phase 1 Photos/November 5 2021/Segmented"
 
-file <- file_name %>% 
-  select(-c("Date","FileType","Segmented")) %>% 
-  mutate(Crop = "crop")
+file_names_old <- list.files(my_path)
+file_names_old
+file_names_old_2 <- file_path_sans_ext(file_names_old)
+file_names_old_2
 
-file2 <- toString(file, sep = " ")
-file2
+file_names_new <- paste0(file_names_old_2,"_crop",".jpg")
+file_names_new
 
-
-
-
+my_path_new <- "C:/Users/allie/Desktop/UofA/HW project/heatwave_analysis/Phase 1 Photos/November 5 2021/Crop/"
+my_path_new <- paste0(my_path_new, file_names_new)
+my_path_new
 
 
 #trying to make the label a color so that autocrop recgnizes it
@@ -73,6 +77,7 @@ autocrop(pic_mask_1) %>% plot()
 
 
 #ignore black, orange, and blue (where c(R,G,B))
+#kind of cuts out too much...
 orange.lower.1 <- c(0.0, 0.0, 0.0)
 orange.upper.1 <- c(0.5, 0.2, 0.5)
 orange.lower.2 <- c(0.5, 0.0, 0.0)
