@@ -9,6 +9,7 @@ library(tidyverse)
 library(countcolors)
 library(colorfindr) #for 3D image and get_colors
 library(imager) #for autocrop
+library(magick) #
 library(jpeg)
 
 #crop photo
@@ -17,8 +18,47 @@ pic1 <- load.image(pic)
 label <- "November 5 2021/label.jpg"
 label1 <- load.image(label)
 
+
 pic_mask <- "November 5 2021/PIED44 Ambient Drought DSC00340_segmented_masked.png"
-pic_mask_1 <- load.image(pic_mask)
+pic_mask_1 <- load.image(pic_mask) 
+pic_mask_2 <- image_read(pic_mask) #magick
+pic3 <- image_convert(pic_mask_2, "jpeg") #magick
+
+print(pic2)
+image_info(pic3)
+
+
+#crop photo using magick
+pic <- "November 5 2021/PIED44 Ambient Drought DSC00340_segmented.jpg"
+pic1 <- image_read(pic)
+pic1_crop <- image_crop(pic1, geometry = "0x3550")
+print(pic1_crop)
+#image_write(pic1_crop, path = "November 5 2021/crop/{file2}_crop.jpg")
+
+#question of how to make the saved image have the same naming structure, but add _crop
+file_name <- data.frame(text = pic) %>% 
+  separate(text, sep = "/", 
+           into = c("Date","Event")) %>% 
+  separate(Event, sep = " ",
+           into = c("SpeciesID","Treatment_temp","Treatment_water","Suffix")) %>% 
+  separate(Suffix, sep = "_",
+           into = c("PhotoID","Suffix")) %>% 
+  separate(Suffix, into = c("Segmented", "FileType")) %>% 
+  mutate(FileType = tolower(FileType)) %>% 
+  mutate(Date = parse_datetime(Date,
+                               format = "%B %d %Y"))
+
+file <- file_name %>% 
+  select(-c("Date","FileType","Segmented")) %>% 
+  mutate(Crop = "crop")
+
+file2 <- toString(file, sep = " ")
+file2
+
+
+
+
+
 
 #trying to make the label a color so that autocrop recgnizes it
 label_colors <- get_colors(label)
@@ -29,7 +69,7 @@ autocrop(pic1, label_colors_rgb) %>% plot()
 #this works well, except for label
 autocrop(pic_mask_1) %>% plot()
 
-
+?magick
 
 
 #ignore black, orange, and blue (where c(R,G,B))
