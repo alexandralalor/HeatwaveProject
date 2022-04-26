@@ -9,9 +9,24 @@ library(tidyverse)
 library(countcolors)
 library(colorfindr) #for 3D image and get_colors
 library(imager) #for autocrop
-library(magick) #
+library(magick) 
 library(jpeg)
 library(tools) #for file naming
+
+
+################################################################################
+                     
+#testing crop sizes
+
+pic <- "E:/Phase 1 Data/Phase 1 Photos/August 26 2021/Segmented/PIPO09 Ambient Watered DSC00281_segmented.jpg"
+
+pic1 <- image_read(pic)
+pic1_crop <- image_crop(pic1, geometry = "0x3000")
+print(pic1_crop)
+
+################################################################################
+
+
 
 #crop photo...
 pic_crop <- "November 5 2021/Crop/PIED44 Ambient Drought DSC00340_segmented_masked.png"
