@@ -7,38 +7,38 @@
 
 #load libraries
 library(tidyverse)
-library(colorfindr)
+library(colorfindr) #for get_colors
 library(sjmisc) #for rotate_df
 library(ggtern) #for rbg2hex
 #library(countcolors)
 
 #load in pic_segmented_masked
-pic_mask <- "Phase 1 Photos/November 5 2021/Practice/PSME47 Ambient Drought DSC04435_segmented_masked.png"
+pic_crop <- "E:/Phase 1 Data/Phase 1 Photos/August 26 2021/Final/PIPO30 Ambient+HW Drought DSC00297_segmented_crop.jpg"
 
 ################################################################################
 #save file name information,
 #first separate by "/", then by " ", then by "_"
 #better file naming could shorten this code...
-file_name <- data.frame(text = pic_mask) %>% 
+file_name <- data.frame(text = pic_crop) %>% 
   separate(text, sep = "/", 
-           into = c("Date","Event")) %>% 
+           into = c("Drive", "Phase", "Photos", "Date", "Stage", "Event")) %>% 
   separate(Event, sep = " ",
            into = c("SpeciesID","Treatment_temp","Treatment_water","Suffix")) %>% 
   separate(Suffix, sep = "_",
            into = c("PhotoID","Segmented","Suffix")) %>% 
-  separate(Suffix, into = c("Masked", "FileType")) %>% 
+  separate(Suffix, into = c("Cropped", "FileType")) %>% 
   mutate(FileType = tolower(FileType)) %>% 
   mutate(Date = parse_datetime(Date,
                                format = "%B %d %Y"))
 
 #create condensed version to add to data, we don't need all of this
 file_add <- file_name %>% 
-  select(-c("Treatment_temp", "Treatment_water", "Segmented", "Masked", "PhotoID","FileType"))
+  select(-c("Drive", "Phase", "Photos", "Stage", "Treatment_temp", "Treatment_water", "Segmented", "Cropped", "PhotoID", "FileType"))
 
 ################################################################################
 #create a data frame from get_colors
 #exclude black color
-tree <- data.frame(get_colors(pic_mask, exclude_col = "black"))
+tree <- data.frame(get_colors(pic_crop, exclude_col = "black"))
 
 #add RGB data into data frame from the hex codes column
 rgb <- rotate_df(as.data.frame(col2rgb(tree$col_hex)))
@@ -132,7 +132,7 @@ tree_rgb_sum_filter %>%
              fill = col_hex)) +
   geom_col(fill = colors) +
   ylab("Color Percent") +
-  xlab("November")
+  xlab("August - PIPO30")
 
 #try to find a way to arrange the y-axis by most frequent colors to least frequent
 

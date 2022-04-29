@@ -18,10 +18,10 @@ library(tools) #for file naming
                      
 #testing crop sizes
 
-pic <- "E:/Phase 1 Data/Phase 1 Photos/December 3 2021/Segmented/PIFL27 Ambient Watered DSC03511_segmented.jpg"
+pic <- "E:/Phase 1 Data/Phase 1 Photos/September 2 2021/Segmented/PIED12 Ambient Drought DSC00368_segmented.jpg"
 
 pic1 <- image_read(pic)
-pic1_crop <- image_crop(pic1, geometry = "0x3000")
+pic1_crop <- image_crop(pic1, geometry = "0x3150")
 print(pic1_crop)
 
 ################################################################################
