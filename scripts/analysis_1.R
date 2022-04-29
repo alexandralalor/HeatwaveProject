@@ -1,9 +1,6 @@
 #baby analysis
 
 
-#working directory
-setwd("~/Desktop/UofA/HW project/analysis/HeatwaveProject")
-
 #load tidyverse
 library(tidyverse)
 install.packages("ggfortify")

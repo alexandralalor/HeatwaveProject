@@ -13,7 +13,7 @@ library(ggtern) #for rbg2hex
 #library(countcolors)
 
 #load in pic_segmented_masked
-pic_mask <- "November 5 2021/PSME47 Ambient Drought DSC04435_segmented_masked.png"
+pic_mask <- "Phase 1 Photos/November 5 2021/Practice/PSME47 Ambient Drought DSC04435_segmented_masked.png"
 
 ################################################################################
 #save file name information,
