@@ -2,7 +2,7 @@
 #Allie Lalor
 #allielalor@email.arizona.edu
 #First created: 2022-03-01
-#Last updated: 2022-03-19
+#Last updated: 2022-05-10
 
 #uing existing R package of plant colors
 #I'd like to use this color data to extract plant tissue color from my 
@@ -380,5 +380,47 @@ pca_colors_df <- prcomp_colors$x %>%
 pca_colors_df %>% 
   ggplot(aes(x = PC1)) +
   geom_boxplot()
+
+
+################################################################################
+#new background foreground method
+library(tidyverse)
+library(jpeg)
+library(colorfindr) #for get_colors
+library(sjmisc) #for rotate_df
+library(ggtern) #for rbg2hex
+
+
+img <- "C:/Users/allie/Desktop/UofA/HW project/heatwave_analysis/Photos/backdrop photos/DSC05348.JPG"
+img1 <- readJPEG(img)
+
+background <- get_colors(img)
+rgb <- rotate_df(as.data.frame(col2rgb(background$col_hex)))
+rownames(rgb) <- c(1:nrow(background))
+backgound_rgb <- cbind(rgb, background)
+
+
+background_hex <- background$col_hex
+
+pic_crop <- "C:/Users/allie/Desktop/UofA/HW project/heatwave_analysis/Photos/backdrop photos/PIED01 Ambient Watered DSC00329.JPG"
+
+tree <- get_colors(pic_crop)
+tree_seg <- get_colors(pic_crop, exclude_col = background_hex)
+
+tree_seg %>%
+  plot_colors_3d(sample_size = 5000, marker_size = 2.5, color_space = "RGB")
+
+
+
+
+#add RGB data into data frame from the hex codes column
+rgb <- rotate_df(as.data.frame(col2rgb(tree$col_hex)))
+rownames(rgb) <- c(1:nrow(tree))
+tree_rgb <- cbind(file_add, rgb, tree)
+
+
+
+
+
 
 
