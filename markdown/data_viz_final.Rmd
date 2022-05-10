@@ -1,0 +1,260 @@
+---
+title: "Data Viz Final Project"
+author: "Alexandra Lalor"
+date: '2022-05-06'
+output:
+  html_document:
+    theme: readable
+    highlight: breezedark
+    toc: true
+    toc_depth: 3
+    toc_float:
+      smooth_scroll: true
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(tidyverse)
+#install.packages("magick")
+library(magick) #to load image
+#install.packages("colorfindr")
+library(colorfindr) #for 3D graph
+#install.packages("countcolors")
+library(countcolors) #for 2D graph
+library(ggthemes)
+opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+# Study Explanation
+
+### Background
+
+As climate change progresses, disturbances in forested ecosystems will become a more powerful force of ecosystem change . Heatwaves and droughts will become more prevalent and co-occurring with climate change, yet it is largely unknown how this will impact seedling establishment and forest regeneration. The purpose of this proposal is to develop an experimental design to determine the impact of heatwaves on mortality rates of droughted tree seedlings.
+
+
+
+
+### Main Question
+
+* Do Ponderosa Pine tree seedlings show temperature sensitivity to heatwaves under droughted conditions? 
+
+* Can plant stress be captured through color change over time using repeat photographs?
+
+
+
+### Photo Measurements
+
+* *What*: Take photos of each plant, in the same position and with similar lighting
+
+* *When*: weekly
+
+* *Why*: Photos can capture color change over time to determine when a plant has died
+
+* *Limitations*: Requires time to develop a code to take an image of a plant, isolate the needles, and determine pixel color as a measure from green to brown. This is what I explore in the final project!
+
+
+
+### Treatments
+
+A subset of 10 plants (out of 250) were included in this visualization process, with the goal of refining the workflow of quantifying colors and exploring potential useful visualizations. Photos were taken of these plants every week for 13 weeks, until all plants in the study had died from drought.
+
+These 10 plants were divided into two groups, based on the experimental design.
+
+* Drought (5 plants)
+
+* Drought + heatwave (5 plants)
+
+
+
+
+### Pre-vizualization work flow
+
+How can I construct a code to take an image of a plant, isolate the needles, and determine pixel color as a measure from green to brown?
+
+1. From weekly photographs, exclude pixels that are not living tissue using a Gaussian Mixture Model in python (background/foreground)
+
+3. Develop code in R to extract pixels and organize data into a data frame
+
+3. Reduce the data frame and summarize information for analysis
+
+
+
+# Data
+
+### Photo Example 
+
+For this visualization, I took a subset of 10 plants, tracked with photographs over 13 weeks (from August 26 2021 to November 19 2021).
+
+Below is a photo of one plant as an example, after the background has been removed using a Gaussian Mixture Model. The goal of this was to leave only plant-tissue pixels in the photo.
+
+```{r}
+pic <- "data_raw/final_project/Photos/August 26 2021/Final/PIPO10 Ambient+HW Drought DSC00273_segmented_crop.jpg"
+pic1 <- image_read(pic)
+image_scale(pic1)
+```
+
+
+### Pixel Data
+
+Using the processed photos, I then worked with R to extract the plant-tissue pixels and put color information in a data frame.
+
+I have three sets of data, which are summarized to different levels
+
+1. Total
+  + **tree_rgb_all**: contains all the pixels extracted from my images (~12,000,000 data points)
+
+2. Summarized
+  + **tree_rgb_sum_all**: summarized into color groups (~12,000 data points)
+
+3. Filtered
+  + **tree_rgb_sum_filter_all**: filtered to exclude grey colors and pixels with less than 0% color contribution (~6,000 data points)
+
+```{r}
+# read in data
+#tree_rgb_all is too big to upload to github...see next viz
+tree_rgb_sum_all <- read.csv("data_raw/final_project/tree_rgb_sum/tree_rgb_sum_all.csv")
+tree_rgb_sum_filter_all <- read.csv("data_raw/final_project/tree_rgb_sum_filter/tree_rgb_sum_filter_all.csv")
+```
+
+
+# Viz 1
+
+### 3D (and 2D) scatterplot of total pixel colors plotted on red-green-blue axes 
+
+Let's start by looking at the total data.
+
+...I couldn't add this file to github because it's too big, but if you'd like to download the data it looks really cool as a 3D plot!
+Code is below if you download the total data separately, add file to data_raw/final_project
+
+```{r}
+#tree_rgb_all <- read.csv("data_raw/final_project/tree_rgb/tree_rgb_all.csv")
+
+# tree_rgb_all %>% 
+#   filter(SpeciesID == "PIPO10" & Week == 1) %>% 
+#   plot_colors_3d(sample_size = 5000, marker_size = 2.5, color_space = "RGB")
+```
+
+
+Let's instead look at summarized data, because 12 million data points is a lot!
+
+```{r, fig.height=7, fig.width=9}
+#Summarized data: tree_rgb_sum_all
+#to see how I came up with this data, look at 1_naming.R, 2_rgb.R, and 3_rgb_sum.R in the scripts folder
+head(tree_rgb_sum_all)
+
+#Here's a list of all the species available
+#PIPO stands for Ponderosa Pine (tree seedling), the number represents an individual out of 50 replicates
+tree_rgb_sum_all %>% 
+  summarize(species = unique(SpeciesID))
+
+#Here's a list of all dates available
+tree_rgb_sum_all %>% 
+  summarize(dates = unique(Date), week = unique(Week)) %>% 
+  arrange(week)
+
+#Take a look at this 3D color graph
+#Feel free to change the species and week to explore colors
+#I tried to do this on Shiny to be more interactive, but was unsuccessful and ran out of time.... perhaps you could help with this later on!
+tree_rgb_sum_all %>% 
+  filter(SpeciesID == "PIPO10" & Week == 1) %>% 
+  plot_colors_3d(sample_size = 5000, marker_size = 2.5, color_space = "RGB")
+
+#If this doesn't work (could need computer installations), look at this 2D color graph
+pic <- "data_raw/final_project/Photos/August 26 2021/Final/PIPO10 Ambient+HW Drought DSC00273_segmented_crop.jpg"
+colordistance::plotPixels(pic, lower = NULL, upper = NULL, n = 5000)
+
+```
+
+
+# Viz 2
+
+### Bar chart showing plant color variation over time (as plants die)
+
+Let's look again at summarized data.
+
+For ease of visualization, I display only 4 plants over time (2 with heatwave treatment and 2 without)
+
+```{r, fig.height=7, fig.width=9}
+#Summarized data: tree_rgb_sum_all
+#to see how I came up with this data, look at 3_rgb_sum.R in the scripts folder
+head(tree_rgb_sum_all)
+
+
+tree_rgb_sum_viz <- tree_rgb_sum_all %>% 
+  filter(SpeciesID %in% c("PIPO23","PIPO42","PIPO45","PIPO49")) %>% 
+  arrange(SpeciesID, Date, desc(col_share))
+
+colors1 <- tree_rgb_sum_viz$col_hex
+
+tree_rgb_sum_viz %>% 
+  mutate(Treatment = ifelse(Treatment_temp == "Ambient+HW", "Drought with Heatwave", "Drought")) %>% 
+  ggplot(aes(x = Week,
+             y = col_share,
+             fill = colors1)) +
+  geom_col(fill = colors1) +
+  facet_wrap(~SpeciesID + Treatment) +
+  #facet_grid(rows = vars(SpeciesID)) +
+  scale_x_continuous(breaks = 1:13) +
+  ylab("Color Percent") +
+  xlab("Weeks") +
+  labs(title = "Color change of droughted Ponderosa Pine seedlings over time",
+       subtitle = "With and without heatwave (week 7)",
+       caption = "Data collected using photographs from August 26 2021 to November 19 2021") +
+  theme_minimal(base_size = 13)
+
+
+```
+
+
+# Viz 3
+
+### Line graph showing leaf area change over time
+
+Let's look at filtered data now.
+
+```{r}
+#Filtered data: tree_rgb_sum_filter_all
+#to see how I came up with this data, look at 4_rgb_sum_filter.R in the scripts folder
+head(tree_rgb_sum_filter_all)
+
+tree_rgb_sum_filter_viz <- tree_rgb_sum_filter_all %>% 
+  arrange(SpeciesID, Date, desc(col_share))
+
+colors3 <- tree_rgb_sum_filter_viz$col_hex
+
+
+tree_rgb_sum_filter_viz %>% 
+  mutate(Treatment = ifelse(Treatment_temp == "Ambient", "Drought", "Dought + Heatwave")) %>% 
+  group_by(Week, Treatment) %>% 
+  summarize(mean_pixels = mean(col_total, na.rm = TRUE)) %>% 
+  ggplot(aes(x = Week,
+             y = mean_pixels,
+             color = Treatment)) +
+  geom_point() +
+    annotate("segment",
+           x = 7, xend = 7,
+           y = 0, yend = 1600000,
+           color = "red",
+           linetype = "dashed") +
+  annotate("segment",
+           x = 8, xend = 8,
+           y = 0, yend = 1600000,
+           color = "red",
+           linetype = "dashed") +
+  annotate("rect",
+           xmin = 7, xmax = 8, 
+           ymin = 1300000, ymax = 1600000,
+           fill = "red",
+           alpha = .2) +
+  geom_text(label = "Heatwave, +10C",
+            x = 10, y = 1550000, color = "red") +
+  geom_line() +
+  scale_color_manual(values = c("#D55E00", "#009E73")) +
+  scale_x_continuous(breaks = 1:13) +
+  ylab("Average number of leaf pixels") +
+  labs(title = "Comparing leaf area change of droughted seedlings over time",
+       subtitle = "Estimated by total number leaf pixels") +
+  theme_minimal()
+
+```
+

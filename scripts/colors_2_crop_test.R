@@ -140,6 +140,31 @@ pic_mask %>%
   get_colors() %>% 
   plot_colors_3d(sample_size = 5000, marker_size = 2.5, color_space = "RGB")
 
+
+################################################################################
+
+#testing masking after crop, how to consolidate black colors
+#look at 3D graph, figure our black upper and lower bounds
+pic_crop %>%
+  get_colors() %>% 
+  plot_colors_3d(sample_size = 5000, marker_size = 2.5, color_space = "RGB")
+
+
+
+#mask our background
+background.ignore <- countcolors::countColors(pic_crop, color.range="rectangular",
+                                              upper = black.upper,
+                                              lower = black.lower,
+                                              target.color=c("black"),
+                                              plotting = TRUE,
+                                              save.indicator = "data_raw/final_project/Photos/August 26 2021/Test/PIPO23 Ambient+HW Drought DSC00299_segmented_crop_mask.jpg")
+?countColors
+#look at 3D graph again, make sure black color is reduced to single point
+pic_mask <- "data_raw/final_project/Photos/August 26 2021/Final/PIPO10 Ambient+HW Drought DSC00273_segmented_crop_masked.png"
+pic_mask %>%
+  get_colors() %>% 
+  plot_colors_3d(sample_size = 5000, marker_size = 2.5, color_space = "RGB")
+
   
 
 
