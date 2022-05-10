@@ -2,7 +2,7 @@
 #Alexandra Lalor
 #allielalor@email.arizona.edu
 #First created: 2022-04-14
-#Last updated: 2022-04-19
+#Last updated: 2022-05-02
 
 
 #load libraries
@@ -12,7 +12,7 @@ library(sjmisc) #for rotate_df
 library(ggtern) #for rbg2hex
 #library(countcolors)
 
-#load in pic_segmented_masked
+#load in pic_segmented_crop
 pic_crop <- "E:/Phase 1 Data/Phase 1 Photos/August 26 2021/Final/PIPO30 Ambient+HW Drought DSC00297_segmented_crop.jpg"
 
 ################################################################################
