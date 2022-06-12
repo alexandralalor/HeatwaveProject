@@ -231,7 +231,7 @@ tree_rgb %>%
 # tree_rgb_all <- rbind(tree_rgb_August_26_2021, 
 #                       tree_rgb_September_02_2021, tree_rgb_September_09_2021, tree_rgb_September_16_2021, tree_rgb_September_24_2021, tree_rgb_September_30_2021,
 #                       tree_rgb_October_07_2021, tree_rgb_October_15_2021, tree_rgb_October_21_2021, tree_rgb_October_29_2021,
-#                       tree_rgb_November_5_2021, tree_rgb_November_11_2021, tree_rgb_November_19_2021, tree_rgb_November_26_2021,
+#                       tree_rgb_November_05_2021, tree_rgb_November_11_2021, tree_rgb_November_19_2021, tree_rgb_November_26_2021,
 #                       tree_rgb_December_03_2021, tree_rgb_December_10_2021, tree_rgb_December_17_2021, tree_rgb_December_30_2021,
 #                       tree_rgb_January_06_2022, tree_rgb_January_13_2022, tree_rgb_January_21_2022, tree_rgb_January_28_2022,
 #                       tree_rgb_February_04_2022, tree_rgb_February_11_2022, tree_rgb_February_18_2022, tree_rgb_February_24_2022,
