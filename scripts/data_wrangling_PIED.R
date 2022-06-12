@@ -11,10 +11,10 @@ setwd("~/Desktop/UofA/HW project/analysis/HeatwaveProject")
 library(tidyverse)
 
 #read in data
-Phase1_PIED_Dead <- read.csv(file = "data_raw/Phase1_PIED_Dead.csv")
-Phase1_PIED_PercentBrown <- read.csv(file = "data_raw/Phase1_PIED_PercentBrown.csv")
-Phase1_PIED_Porometer <- read.csv(file = "data_raw/Phase1_PIED_Porometer.csv")
-Phase1_PIED_Weight <- read.csv(file = "data_raw/Phase1_PIED_Weight.csv")
+Phase1_PIED_Dead <- read_csv(file = "data_raw/plant_data/Phase1_PIED_Dead.csv")
+Phase1_PIED_PercentBrown <- read_csv(file = "data_raw/plant_data/Phase1_PIED_PercentBrown.csv")
+Phase1_PIED_Porometer <- read_csv(file = "data_raw/plant_data/Phase1_PIED_Porometer.csv")
+Phase1_PIED_Weight <- read_csv(file = "data_raw/plant_data/Phase1_PIED_Weight.csv")
 
 
 
@@ -201,6 +201,6 @@ Phase1_PIED_PIEN <- merge(Phase1_PIED,
                           by=c("Species","SpeciesID","Week", "Dead"), all=TRUE)
 
 #finally, make a CSV!
-write.csv(Phase1_PIED, "data_step1/Phase1_PIED.csv", quote=FALSE, row.names = FALSE)
+write.csv(Phase1_PIED, "data_step1/Phase1_PIED.csv", quote = FALSE, row.names = FALSE)
 
 

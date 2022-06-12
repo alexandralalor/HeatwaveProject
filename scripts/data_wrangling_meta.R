@@ -2,14 +2,25 @@
 #Allie Lalor
 #allielalor@gmail.com
 #First created: 2022-02
-#Last updated: 2022-03-15
-
-#working directory
-setwd("~/Desktop/UofA/HW project/analysis/HeatwaveProject")
+#Last updated: 2022-06-11
 
 #load tidyverse
 library(tidyverse)
 
-#read in data
-Phase1_Chamber1_Dates <- read.csv(file = "data_raw/Phase1_Chamber1_Dates.csv")
-Phase1_InitialData <- read.csv(file = "data_raw/Phase1_InitialData.csv")
+#read in cleaned up csv
+#looking very nice :)
+Phase1_Dates <- read_csv(file = "data_raw/meta/Phase1_Dates.csv")
+Phase1_InitialData <- read_csv(file = "data_raw/meta/Phase1_InitialData.csv")
+Phase1_PIED <- read_csv(file = "data_step1/Phase1_PIED.csv")
+Phase1_PIPO <- read_csv(file = "data_step1/Phase1_PIPO.csv")
+Phase1_PSME <- read_csv(file = "data_step1/Phase1_PSME.csv")
+Phase1_PIFL <- read_csv(file = "data_step1/Phase1_PIFL.csv")
+Phase1_PIEN <- read_csv(file = "data_step1/Phase1_PIEN.csv")
+
+#connect plant data
+Phase1_Plants <- rbind(Phase1_PIED, Phase1_PIPO, Phase1_PSME, Phase1_PIFL, Phase1_PIEN)
+
+#save as csv
+write.csv(Phase1_plants, "data_clean/Phase1_Plants.csv", quote = FALSE, row.names = FALSE)
+write.csv(Phase1_Dates, "data_clean/Phase1_Dates.csv", quote = FALSE, row.names = FALSE)
+write.csv(Phase1_InitialData, "data_clean/Phase1_InitialData.csv", quote = FALSE, row.names = FALSE)

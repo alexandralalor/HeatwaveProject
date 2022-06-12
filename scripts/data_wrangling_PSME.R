@@ -8,10 +8,10 @@ setwd("~/Desktop/UofA/HW project/analysis/HeatwaveProject")
 library(tidyverse)
 
 #read in data
-Phase1_PSME_Dead <- read.csv(file = "data_raw/Phase1_PSME_Dead.csv")
-Phase1_PSME_PercentBrown <- read.csv(file = "data_raw/Phase1_PSME_PercentBrown.csv")
-Phase1_PSME_Porometer <- read.csv(file = "data_raw/Phase1_PSME_Porometer.csv")
-Phase1_PSME_Weight <- read.csv(file = "data_raw/Phase1_PSME_Weight.csv")
+Phase1_PSME_Dead <- read_csv(file = "data_raw/plant_data/Phase1_PSME_Dead.csv")
+Phase1_PSME_PercentBrown <- read_csv(file = "data_raw/plant_data/Phase1_PSME_PercentBrown.csv")
+Phase1_PSME_Porometer <- read_csv(file = "data_raw/plant_data/Phase1_PSME_Porometer.csv")
+Phase1_PSME_Weight <- read_csv(file = "data_raw/plant_data/Phase1_PSME_Weight.csv")
 
 
 
@@ -162,4 +162,4 @@ Phase1_PSME <- merge(Phase1_PSME_1,
 
 
 #finally, make a CSV!
-write.csv(Phase1_PSME, "data_step1/Phase1_PSME.csv", quote=FALSE, row.names = FALSE)
+write.csv(Phase1_PSME, "data_step1/Phase1_PSME.csv", quote = FALSE, row.names = FALSE)

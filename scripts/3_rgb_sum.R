@@ -70,9 +70,9 @@ tree_rgb %>%
   summarize(species = unique(Species))
 
 tree_rgb_chamber1 <- tree_rgb %>% 
-  filter(Species == "PIPO", Species == "PIED")
+  filter(Species == "PIPO" | Species == "PIED")
 tree_rgb_chamber2 <- tree_rgb %>% 
-  filter(Species == "PSME", Species == "PIFL")
+  filter(Species == "PSME" | Species == "PIFL")
 tree_rgb_chamber3 <- tree_rgb %>% 
   filter(Species == "PIEN")
 

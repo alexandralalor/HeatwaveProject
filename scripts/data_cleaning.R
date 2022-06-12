@@ -2,34 +2,15 @@
 #Allie Lalor
 #allielalor@gmail.com
 #First created: 2022-02
-#Last updated: 2022-03-15
-
-
-#working directory
-setwd("~/Desktop/UofA/HW project/analysis/HeatwaveProject")
+#Last updated: 2022-06-11
 
 #load tidyverse
 library(tidyverse)
 
 #read in cleaned up csv
 #looking very nice :)
-Phase1_PIED_old <- read.csv(file = "data_step1/Phase1_PIED.csv")
-Phase1_PIPO_old <- read.csv(file = "data_step1/Phase1_PIPO.csv")
-Phase1_PSME_old <- read.csv(file = "data_step1/Phase1_PSME.csv")
-Phase1_InitialData <- read.csv(file = "data_step1/Phase1_InitialData.csv")
-
-#not sure why there's an extra column with the row #s... delete
-#delete first column
-#Phase1_PIED <- select(Phase1_PIED_old, -1)
-#Phase1_PSME <- select(Phase1_PSME_old, -1)
-#Phase1_PIPO <- select(Phase1_PIPO_old, -1)
-
-#connect data
-?rbind
-Phase1_all <- rbind(Phase1_PIED, Phase1_PIPO, Phase1_PSME)
-
-#temp
-Phase1_all_temp <- rbind(Phase1_PIED_PIEN, Phase1_PIPO, Phase1_PSME)
+Phase1_Plants <- read_csv(file = "data_clean/Phase1_Plants.csv")
+Phase1_InitialData <- read_csv(file = "data_step1/Phase1_InitialData.csv")
 
 #now add metadata
 Phase1_InitialData_Treatments <- subset(Phase1_InitialData, ,c(2, 4:7))

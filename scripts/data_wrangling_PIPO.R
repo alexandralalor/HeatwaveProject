@@ -8,10 +8,10 @@ setwd("~/Desktop/UofA/HW project/analysis/HeatwaveProject")
 library(tidyverse)
 
 #read in data
-Phase1_PIPO_Dead <- read.csv(file = "data_raw/Phase1_PIPO_Dead.csv")
-Phase1_PIPO_PercentBrown <- read.csv(file = "data_raw/Phase1_PIPO_PercentBrown.csv")
-Phase1_PIPO_Porometer <- read.csv(file = "data_raw/Phase1_PIPO_Porometer.csv")
-Phase1_PIPO_Weight <- read.csv(file = "data_raw/Phase1_PIPO_Weight.csv")
+Phase1_PIPO_Dead <- read_csv(file = "data_raw/plant_data/Phase1_PIPO_Dead.csv")
+Phase1_PIPO_PercentBrown <- read_csv(file = "data_raw/plant_data/Phase1_PIPO_PercentBrown.csv")
+Phase1_PIPO_Porometer <- read_csv(file = "data_raw/plant_data/Phase1_PIPO_Porometer.csv")
+Phase1_PIPO_Weight <- read_csv(file = "data_raw/plant_data/Phase1_PIPO_Weight.csv")
 
 
 
@@ -162,4 +162,4 @@ Phase1_PIPO <- merge(Phase1_PIPO_1,
 
 
 #finally, make a CSV!
-write.csv(Phase1_PIPO, "data_step1/Phase1_PIPO.csv", quote=FALSE, row.names = FALSE)
+write.csv(Phase1_PIPO, "data_step1/Phase1_PIPO.csv", quote = FALSE, row.names = FALSE)
