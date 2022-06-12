@@ -1,21 +1,25 @@
-#Data Viz Final Project
+#Heatwave Project Phase 1 / Data Viz Final Project
 #Create data frame of rgb pixel colors for each photo, save with file name information
 #allielalor@email.arizona.edu
 #First created: 2022-05-02
-#Last updated: 2022-06-08
+#Last updated: 2022-06-12
+
+#install packages
+install.packages("tidyverse")
+install.packages("colorfindr")
+install.packages("sjmisc")
+install.packages("ggtern")
 
 #load libraries
 library(tidyverse)
 library(colorfindr) #for get_colors
 library(sjmisc) #for rotate_df
 library(ggtern) #for rbg2hex
-library(countcolors) #for masking and reducing black colors to one point
-library(tools) #for file naming
 
 ################################################################################
 #file naming data frames
 
-names_df <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/file_names/names_df_August_26_2021.csv")
+# names_df <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/file_names/names_df_August_26_2021.csv")
 # names_df <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/file_names/names_df_September_02_2021.csv")
 # names_df <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/file_names/names_df_September_09_2021.csv")
 # names_df <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/file_names/names_df_September_16_2021.csv")
@@ -135,13 +139,10 @@ for(i in 1:length(file_names)) {
   tree_rgb <- rbind(tree_rgb, tree_rgb_1)
 }
 
-#check that all plants are added
-tree_rgb %>% 
-  summarize(species = unique(Species))
-
+#check work
 tree_rgb %>% 
   group_by(Date) %>% 
-  summarize(week = unique(Week))
+  summarize(week = unique(Week), species = unique(Species))
 
 
 #Now go to rgb_sum script to summarize the data
