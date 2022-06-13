@@ -2,7 +2,7 @@
 #Allie Lalor
 #allielalor@gmail.com
 #First created: 2022-02-01
-#Last updated: 2022-06-11
+#Last updated: 2022-06-12
 
 #load tidyverse
 library(tidyverse)
@@ -19,54 +19,53 @@ Phase1_Chamber1_Kestrel2 <- read_csv("data_raw/kestrel/Phase1_Chamber1_Kestrel2.
 # Phase1_Chamber4_Kestrel1 <- read_csv("data_raw/kestrel/Phase1_Chamber4_Kestrel1.csv")
 # Phase1_Chamber4_Kestrel2 <- read_csv("data_raw/kestrel/Phase1_Chamber4_Kestrel2.csv")
 
-#split up date and time
-Phase1_Chamber1_Kestrel1 <- Phase1_Chamber1_Kestrel1 %>% 
-  separate(Time, sep = " ",
-           into = c("Date", "Time")) %>%
-  mutate(Date = parse_datetime(Date,
-                               format = "%m/%d/%Y"))
-
-Phase1_Chamber1_Kestrel2 <- Phase1_Chamber1_Kestrel2 %>% 
-  separate(Time, sep = " ",
-           into = c("Date", "Time")) %>%
-  mutate(Date = parse_datetime(Date,
-                               format = "%m/%d/%Y"))
-
-#Add Kestrel number
-Phase1_Chamber1_Kestrel1 <- Phase1_Chamber1_Kestrel1 %>% 
-  mutate(Kestrel = 1)
-Phase1_Chamber1_Kestrel2 <- Phase1_Chamber1_Kestrel2 %>% 
-  mutate(Kestrel = 2)
-
 #Combine df
-Phase1_Chamber1 <- rbind(Phase1_Chamber1_Kestrel1, Phase1_Chamber1_Kestrel2)
+Phase1_Chamber1_Temps <- rbind(Phase1_Chamber1_Kestrel1, Phase1_Chamber1_Kestrel2)
+# Phase1_Chamber2_Temps <- rbind(Phase1_Chamber2_Kestrel1, Phase1_Chamber2_Kestrel2)
+# Phase1_Chamber3_Temps <- rbind(Phase1_Chamber3_Kestrel1, Phase1_Chamber3_Kestrel2)
+# Phase1_Chamber4_Temps <- rbind(Phase1_Chamber4_Kestrel1, Phase1_Chamber4_Kestrel2)
+# Phase1_Temps <- rbind(Phase1_Chamber1, Phase1_Chamber2, Phase1_Chamber3, Phase1_Chamber4)
 
-#Convert Phase, Chamber, Kestrel to categorical variables
-Phase1_TempSettings$Chamber <- as.factor(Phase1_TempSettings$Chamber)
+#Convert variables
 Phase1_TempSettings$Phase <- as.factor(Phase1_TempSettings$Phase)
-Phase1_Chamber1$Chamber <- as.factor(Phase1_Chamber1$Chamber)
-Phase1_Chamber1$Kestrel <- as.factor(Phase1_Chamber1$Kestrel)
+Phase1_TempSettings$Chamber <- as.factor(Phase1_TempSettings$Chamber)
+Phase1_TempSettings <- Phase1_TempSettings %>% 
+  mutate(Kestrel = "calculated")
+
+Phase1_Chamber1_Temps$Chamber <- as.factor(Phase1_Chamber1_Temps$Chamber)
+Phase1_Chamber1_Temps$Kestrel <- as.factor(Phase1_Chamber1_Temps$Kestrel)
 
 
-#calcualted temperatures
-Phase1_TempSettings %>% 
-  group_by(Chamber) %>% 
-  filter(Heatwave == "no") %>%
-  ggplot(aes(x = Time,
-             y = Temperature_C,
-             color = Chamber)) +
-  geom_point()
-  
+#DateTime - Temperature Settings
+Phase1_TempSettings <- Phase1_TempSettings %>% 
+  mutate(Time = ifelse(Time < 1000 & Time > 30, paste0("0", Phase1_TempSettings$Time), 
+                       ifelse(Time == 30, paste0("00", Phase1_TempSettings$Time), 
+                              ifelse(Time == 0, paste0("000", Phase1_TempSettings$Time), Time))))
 
 
-#compare temperatures
-Phase1_Chamber1 %>% 
-  group_by(Kestrel) %>% 
-  filter(Time >= "8/27/2021 0:00" & Time <= "8/28/2021 0:00") %>% 
-  ggplot(aes(x = Time,
-             y = Temperature_C,
-             color = Kestrel)) +
-  geom_point()
+#DateTime - Chamber 1
+Phase1_Chamber1_Temps <- Phase1_Chamber1_Temps %>%
+  separate(Time, sep = " ",
+           into = c("Date", "Time")) %>%
+  mutate(Date = parse_datetime(Date,
+                               format = "%m/%d/%Y"))
+
+Phase1_Chamber1_Temps$Time <- gsub(":","",as.factor(Phase1_Chamber1_Temps$Time))
+Phase1_Chamber1_Temps$Time <- as.numeric(Phase1_Chamber1_Temps$Time)
+
+Phase1_Chamber1_Temps <- Phase1_Chamber1_Temps %>% 
+  mutate(Time = ifelse(Time < 1000 & Time > 30, paste0("0", Phase1_Chamber1_Temps$Time), 
+                         ifelse(Time == 30, paste0("00", Phase1_Chamber1_Temps$Time), 
+                                ifelse(Time == 0, paste0("000", Phase1_Chamber1_Temps$Time), Time))))
+
+Phase1_Chamber1_Temps$DateTime <- paste(Phase1_Chamber1_Temps$Date, " ", Phase1_Chamber1_Temps$Time)
+Phase1_Chamber1_Temps$DateTime <- strptime(Phase1_Chamber1_Temps$DateTime, format="%Y-%m-%d %H%M")
+
+
+
+#Save csv
+write.csv(Phase1_TempSettings, "data_clean/Phase1_TempSettings", quote=FALSE, row.names = FALSE)
+write.csv(Phase1_Chamber1_Temps, "data_clean/Phase1_Chamber1_Temps", quote=FALSE, row.names = FALSE)
 
 
 
