@@ -1,16 +1,20 @@
 #data cleaning and checking
 #Allie Lalor
 #allielalor@gmail.com
-#First created: 2022-02
+#First created: 2022-02-01
 #Last updated: 2022-06-11
 
 #load tidyverse
 library(tidyverse)
 
-#read in cleaned up csv
-#looking very nice :)
-Phase1_Plants <- read_csv(file = "data_clean/Phase1_Plants.csv")
-Phase1_InitialData <- read_csv(file = "data_step1/Phase1_InitialData.csv")
+#read in clean csv
+Phase1_Plants <- read_csv("data_clean/Phase1_Plants.csv")
+Phase1_InitialData <- read_csv("data_clean/Phase1_InitialData.csv")
+Phase1_Dates <- read_csv("data_clean/Phase1_Dates.csv")
+Phase1_Porometer <- read_csv("data_clean/Phase1_Porometer.csv")
+
+
+
 
 #now add metadata
 Phase1_InitialData_Treatments <- subset(Phase1_InitialData, ,c(2, 4:7))

@@ -9,16 +9,21 @@ library(tidyverse)
 
 #read in cleaned up csv
 #looking very nice :)
-Phase1_Dates <- read_csv(file = "data_raw/meta/Phase1_Dates.csv")
-Phase1_InitialData <- read_csv(file = "data_raw/meta/Phase1_InitialData.csv")
 Phase1_PIED <- read_csv(file = "data_step1/Phase1_PIED.csv")
 Phase1_PIPO <- read_csv(file = "data_step1/Phase1_PIPO.csv")
 Phase1_PSME <- read_csv(file = "data_step1/Phase1_PSME.csv")
 Phase1_PIFL <- read_csv(file = "data_step1/Phase1_PIFL.csv")
 Phase1_PIEN <- read_csv(file = "data_step1/Phase1_PIEN.csv")
+Phase1_Dates <- read_csv(file = "data_raw/meta/Phase1_Dates.csv")
+Phase1_InitialData <- read_csv(file = "data_raw/meta/Phase1_InitialData.csv")
 
 #connect plant data
 Phase1_Plants <- rbind(Phase1_PIED, Phase1_PIPO, Phase1_PSME, Phase1_PIFL, Phase1_PIEN)
+
+#check out data and make sure it looks ok
+View(Phase1_Plants)
+view(Phase1_Dates)
+view(Phase1_InitialData)
 
 #save as csv
 write.csv(Phase1_plants, "data_clean/Phase1_Plants.csv", quote = FALSE, row.names = FALSE)
