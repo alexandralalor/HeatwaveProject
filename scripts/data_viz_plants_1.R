@@ -49,8 +49,10 @@ Phase1_Plants_All <- Phase1_Plants_All %>%
 km <- with(Phase1_Plants_All, Surv(Week, Dead))
 
 km_fit <- survfit(Surv(Week, Dead)~1, data=Phase1_Plants_All)
+summary(km_fit, )
 
 km_trt_fit <- survfit(Surv(Week, Dead)~Species, data=Phase1_Plants_All)
+
 autoplot(km_trt_fit)  
 
 
@@ -58,9 +60,9 @@ autoplot(km_trt_fit)
 km <- with(Phase1_Plants_All, Surv(Week, Dead))
 
 km_fit <- survfit(Surv(Week, Dead)~1, data=Phase1_Plants_All)
-#summary(km_fit, )
 
 km_trt_fit <- survfit(Surv(Week, Dead)~Heatwave_graph, data=Phase1_Plants_All)
+
 autoplot(km_trt_fit) +
   scale_fill_brewer(palette = "Paired") +
   scale_color_brewer(palette = "Paired") +

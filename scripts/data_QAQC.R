@@ -1,4 +1,4 @@
-#data cleaning and checking
+#QAQC
 #Alexandra Lalor
 #allielalor@email.arizona.edu
 #allielalor@gmail.com

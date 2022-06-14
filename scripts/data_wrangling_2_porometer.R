@@ -58,11 +58,10 @@ porometer_all <- rbind(porometer_August_26_2021,
                       porometer_April_07_2022, porometer_April_15_2022, porometer_April_21_2022, porometer_April_29_2022,
                       porometer_May_06_2022, porometer_May_12_2022)
 
-
-
+#take a look at data
+glimpse((porometer_all))
 
 #split up date and time
-
 porometer_all <- porometer_all %>% 
   separate(Time, sep = " ",
            into = c("Date", "Time", "AMPM")) %>% 
