@@ -1,5 +1,9 @@
 #Data wrangling script - Phase 1 PSME
-#ARL Feb 2022
+#Alexandra Lalor
+#allielalor@email.arizona.edu
+#allielalor@gmail.com
+#First created: 2022-02-01
+#Last updated: 2022-06-11
 
 #working directory
 setwd("~/Desktop/UofA/HW project/analysis/HeatwaveProject")

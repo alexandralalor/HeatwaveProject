@@ -1,5 +1,7 @@
 #Data Viz Final Project
+#Alexandra Lalor
 #allielalor@email.arizona.edu
+#allielalor@gmail.com
 #First created: 2022-05-02
 #Last updated: 2022-05-02
 

@@ -1,6 +1,7 @@
 #get_colors with colorfindr package, create a dataframe from masked image
 #Alexandra Lalor
 #allielalor@email.arizona.edu
+#allielalor@gmail.com
 #First created: 2022-04-14
 #Last updated: 2022-05-02
 

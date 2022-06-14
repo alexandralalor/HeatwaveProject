@@ -1,5 +1,6 @@
 #Data analysis/viz script - Phase 1 kestrel
-#Allie Lalor
+#Alexandra Lalor
+#allielalor@email.arizona.edu
 #allielalor@gmail.com
 #First created: 2022-02-01
 #Last updated: 2022-06-13

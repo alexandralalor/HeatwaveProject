@@ -1,5 +1,6 @@
 #Data wrangling script - Phase 1 porometer
-#Allie Lalor
+#Alexandra Lalor
+#allielalor@email.arizona.edu
 #allielalor@gmail.com
 #First created: 2022-06-11
 #Last updated: 2022-06-11

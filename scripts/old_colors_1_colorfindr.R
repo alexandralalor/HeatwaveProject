@@ -1,6 +1,7 @@
 #color script with colorfindr
-#Allie Lalor
+#Alexandra Lalor
 #allielalor@email.arizona.edu
+#allielalor@gmail.com
 #First created: 2022-03-17
 #Last updated: 2022-03-19
 

@@ -2,6 +2,7 @@
 #alternative would be to crop image, but I'd rather just have 1 code than crop 5000+ images
 #Alexandra Lalor
 #allielalor@email.arizona.edu
+#allielalor@gmail.com
 #First created: 2022-04-14
 #Last updated: 2022-04-25
 

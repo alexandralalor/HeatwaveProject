@@ -1,6 +1,8 @@
 #Heatwave Analysis / Data Viz Final Project
 #Create data frame with important information related to photos, using photo file name
+#Alexandra Lalor
 #allielalor@email.arizona.edu
+#allielalor@gmail.com
 #First created: 2022-05-02
 #Last updated: 2022-06-08
 

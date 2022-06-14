@@ -1,6 +1,8 @@
 #Heatwave Project Phase 1 / Data Viz Final Project
 #Create data frame of rgb pixel colors for each photo, save with file name information
+#Alexandra Lalor
 #allielalor@email.arizona.edu
+#allielalor@gmail.com
 #First created: 2022-05-02
 #Last updated: 2022-06-12
 
