@@ -163,4 +163,4 @@ Phase1_PIFL <- merge(Phase1_PIFL_1,
 
 
 #finally, make a CSV!
-write.csv(Phase1_PIFL, "data_step1/Phase1_PIFL.csv", quote = FALSE, row.names = FALSE)
+write.csv(Phase1_PIFL, "data_raw/plant_data_2/Phase1_PIFL.csv", quote = FALSE, row.names = FALSE)

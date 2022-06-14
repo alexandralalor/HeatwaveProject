@@ -202,6 +202,6 @@ Phase1_PIED_PIEN <- merge(Phase1_PIED,
                           by=c("Species","SpeciesID","Week", "Dead"), all=TRUE)
 
 #finally, make a CSV!
-write.csv(Phase1_PIED, "data_step1/Phase1_PIED.csv", quote = FALSE, row.names = FALSE)
+write.csv(Phase1_PIED, "data_raw/plant_data_2/Phase1_PIED.csv", quote = FALSE, row.names = FALSE)
 
 

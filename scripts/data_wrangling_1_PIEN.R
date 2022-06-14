@@ -167,4 +167,4 @@ Phase1_PIEN <- merge(Phase1_PIEN_1,
 
 
 #finally, make a CSV!
-write.csv(Phase1_PIEN, "data_step1/Phase1_PIEN.csv", quote = FALSE, row.names = FALSE)
+write.csv(Phase1_PIEN, "data_raw/plant_data_2/Phase1_PIEN.csv", quote = FALSE, row.names = FALSE)

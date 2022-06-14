@@ -166,4 +166,4 @@ Phase1_PSME <- merge(Phase1_PSME_1,
 
 
 #finally, make a CSV!
-write.csv(Phase1_PSME, "data_step1/Phase1_PSME.csv", quote = FALSE, row.names = FALSE)
+write.csv(Phase1_PSME, "data_raw/plant_data_2/Phase1_PSME.csv", quote = FALSE, row.names = FALSE)
