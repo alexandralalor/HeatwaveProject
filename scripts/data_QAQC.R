@@ -8,16 +8,17 @@
 #load tidyverse
 library(tidyverse)
 
-#read in clean csv
-Phase1_Plants <- read_csv("data_clean/Phase1_Plants.csv")
-Phase1_InitialData <- read_csv("data_clean/Phase1_InitialData.csv")
+#read in clean csvs
+Phase1_Kestrel_Meta <- read_csv("data_clean/Phase1_Kestrel_Meta.csv")
 Phase1_Dates <- read_csv("data_clean/Phase1_Dates.csv")
+Phase1_InitialData <- read_csv("data_clean/Phase1_InitialData.csv")
+Phase1_TempSettings <- read_csv("data_clean/Phase1_TempSettings.csv")
+Phase1_Kestrel <- read_csv("data_clean/Phase1_Chamber1_Kestrel.csv")
 Phase1_Porometer <- read_csv("data_clean/Phase1_Porometer.csv")
+Phase1_Plants <- read_csv("data_clean/Phase1_Plants.csv")
 
 
-
-
-#now add metadata
+#now add metadata/combine info
 Phase1_InitialData_Treatments <- subset(Phase1_InitialData, ,c(2, 4:7))
 
 Phase1_meta <- merge(Phase1_all,
