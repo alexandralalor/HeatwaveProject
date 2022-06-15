@@ -17,8 +17,30 @@ Phase1_Kestrel <- read_csv("data_clean/Phase1_Chamber1_Kestrel.csv")
 Phase1_Porometer <- read_csv("data_clean/Phase1_Porometer.csv")
 Phase1_Plants <- read_csv("data_clean/Phase1_Plants.csv")
 
+#check structure, ensure consistent formats
+#Date as <date>
+#Time as <chr>
+#DateTime as <dttm>
+#Phase as <fctr>
+#Chamber as <fctr>
+#Kestrel as <fctr>
+glimpse(Phase1_Kestrel_Meta)
+glimpse(Phase1_Dates)
+glimpse(Phase1_InitialData)
+glimpse(Phase1_TempSettings)
+glimpse(Phase1_Kestrel)
+glimpse(Phase1_Porometer)
+glimpse(Phase1_Plants)
 
 #now add metadata/combine info
+
+#Kestrel + Kestrel_Meta data
+Phase1_Kestrel <- merge(Phase1_Kestrel, Phase1_Kestrel_Meta, by = c("Phase", "Chamber", "Kestrel"))
+
+#Plants + InitialData
+
+
+
 Phase1_InitialData_Treatments <- subset(Phase1_InitialData, ,c(2, 4:7))
 
 Phase1_meta <- merge(Phase1_all,

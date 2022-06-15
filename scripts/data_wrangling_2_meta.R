@@ -20,12 +20,34 @@ glimpse(Phase1_InitialData)
 glimpse(Phase1_Kestrel_Meta)
 glimpse(Phase1_TempSettings)
 
+
+#kestrel_meta, add Phase, Chamber, and Kestrel columns
+Phase1_Kestrel_Meta <- Phase1_Kestrel_Meta %>% 
+  mutate(Phase = 1) %>% 
+  mutate(Chamber = "") %>% 
+  mutate(Kestrel = "") %>% 
+  mutate(KestrelName = Name) %>% 
+  separate(Name, sep = "_",
+           into = c("Phase", "Chamber", "Kestrel"))
+
+Phase1_Kestrel_Meta <- Phase1_Kestrel_Meta %>% 
+  mutate(Phase = ifelse(Phase1_Kestrel_Meta$Phase == "Phase1", 1, 2)) %>% 
+  mutate(Chamber = ifelse(Phase1_Kestrel_Meta$Chamber == "Chamber1", 1, 
+                          ifelse(Phase1_Kestrel_Meta$Chamber == "Chamber2", 2, 
+                                 ifelse(Phase1_Kestrel_Meta$Chamber == "Chamber3", 3, 4)))) %>%
+  mutate(Kestrel = ifelse(Phase1_Kestrel_Meta$Kestrel == "Kestrel1", 1, 2))
+
+
 #Convert Variables
 Phase1_Dates$Chamber <- as.factor(Phase1_Dates$Chamber)
 
 Phase1_InitialData$Phase <- as.factor(Phase1_InitialData$Phase)
 Phase1_InitialData$Chamber <- as.factor(Phase1_InitialData$Chamber)
 Phase1_InitialData$Whorls <- as.factor(Phase1_InitialData$Whorls)
+
+Phase1_Kestrel_Meta$Phase <- as.factor(Phase1_Kestrel_Meta$Phase)
+Phase1_Kestrel_Meta$Chamber <- as.factor(Phase1_Kestrel_Meta$Chamber)
+Phase1_Kestrel_Meta$Kestrel <- as.factor(Phase1_Kestrel_Meta$Kestrel)
 
 Phase1_TempSettings$Phase <- as.factor(Phase1_TempSettings$Phase)
 Phase1_TempSettings$Chamber <- as.factor(Phase1_TempSettings$Chamber)
@@ -43,5 +65,4 @@ write.csv(Phase1_Dates, "data_clean/Phase1_Dates.csv", quote = FALSE, row.names 
 write.csv(Phase1_InitialData, "data_clean/Phase1_InitialData.csv", quote = FALSE, row.names = FALSE)
 write.csv(Phase1_Kestrel_Meta, "data_clean/Phase1_Kestrel_Meta.csv", quote = FALSE, row.names = FALSE)
 write.csv(Phase1_TempSettings, "data_clean/Phase1_TempSettings.csv", quote=FALSE, row.names = FALSE)
-
 

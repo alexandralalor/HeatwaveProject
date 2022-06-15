@@ -8,6 +8,9 @@
 #load packages
 library(tidyverse)
 
+#combined csv
+#Phase1_Porometer <- read_csv("data_clean/Phase1_Porometer.csv")
+
 #read csv
 porometer_August_26_2021 <- read.csv(file = "data_raw/porometer/SC-1 Porometer Data 30-Aug-2021.csv")
 porometer_September_02_2021 <- read.csv(file = "data_raw/porometer/SC-1 Porometer Data 3-Sep-2021.csv")
@@ -46,8 +49,9 @@ porometer_April_29_2022 <- read.csv(file = "data_raw/porometer/SC-1 Porometer Da
 porometer_May_06_2022 <- read.csv(file = "data_raw/porometer/SC-1 Porometer Data 6-May-2022.csv")
 porometer_May_12_2022 <- read.csv(file = "data_raw/porometer/SC-1 Porometer Data 12-May-2022.csv")
 
+
 #combine all dates
-porometer_all <- rbind(porometer_August_26_2021,
+Phase1_Porometer <- rbind(porometer_August_26_2021,
                       porometer_September_02_2021, porometer_September_09_2021, porometer_September_16_2021, porometer_September_24_2021, porometer_September_30_2021,
                       porometer_October_07_2021, porometer_October_15_2021, porometer_October_21_2021, porometer_October_29_2021,
                       porometer_November_05_2021, porometer_November_11_2021, porometer_November_19_2021, porometer_November_26_2021,
@@ -59,22 +63,28 @@ porometer_all <- rbind(porometer_August_26_2021,
                       porometer_May_06_2022, porometer_May_12_2022)
 
 #take a look at data
-glimpse((porometer_all))
+glimpse((Phase1_Porometer))
 
-#split up date and time
-porometer_all <- porometer_all %>% 
+#make 24hr time
+Phase1_Porometer$DateTime <- strptime(Phase1_Porometer$Time, format = "%m/%d/%Y %I:%M %p")
+
+Phase1_Porometer <- Phase1_Porometer %>% 
+  mutate(Date = "", Time = DateTime) %>% 
   separate(Time, sep = " ",
-           into = c("Date", "Time", "AMPM")) %>% 
-  unite("Time", Time:AMPM) %>% 
-  mutate(Date = parse_datetime(Date,
-                               format = "%m/%d/%Y"))
+           into = c("Date", "Time")) %>% 
+  separate(Time, sep = ":",
+           into = c("hour", "minute", "second")) %>% 
+  unite("Time", "hour":"minute", sep = "") %>% 
+  select(-"second")
 
-#check labels
-porometer_all %>% 
-  summarize(Date = unique(Date))
+#check
+glimpse(Phase1_Porometer)
+
+#convert columns
+Phase1_Porometer$Date <- as.Date(Phase1_Porometer$Date)
 
 #save as csv
-write.csv(porometer_all, "data_clean/Phase1_Porometer.csv", quote = FALSE, row.names = FALSE)
+write.csv(Phase1_Porometer, "data_clean/Phase1_Porometer.csv", quote = FALSE, row.names = FALSE)
 
 
 

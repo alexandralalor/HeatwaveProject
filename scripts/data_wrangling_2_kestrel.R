@@ -28,7 +28,12 @@ Phase1_Chamber1_Kestrel <- rbind(Phase1_Chamber1_Kestrel1, Phase1_Chamber1_Kestr
 #take a look at data
 glimpse(Phase1_Chamber1_Kestrel)
 
+#add Phase column
+Phase1_Kestrel <- Phase1_Kestrel %>% 
+  mutate(Phase = 1)
+
 #Convert variables
+Phase1_Chamber1_Kestrel$Phase <- as.factor(Phase1_Chamber1_Kestrel$Phase)
 Phase1_Chamber1_Kestrel$Chamber <- as.factor(Phase1_Chamber1_Kestrel$Chamber)
 Phase1_Chamber1_Kestrel$Kestrel <- as.factor(Phase1_Chamber1_Kestrel$Kestrel)
 

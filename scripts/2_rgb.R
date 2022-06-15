@@ -8,6 +8,9 @@
 
 #install packages
 install.packages("tidyverse")
+#on ubuntu need to install 2 packages for colorfindr when using CyVerse
+#sudo apt-get install -y librsvg2-2
+#sudo apt-get install -y libglpk-dev
 install.packages("colorfindr")
 install.packages("sjmisc")
 install.packages("ggtern")
