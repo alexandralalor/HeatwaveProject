@@ -8,6 +8,10 @@
 #load tidyverse
 library(tidyverse)
 
+################################################################################
+#Phase1_AvgTemp
+#Temperatures combined (daily temps), keeping Kestrel number intact for verification
+################################################################################
 #read in clean csvs
 Phase1_TempSettings <- read_csv("data_clean/Phase1_TempSettings.csv")
 Phase1_Kestrel <- read_csv("data_clean/Phase1_Kestrel.csv")
@@ -26,7 +30,6 @@ Phase1_Kestrel$Chamber <- as.factor(Phase1_Kestrel$Chamber)
 Phase1_Kestrel$Kestrel <- as.factor(Phase1_Kestrel$Kestrel)
 
 
-################################################################################
 #average temps
 Phase1_Kestrel_Chamber1 <- Phase1_Kestrel %>% 
   filter(Heatwave == "no", Chamber == 1) %>%
@@ -46,7 +49,7 @@ Phase1_Kestrel_Chamber3 <- Phase1_Kestrel %>%
   group_by(Phase, Chamber, Kestrel, Heatwave, Time) %>% 
   summarize(Temperature_avg = mean(Temperature_C))
 
-################################################################################
+
 #average temps - heatwave
 Phase1_Kestrel_Chamber1_HW <- Phase1_Kestrel %>% 
   filter(Heatwave == "yes", Chamber == 1) %>%
@@ -66,7 +69,7 @@ Phase1_Kestrel_Chamber3_HW <- Phase1_Kestrel %>%
   group_by(Phase, Chamber, Kestrel, Heatwave, Time) %>% 
   summarize(Temperature_avg = mean(Temperature_C))
 
-################################################################################
+
 #calculated temp settings
 Phase1_TempSettings_Chamber1 <- Phase1_TempSettings %>%
   filter(Heatwave == "no", Chamber == 1) %>%
@@ -83,7 +86,7 @@ Phase1_TempSettings_Chamber3 <- Phase1_TempSettings %>%
   group_by(Phase, Chamber, Kestrel, Heatwave, Time) %>% 
   summarize(Temperature_avg = mean(Temperature_C))
 
-################################################################################
+
 #calculated temp settings - heatwave
 Phase1_TempSettings_Chamber1_HW <- Phase1_TempSettings %>%
   filter(Heatwave == "yes", Chamber == 1) %>% 
@@ -100,7 +103,8 @@ Phase1_TempSettings_Chamber3_HW <- Phase1_TempSettings %>%
   group_by(Phase, Chamber, Kestrel, Heatwave, Time) %>% 
   summarize(Temperature_avg = mean(Temperature_C))
 
-################################################################################
+
+#combine data
 Phase1_Chamber1_AvgTemp_amb <- rbind(Phase1_Kestrel_Chamber1, Phase1_TempSettings_Chamber1)
 Phase1_Chamber1_AvgTemp_HW <- rbind(Phase1_Kestrel_Chamber1_HW, Phase1_TempSettings_Chamber1_HW)
 Phase1_Chamber1_AvgTemp <- rbind(Phase1_Chamber1_AvgTemp_amb, Phase1_Chamber1_AvgTemp_HW)
@@ -115,19 +119,21 @@ Phase1_Chamber3_AvgTemp <- rbind(Phase1_Chamber3_AvgTemp_amb, Phase1_Chamber3_Av
 
 Phase1_AvgTemp <- rbind(Phase1_Chamber1_AvgTemp, Phase1_Chamber2_AvgTemp, Phase1_Chamber3_AvgTemp)
 
-################################################################################
+
 #save csv
 # write.csv(Phase1_Chamber1_AvgTemp, "data_QAQC/Phase1_Chamber1_AvgTemp.csv", quote=FALSE, row.names = FALSE)
 # write.csv(Phase1_Chamber2_AvgTemp, "data_QAQC/Phase1_Chamber2_AvgTemp.csv", quote=FALSE, row.names = FALSE)
 # write.csv(Phase1_Chamber3_AvgTemp, "data_QAQC/Phase1_Chamber3_AvgTemp.csv", quote=FALSE, row.names = FALSE)
-
 write.csv(Phase1_AvgTemp, "data_QAQC/Phase1_AvgTemp.csv", quote=FALSE, row.names = FALSE)
 
 
-################################################################################
-################################################################################
 
-#Take average of both kestrels for summarized data
+
+
+################################################################################
+#Phase1_AvgTemp_Sum
+#Take average of both kestrels for summarized data (daily temps)
+################################################################################
 
 #read csv
 Phase1_AvgTemp <- read_csv("data_QAQC/Phase1_AvgTemp.csv")
@@ -149,15 +155,32 @@ Phase1_AvgTemp_Calculated$Chamber <- as.factor(Phase1_AvgTemp_Calculated$Chamber
 glimpse(Phase1_AvgTemp_Actual)
 glimpse(Phase1_AvgTemp_Calculated)
 
-################################################################################
-#average of both kestrels
+
+#average of kestrels
 Phase1_AvgTemp_Actual <- Phase1_AvgTemp_Actual %>% 
   group_by(Phase, Chamber, Heatwave, Time) %>% 
   summarize(Temperature_avg = round(mean(Temperature_avg), digits = 1)) %>% 
   mutate(Kestrel = "actual")
 
 #combine average and calculated data
-Phase1_AvgTemp_Summarized <- rbind(Phase1_AvgTemp_Actual, Phase1_AvgTemp_Calculated)
+Phase1_AvgTemp_Sum <- rbind(Phase1_AvgTemp_Actual, Phase1_AvgTemp_Calculated)
 
 #write csv
-write.csv(Phase1_AvgTemp_Summarized, "data_QAQC/Phase1_AvgTemp_Summarized.csv", quote=FALSE, row.names = FALSE)
+write.csv(Phase1_AvgTemp_Sum, "data_QAQC/Phase1_AvgTemp_Sum.csv", quote=FALSE, row.names = FALSE)
+
+
+################################################################################
+#Phase1_AvgTemp_Sum_Total
+#Take average for overall temp summary (not daily)
+################################################################################
+
+#read csv
+Phase1_AvgTemp_Sum <- read_csv("data_QAQC/Phase1_AvgTemp_Sum.csv")
+
+Phase1_AvgTemp_Sum_Total <- Phase1_AvgTemp_Sum %>% 
+  group_by(Phase, Chamber, Heatwave, Kestrel) %>% 
+  summarize(Temperature_avg = round(mean(Temperature_avg), digits = 1))
+
+#write csv
+write.csv(Phase1_AvgTemp_Sum_Total, "data_QAQC/Phase1_AvgTemp_Sum_Total.csv", quote=FALSE, row.names = FALSE)
+

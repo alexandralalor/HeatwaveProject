@@ -1,0 +1,13 @@
+Phase,Chamber,Heatwave,Kestrel,Temperature_avg
+1,1,no,actual,21.2
+1,1,no,calculated,20.4
+1,1,yes,actual,30.1
+1,1,yes,calculated,30.4
+1,2,no,actual,11.7
+1,2,no,calculated,14.5
+1,2,yes,actual,21.7
+1,2,yes,calculated,24.5
+1,3,no,actual,12.2
+1,3,no,calculated,14
+1,3,yes,actual,21.4
+1,3,yes,calculated,24
