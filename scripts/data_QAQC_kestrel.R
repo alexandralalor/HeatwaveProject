@@ -9,13 +9,8 @@
 library(tidyverse)
 
 #read in clean csvs
-Phase1_Kestrel_Meta <- read_csv("data_clean/Phase1_Kestrel_Meta.csv")
 Phase1_TempSettings <- read_csv("data_clean/Phase1_TempSettings.csv")
 Phase1_Kestrel <- read_csv("data_clean/Phase1_Kestrel.csv")
-
-#merge Kestrel + Kestrel_Meta data
-Phase1_Kestrel <- merge(Phase1_Kestrel, Phase1_Kestrel_Meta, by = c("Phase", "Chamber", "Kestrel", "Heatwave"))
-
 
 #check structure, ensure consistent formats
 #Phase as <fctr>
@@ -30,8 +25,6 @@ Phase1_Kestrel$Phase <- as.factor(Phase1_Kestrel$Phase)
 Phase1_Kestrel$Chamber <- as.factor(Phase1_Kestrel$Chamber)
 Phase1_Kestrel$Kestrel <- as.factor(Phase1_Kestrel$Kestrel)
 
-#save csv
-write.csv(Phase1_Kestrel, "data_QAQC/Phase1_Kestrel.csv", quote=FALSE, row.names = FALSE)
 
 ################################################################################
 #average temps
@@ -110,30 +103,22 @@ Phase1_TempSettings_Chamber3_HW <- Phase1_TempSettings %>%
 ################################################################################
 Phase1_Chamber1_AvgTemp_amb <- rbind(Phase1_Kestrel_Chamber1, Phase1_TempSettings_Chamber1)
 Phase1_Chamber1_AvgTemp_HW <- rbind(Phase1_Kestrel_Chamber1_HW, Phase1_TempSettings_Chamber1_HW)
+Phase1_Chamber1_AvgTemp <- rbind(Phase1_Chamber1_AvgTemp_amb, Phase1_Chamber1_AvgTemp_HW)
 
 Phase1_Chamber2_AvgTemp_amb <- rbind(Phase1_Kestrel_Chamber2, Phase1_TempSettings_Chamber2)
 Phase1_Chamber2_AvgTemp_HW <- rbind(Phase1_Kestrel_Chamber2_HW, Phase1_TempSettings_Chamber2_HW)
+Phase1_Chamber2_AvgTemp <- rbind(Phase1_Chamber2_AvgTemp_amb, Phase1_Chamber2_AvgTemp_HW)
 
 Phase1_Chamber3_AvgTemp_amb <- rbind(Phase1_Kestrel_Chamber3, Phase1_TempSettings_Chamber3)
 Phase1_Chamber3_AvgTemp_HW <- rbind(Phase1_Kestrel_Chamber3_HW, Phase1_TempSettings_Chamber3_HW)
-
-
-Phase1_Chamber1_AvgTemp <- rbind(Phase1_Chamber1_AvgTemp_amb, Phase1_Chamber1_AvgTemp_HW)
-Phase1_Chamber2_AvgTemp <- rbind(Phase1_Chamber2_AvgTemp_amb, Phase1_Chamber2_AvgTemp_HW)
 Phase1_Chamber3_AvgTemp <- rbind(Phase1_Chamber3_AvgTemp_amb, Phase1_Chamber3_AvgTemp_HW)
 
+Phase1_AvgTemp <- rbind(Phase1_Chamber1_AvgTemp, Phase1_Chamber2_AvgTemp, Phase1_Chamber3_AvgTemp)
 
 ################################################################################
 #save csv
-# write.csv(Phase1_Chamber1_AvgTemp_amb, "data_QAQC/Phase1_Chamber1_AvgTemp_amb.csv", quote=FALSE, row.names = FALSE)
-# write.csv(Phase1_Chamber1_AvgTemp_HW, "data_QAQC/Phase1_Chamber1_AvgTemp_HW.csv", quote=FALSE, row.names = FALSE)
-# 
-# write.csv(Phase1_Chamber2_AvgTemp_amb, "data_QAQC/Phase1_Chamber2_AvgTemp_amb.csv", quote=FALSE, row.names = FALSE)
-# write.csv(Phase1_Chamber2_AvgTemp_HW, "data_QAQC/Phase1_Chamber2_AvgTemp_HW.csv", quote=FALSE, row.names = FALSE)
-# 
-# write.csv(Phase1_Chamber3_AvgTemp_amb, "data_QAQC/Phase1_Chamber3_AvgTemp_amb.csv", quote=FALSE, row.names = FALSE)
-# write.csv(Phase1_Chamber3_AvgTemp_HW, "data_QAQC/Phase1_Chamber3_AvgTemp_HW.csv", quote=FALSE, row.names = FALSE)
+# write.csv(Phase1_Chamber1_AvgTemp, "data_QAQC/Phase1_Chamber1_AvgTemp.csv", quote=FALSE, row.names = FALSE)
+# write.csv(Phase1_Chamber2_AvgTemp, "data_QAQC/Phase1_Chamber2_AvgTemp.csv", quote=FALSE, row.names = FALSE)
+# write.csv(Phase1_Chamber3_AvgTemp, "data_QAQC/Phase1_Chamber3_AvgTemp.csv", quote=FALSE, row.names = FALSE)
 
-write.csv(Phase1_Chamber1_AvgTemp, "data_QAQC/Phase1_Chamber1_AvgTemp.csv", quote=FALSE, row.names = FALSE)
-write.csv(Phase1_Chamber2_AvgTemp, "data_QAQC/Phase1_Chamber2_AvgTemp.csv", quote=FALSE, row.names = FALSE)
-write.csv(Phase1_Chamber3_AvgTemp, "data_QAQC/Phase1_Chamber3_AvgTemp.csv", quote=FALSE, row.names = FALSE)
+write.csv(Phase1_AvgTemp, "data_QAQC/Phase1_AvgTemp.csv", quote=FALSE, row.names = FALSE)
