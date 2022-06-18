@@ -1,19 +1,15 @@
-#Data Viz Final Project
-#To summarize data from all pixels. This means creating bins and grouping colors, as well as cleaning up some columns
+#Heatwave Project Phase 1
+#To summarize data from all pixels.
+#This means creating bins and grouping colors, as well as cleaning up some columns
 #Alexandra Lalor
 #allielalor@email.arizona.edu
 #allielalor@gmail.com
 #First created: 2022-05-02
-#Last updated: 2022-06-11
+#Last updated: 2022-06-18
 
 #load libraries
 library(tidyverse)
 library(ggtern) #for rbg2hex
-# library(colorfindr) #for get_colors
-# library(sjmisc) #for rotate_df
-# library(ggtern) #for rbg2hex
-# library(countcolors) #for masking and reducing black colors to one point
-# library(tools) #for file naming
 
 ################################################################################
 
@@ -27,7 +23,7 @@ library(ggtern) #for rbg2hex
 # tree_rgb <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb/tree_rgb_October_07_2021.csv")
 # tree_rgb <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb/tree_rgb_October_15_2021.csv")
 # tree_rgb <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb/tree_rgb_October_21_2021.csv")
-tree_rgb <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb/tree_rgb_October_29_2021.csv")
+# tree_rgb <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb/tree_rgb_October_29_2021.csv")
 # tree_rgb <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb/tree_rgb_November_05_2021.csv")
 # tree_rgb <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb/tree_rgb_November_11_2021.csv")
 # tree_rgb <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb/tree_rgb_November_19_2021.csv")
@@ -56,14 +52,7 @@ tree_rgb <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb/tree_rgb_O
 # tree_rgb <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb/tree_rgb_May_06_2022.csv")
 # tree_rgb <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb/tree_rgb_May_12_2022.csv")
 
-# tree_rgb_all <- read.csv("data_raw/final_project/tree_rgb/tree_rgb_all.csv")
-
-#combine all dates
-# tree_rgb_all <- rbind(tree_rgb_August_26_2021, tree_rgb_November_11_2021, tree_rgb_November_19_2021,
-#                       tree_rgb_November_5_2021, tree_rgb_October_15_2021, tree_rgb_October_21_2021,
-#                       tree_rgb_October_29_2021, tree_rgb_October_7_2021, tree_rgb_September_16_2021,
-#                       tree_rgb_September_2_2021, tree_rgb_September_24_2021, tree_rgb_September_30_2021,
-#                       tree_rgb_September_9_2021)
+################################################################################
 
 #reducing the data frame
 
@@ -71,15 +60,15 @@ tree_rgb <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb/tree_rgb_O
 tree_rgb %>% 
   summarize(species = unique(Species))
 
-tree_rgb_chamber1 <- tree_rgb %>% 
-  filter(Species == "PIPO" | Species == "PIED")
-tree_rgb_chamber2 <- tree_rgb %>% 
-  filter(Species == "PSME" | Species == "PIFL")
-tree_rgb_chamber3 <- tree_rgb %>% 
-  filter(Species == "PIEN")
+# tree_rgb_chamber1 <- tree_rgb %>% 
+#   filter(Species == "PIPO" | Species == "PIED")
+# tree_rgb_chamber2 <- tree_rgb %>% 
+#   filter(Species == "PSME" | Species == "PIFL")
+# tree_rgb_chamber3 <- tree_rgb %>% 
+#   filter(Species == "PIEN")
 
 #bin red
-tree_rgb_chamber1 <- tree_rgb_chamber1 %>% 
+tree_rgb <- tree_rgb %>% 
   mutate(red_class = ifelse(red <= 10, "1-10", 
                             ifelse(red <= 20, "11-20", 
                                    ifelse(red <= 30, "21-30",
@@ -107,7 +96,7 @@ tree_rgb_chamber1 <- tree_rgb_chamber1 %>%
                                                                                                                                                                                              ifelse(red <= 250, "241-250", "250-255"))))))))))))))))))))))))))
 ##############################################################################################################################################################################################################################################################
 #bin green
-tree_rgb_chamber1 <- tree_rgb_chamber1 %>% 
+tree_rgb <- tree_rgb %>% 
   mutate(green_class = ifelse(green <= 10, "1-10", 
                               ifelse(green <= 20, "11-20", 
                                      ifelse(green <= 30, "21-30",
@@ -135,7 +124,7 @@ tree_rgb_chamber1 <- tree_rgb_chamber1 %>%
                                                                                                                                                                                                ifelse(green <= 250, "241-250", "250-255"))))))))))))))))))))))))))
 ################################################################################################################################################################################################################################################################
 #bin blue
-tree_rgb_chamber1 <- tree_rgb_chamber1 %>% 
+tree_rgb <- tree_rgb %>% 
   mutate(blue_class = ifelse(blue <= 10, "1-10", 
                              ifelse(blue <= 20, "11-20", 
                                     ifelse(blue <= 30, "21-30",
@@ -162,37 +151,99 @@ tree_rgb_chamber1 <- tree_rgb_chamber1 %>%
                                                                                                                                                                                        ifelse(blue <= 240, "231-240",
                                                                                                                                                                                               ifelse(blue <= 250, "241-250", "250-255"))))))))))))))))))))))))))
 ###############################################################################################################################################################################################################################################################
-glimpse(tree_rgb_sum)
+glimpse(tree_rgb)
 
 #summarize by bins
-tree_rgb_sum_chamber1 <- tree_rgb_chamber1 %>% 
+tree_rgb_sum <- tree_rgb %>% 
   group_by(Week, Date, Species, SpeciesID, Treatment_temp, Treatment_water, red_class, green_class, blue_class) %>% 
   summarize(red = round(mean(red)),
             green = round(mean(green)),
             blue = round(mean(blue)),
             col_freq = sum(col_freq))
 
+glimpse(tree_rgb_sum)
 
 #fill in summary df
 #add hex codes to summary df
-hex <- as.data.frame(rgb2hex(r = tree_rgb_sum_chamber1$red, 
-                             g = tree_rgb_sum_chamber1$green, 
-                             b = tree_rgb_sum_chamber1$blue))
+hex <- as.data.frame(rgb2hex(r = tree_rgb_sum$red, 
+                             g = tree_rgb_sum$green, 
+                             b = tree_rgb_sum$blue))
 colnames(hex) <- "col_hex"
-tree_rgb_sum_chamber1 <- cbind(tree_rgb_sum_chamber1, hex)
+tree_rgb_sum <- cbind(tree_rgb_sum, hex)
 #reorder columns
-tree_rgb_sum_chamber1 <- tree_rgb_sum_chamber1[, c(1,2,3,4,5,6,7,8,9,10,11,12,14,13)]
+tree_rgb_sum <- tree_rgb_sum[, c(1,2,3,4,5,6,7,8,9,10,11,12,14,13)]
 #calculate total # pixels and percent of each color, add to summary df
-tree_rgb_sum_chamber1 <- tree_rgb_sum_chamber1 %>% 
+tree_rgb_sum <- tree_rgb_sum %>% 
   group_by(Week, Date, Species, SpeciesID, Treatment_temp, Treatment_water) %>% 
   mutate(col_total = sum(col_freq)) %>% 
   mutate(col_share = round(100*(col_freq/col_total), digits = 1))
 
 
-tree_rgb_sum <- rbind(tree_rgb_sum_chamber1, tree_rgb_sum_chamber2, tree_rgb_sum_chamber3)
+#tree_rgb_sum <- rbind(tree_rgb_sum_chamber1, tree_rgb_sum_chamber2, tree_rgb_sum_chamber3)
 
 
 #Remember to change date when saving!
 #write csv
-write.csv(tree_rgb_sum, "E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_October_29_2021.csv", quote=FALSE, row.names = FALSE)
+write.csv(tree_rgb_sum, "E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_August_26_2021.csv", quote=FALSE, row.names = FALSE)
+
+################################################################################
+################################################################################
+################################################################################
+
+#combine all files
+
+#read in files
+tree_rgb_sum_August_26_2021 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_August_26_2021.csv")
+tree_rgb_sum_September_02_2021 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_September_02_2021.csv")
+tree_rgb_sum_September_09_2021 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_September_09_2021.csv")
+tree_rgb_sum_September_16_2021 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_September_16_2021.csv")
+tree_rgb_sum_September_24_2021 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_September_24_2021.csv")
+tree_rgb_sum_September_30_2021 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_September_30_2021.csv")
+tree_rgb_sum_October_07_2021 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_October_07_2021.csv")
+tree_rgb_sum_October_15_2021 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_October_15_2021.csv")
+tree_rgb_sum_October_21_2021 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_October_21_2021.csv")
+tree_rgb_sum_October_29_2021 <-read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_October_29_2021.csv")
+tree_rgb_sum_November_05_2021 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_November_05_2021.csv")
+tree_rgb_sum_November_11_2021 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_November_11_2021.csv")
+tree_rgb_sum_November_19_2021 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_November_19_2021.csv")
+tree_rgb_sum_November_26_2021 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_November_26_2021.csv")
+tree_rgb_sum_December_03_2021 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_December_03_2021.csv")
+tree_rgb_sum_December_10_2021 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_December_10_2021.csv")
+tree_rgb_sum_December_17_2021 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_December_17_2021.csv")
+tree_rgb_sum_December_30_2021 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_December_30_2021.csv")
+tree_rgb_sum_January_06_2022 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_January_06_2022.csv")
+tree_rgb_sum_January_13_2022 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_January_13_2022.csv")
+tree_rgb_sum_January_21_2022 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_January_21_2022.csv")
+tree_rgb_sum_January_28_2022 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_January_28_2022.csv")
+tree_rgb_sum_February_04_2022 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_February_04_2022.csv")
+tree_rgb_sum_February_11_2022 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_February_11_2022.csv")
+tree_rgb_sum_February_18_2022 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_February_18_2022.csv")
+tree_rgb_sum_February_24_2022 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_February_24_2022.csv")
+tree_rgb_sum_March_03_2022 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_March_03_2022.csv")
+tree_rgb_sum_March_11_2022 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_March_11_2022.csv")
+tree_rgb_sum_March_18_2022 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_March_18_2022.csv")
+tree_rgb_sum_March_24_2022 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_March_24_2022.csv")
+tree_rgb_sum_March_31_2022 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_March_31_2022.csv")
+tree_rgb_sum_April_07_2022 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_April_07_2022.csv")
+tree_rgb_sum_April_15_2022 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_April_15_2022.csv")
+tree_rgb_sum_April_21_2022 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_April_21_2022.csv")
+tree_rgb_sum_April_29_2022 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_April_29_2022.csv")
+tree_rgb_sum_May_06_2022 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_May_06_2022.csv")
+tree_rgb_sum_May_12_2022 <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_May_12_2022.csv")
+
+
+#combine all dates
+tree_rgb_sum_all <- rbind(tree_rgb_sum_August_26_2021,
+                      tree_rgb_sum_September_02_2021, tree_rgb_sum_September_09_2021, tree_rgb_sum_September_16_2021, tree_rgb_sum_September_24_2021, tree_rgb_sum_September_30_2021,
+                      tree_rgb_sum_October_07_2021, tree_rgb_sum_October_15_2021, tree_rgb_sum_October_21_2021, tree_rgb_sum_October_29_2021,
+                      tree_rgb_sum_November_05_2021, tree_rgb_sum_November_11_2021, tree_rgb_sum_November_19_2021, tree_rgb_sum_November_26_2021,
+                      tree_rgb_sum_December_03_2021, tree_rgb_sum_December_10_2021, tree_rgb_sum_December_17_2021, tree_rgb_sum_December_30_2021,
+                      tree_rgb_sum_January_06_2022, tree_rgb_sum_January_13_2022, tree_rgb_sum_January_21_2022, tree_rgb_sum_January_28_2022,
+                      tree_rgb_sum_February_04_2022, tree_rgb_sum_February_11_2022, tree_rgb_sum_February_18_2022, tree_rgb_sum_February_24_2022,
+                      tree_rgb_sum_March_03_2022, tree_rgb_sum_March_11_2022, tree_rgb_sum_March_18_2022, tree_rgb_sum_March_24_2022, tree_rgb_sum_March_31_2022,
+                      tree_rgb_sum_April_07_2022, tree_rgb_sum_April_15_2022, tree_rgb_sum_April_21_2022, tree_rgb_sum_April_29_2022,
+                      tree_rgb_sum_May_06_2022, tree_rgb_sum_May_12_2022)
+
+
+write.csv(tree_rgb_sum_all, "E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_all.csv", quote=FALSE, row.names = FALSE)
 

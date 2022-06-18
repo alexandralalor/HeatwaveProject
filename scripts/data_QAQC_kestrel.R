@@ -122,3 +122,42 @@ Phase1_AvgTemp <- rbind(Phase1_Chamber1_AvgTemp, Phase1_Chamber2_AvgTemp, Phase1
 # write.csv(Phase1_Chamber3_AvgTemp, "data_QAQC/Phase1_Chamber3_AvgTemp.csv", quote=FALSE, row.names = FALSE)
 
 write.csv(Phase1_AvgTemp, "data_QAQC/Phase1_AvgTemp.csv", quote=FALSE, row.names = FALSE)
+
+
+################################################################################
+################################################################################
+
+#Take average of both kestrels for summarized data
+
+#read csv
+Phase1_AvgTemp <- read_csv("data_QAQC/Phase1_AvgTemp.csv")
+
+#separate actual data vs calculated data
+Phase1_AvgTemp_Actual <- Phase1_AvgTemp %>% 
+  filter(Kestrel == "1" | Kestrel == "2")
+Phase1_AvgTemp_Calculated <- Phase1_AvgTemp %>% 
+  filter(Kestrel == "calculated")
+
+#change formats to match
+Phase1_AvgTemp_Actual$Phase <- as.factor(Phase1_AvgTemp_Actual$Phase)
+Phase1_AvgTemp_Actual$Chamber <- as.factor(Phase1_AvgTemp_Actual$Chamber)
+Phase1_AvgTemp_Actual$Kestrel <- as.factor(Phase1_AvgTemp_Actual$Kestrel)
+Phase1_AvgTemp_Calculated$Phase <- as.factor(Phase1_AvgTemp_Calculated$Phase)
+Phase1_AvgTemp_Calculated$Chamber <- as.factor(Phase1_AvgTemp_Calculated$Chamber)
+
+#take a look at data
+glimpse(Phase1_AvgTemp_Actual)
+glimpse(Phase1_AvgTemp_Calculated)
+
+################################################################################
+#average of both kestrels
+Phase1_AvgTemp_Actual <- Phase1_AvgTemp_Actual %>% 
+  group_by(Phase, Chamber, Heatwave, Time) %>% 
+  summarize(Temperature_avg = round(mean(Temperature_avg), digits = 1)) %>% 
+  mutate(Kestrel = "actual")
+
+#combine average and calculated data
+Phase1_AvgTemp_Summarized <- rbind(Phase1_AvgTemp_Actual, Phase1_AvgTemp_Calculated)
+
+#write csv
+write.csv(Phase1_AvgTemp_Summarized, "data_QAQC/Phase1_AvgTemp_Summarized.csv", quote=FALSE, row.names = FALSE)

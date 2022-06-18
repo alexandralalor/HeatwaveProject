@@ -1,52 +1,22 @@
-#Data Viz Final Project
+#Heatwave Project Phase 1
+#Filter rgb data
 #Alexandra Lalor
 #allielalor@email.arizona.edu
 #allielalor@gmail.com
 #First created: 2022-05-02
-#Last updated: 2022-05-02
+#Last updated: 2022-06-18
 
 #load libraries
 library(tidyverse)
-library(colorfindr) #for get_colors
-library(sjmisc) #for rotate_df
-library(ggtern) #for rbg2hex
-library(countcolors) #for masking and reducing black colors to one point
-library(tools) #for file naming
-
-################################################################################
-#Filter and visualize
-
-#read in df_rgb_sum
-
-#CAREFUL these are slightly differnt becasue they don't include a species column
-
-# tree_rgb_sum_August_26_2021 <- read.csv("data_raw/final_project/tree_rgb_sum/tree_rgb_sum_August_26_2021.csv")
-# tree_rgb_sum_November_11_2021 <- read.csv("data_raw/final_project/tree_rgb_sum/tree_rgb_sum_November_11_2021.csv")
-# tree_rgb_sum_November_19_2021 <- read.csv("data_raw/final_project/tree_rgb_sum/tree_rgb_sum_November_19_2021.csv")
-# tree_rgb_sum_November_5_2021 <- read.csv("data_raw/final_project/tree_rgb_sum/tree_rgb_sum_November_5_2021.csv")
-# tree_rgb_sum_October_15_2021 <- read.csv("data_raw/final_project/tree_rgb_sum/tree_rgb_sum_October_15_2021.csv")
-# tree_rgb_sum_October_21_2021 <- read.csv("data_raw/final_project/tree_rgb_sum/tree_rgb_sum_October_21_2021.csv")
-# tree_rgb_sum_October_29_2021 <- read.csv("data_raw/final_project/tree_rgb_sum/tree_rgb_sum_October_29_2021.csv")
-# tree_rgb_sum_October_7_2021 <- read.csv("data_raw/final_project/tree_rgb_sum/tree_rgb_sum_October_7_2021.csv")
-# tree_rgb_sum_September_16_2021 <- read.csv("data_raw/final_project/tree_rgb_sum/tree_rgb_sum_September_16_2021.csv")
-# tree_rgb_sum_September_2_2021 <- read.csv("data_raw/final_project/tree_rgb_sum/tree_rgb_sum_September_2_2021.csv")
-# tree_rgb_sum_September_24_2021 <- read.csv("data_raw/final_project/tree_rgb_sum/tree_rgb_sum_September_24_2021.csv")
-# tree_rgb_sum_September_30_2021 <- read.csv("data_raw/final_project/tree_rgb_sum/tree_rgb_sum_September_30_2021.csv")
-# tree_rgb_sum_September_9_2021 <-read.csv("data_raw/final_project/tree_rgb_sum/tree_rgb_sum_September_9_2021.csv")
-
-#combine all dates
-# tree_rgb_sum_all <- rbind(tree_rgb_sum_August_26_2021, tree_rgb_sum_November_11_2021, tree_rgb_sum_November_19_2021,
-#                       tree_rgb_sum_November_5_2021, tree_rgb_sum_October_15_2021, tree_rgb_sum_October_21_2021,
-#                       tree_rgb_sum_October_29_2021, tree_rgb_sum_October_7_2021, tree_rgb_sum_September_16_2021,
-#                       tree_rgb_sum_September_2_2021, tree_rgb_sum_September_24_2021, tree_rgb_sum_September_30_2021,
-#                       tree_rgb_sum_September_9_2021)
-
-#read and write csv
-#write.csv(tree_rgb_sum_all, "data_raw/final_project/tree_rgb_sum/tree_rgb_sum_all.csv", quote=FALSE, row.names = FALSE)
+# library(colorfindr) #for get_colors
+# library(sjmisc) #for rotate_df
+# library(ggtern) #for rbg2hex
+# library(countcolors) #for masking and reducing black colors to one point
+# library(tools) #for file naming
 
 
-########################################################################################################################
-tree_rgb_sum_all <- read.csv("data_raw/final_project/tree_rgb_sum/tree_rgb_sum_all.csv")
+#read in tree_rgb_sum_all csv
+tree_rgb_sum_all <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_all.csv")
 
 #check that all dates are in new df
 tree_rgb_sum_all %>% 

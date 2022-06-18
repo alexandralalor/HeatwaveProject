@@ -9,11 +9,14 @@
 library(tidyverse)
 library(ggplot2)
 
+################################################################################
+################################################################################
+
+#first, check that both kestrels were more or less equal
+
 #read in clean csvs
-Phase1_Kestrel <- read_csv("data_clean/Phase1_Kestrel.csv")
 Phase1_AvgTemp <- read_csv("data_QAQC/Phase1_AvgTemp.csv")
 
-################################################################################
 #add fake date to make graph
 Phase1_AvgTemp <- Phase1_AvgTemp %>% 
   mutate(Date = as.Date("2021-10-15"))
@@ -79,6 +82,76 @@ Phase1_AvgTemp %>%
   theme_minimal()
 
 ################################################################################
+################################################################################
+
+#now check summarized data, with the average of both kestrels
+
+#read csv
+Phase1_AvgTemp_Summarized <- read_csv("data_QAQC/Phase1_AvgTemp_Summarized.csv")
+
+#add fake date to make graph
+Phase1_AvgTemp_Summarized <- Phase1_AvgTemp_Summarized %>% 
+  mutate(Date = as.Date("2021-10-15"))
+Phase1_AvgTemp_Summarized$DateTime <- paste(Phase1_AvgTemp_Summarized$Date, " ", Phase1_AvgTemp_Summarized$Time)
+Phase1_AvgTemp_Summarized$DateTime <- strptime(Phase1_AvgTemp_Summarized$DateTime, format="%Y-%m-%d %H%M")
+
+Phase1_AvgTemp_Summarized$Phase <- as.factor(Phase1_AvgTemp_Summarized$Phase)
+Phase1_AvgTemp_Summarized$Chamber <- as.factor(Phase1_AvgTemp_Summarized$Chamber)
+
+glimpse(Phase1_AvgTemp_Summarized)
+
+################################################################################
+
+#Chamber 1 graph
+Phase1_AvgTemp_Summarized %>% 
+  group_by(Phase, Chamber, Kestrel, Heatwave) %>% 
+  filter(Chamber == 1) %>% 
+  ggplot(aes(x = as.POSIXct(DateTime),
+             y = Temperature_avg,
+             color = Kestrel)) +
+  geom_point() +
+  ylim(0, 40) +
+  scale_x_datetime(date_labels = "%H%M") +
+  xlab("Time") +
+  ylab("Temperature (Celcius)") +
+  labs(title = "Chamber 1 (PIPO PIED)\nAverage Daily Temperature Fluctuations",
+       color = "Kestrel",
+       fill = "Heatwave") +
+  theme_minimal()
+
+#Chamber 2 graph
+Phase1_AvgTemp_Summarized %>% 
+  group_by(Phase, Chamber, Kestrel, Heatwave) %>% 
+  filter(Chamber == 2) %>% 
+  ggplot(aes(x = as.POSIXct(DateTime),
+             y = Temperature_avg,
+             color = Kestrel)) +
+  geom_point() +
+  ylim(0, 40) +
+  scale_x_datetime(date_labels = "%H%M") +
+  xlab("Time") +
+  ylab("Temperature (Celcius)") +
+  labs(title = "Chamber 2 (PIFL PSME)\nAverage Daily Temperature Fluctuations",
+       color = "Kestrel",
+       fill = "Heatwave") +
+  theme_minimal()
+
+#Chamber 3 graph
+Phase1_AvgTemp_Summarized %>% 
+  group_by(Phase, Chamber, Kestrel, Heatwave) %>% 
+  filter(Chamber == 3) %>% 
+  ggplot(aes(x = as.POSIXct(DateTime),
+             y = Temperature_avg,
+             color = Kestrel)) +
+  geom_point() +
+  ylim(0, 40) +
+  scale_x_datetime(date_labels = "%H%M") +
+  xlab("Time") +
+  ylab("Temperature (Celcius)") +
+  labs(title = "Chamber 3 (PIEN)\nAverage Daily Temperature Fluctuations",
+       color = "Kestrel",
+       fill = "Heatwave") +
+  theme_minimal()
 
 # #my attempts to outline heatwave temps in red
 
