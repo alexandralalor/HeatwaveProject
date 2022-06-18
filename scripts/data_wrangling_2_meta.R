@@ -20,24 +20,6 @@ glimpse(Phase1_InitialData)
 glimpse(Phase1_Kestrel_Meta)
 glimpse(Phase1_TempSettings)
 
-
-#kestrel_meta, add Phase, Chamber, and Kestrel columns
-Phase1_Kestrel_Meta <- Phase1_Kestrel_Meta %>% 
-  mutate(Phase = 1) %>% 
-  mutate(Chamber = "") %>% 
-  mutate(Kestrel = "") %>% 
-  mutate(KestrelName = Name) %>% 
-  separate(Name, sep = "_",
-           into = c("Phase", "Chamber", "Kestrel"))
-
-Phase1_Kestrel_Meta <- Phase1_Kestrel_Meta %>% 
-  mutate(Phase = ifelse(Phase1_Kestrel_Meta$Phase == "Phase1", 1, 2)) %>% 
-  mutate(Chamber = ifelse(Phase1_Kestrel_Meta$Chamber == "Chamber1", 1, 
-                          ifelse(Phase1_Kestrel_Meta$Chamber == "Chamber2", 2, 
-                                 ifelse(Phase1_Kestrel_Meta$Chamber == "Chamber3", 3, 4)))) %>%
-  mutate(Kestrel = ifelse(Phase1_Kestrel_Meta$Kestrel == "Kestrel1", 1, 2))
-
-
 #Convert Variables
 Phase1_Dates$Chamber <- as.factor(Phase1_Dates$Chamber)
 
@@ -59,6 +41,9 @@ Phase1_TempSettings <- Phase1_TempSettings %>%
   mutate(Time = ifelse(Time < 1000 & Time > 30, paste0("0", Phase1_TempSettings$Time), 
                        ifelse(Time == 30, paste0("00", Phase1_TempSettings$Time), 
                               ifelse(Time == 0, paste0("000", Phase1_TempSettings$Time), Time))))
+
+#reorder columns - Temperature Settings
+Phase1_TempSettings <- Phase1_TempSettings[, c(2,3,6,4,1,5)]
 
 #save as csv
 write.csv(Phase1_Dates, "data_clean/Phase1_Dates.csv", quote = FALSE, row.names = FALSE)

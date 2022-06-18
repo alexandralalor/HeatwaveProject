@@ -27,7 +27,7 @@ library(ggtern) #for rbg2hex
 # tree_rgb <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb/tree_rgb_October_07_2021.csv")
 # tree_rgb <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb/tree_rgb_October_15_2021.csv")
 # tree_rgb <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb/tree_rgb_October_21_2021.csv")
-# tree_rgb <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb/tree_rgb_October_29_2021.csv")
+tree_rgb <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb/tree_rgb_October_29_2021.csv")
 # tree_rgb <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb/tree_rgb_November_05_2021.csv")
 # tree_rgb <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb/tree_rgb_November_11_2021.csv")
 # tree_rgb <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb/tree_rgb_November_19_2021.csv")
@@ -79,7 +79,7 @@ tree_rgb_chamber3 <- tree_rgb %>%
   filter(Species == "PIEN")
 
 #bin red
-tree_rgb_PIFL <- tree_rgb_PIFL %>% 
+tree_rgb_chamber1 <- tree_rgb_chamber1 %>% 
   mutate(red_class = ifelse(red <= 10, "1-10", 
                             ifelse(red <= 20, "11-20", 
                                    ifelse(red <= 30, "21-30",
@@ -107,7 +107,7 @@ tree_rgb_PIFL <- tree_rgb_PIFL %>%
                                                                                                                                                                                              ifelse(red <= 250, "241-250", "250-255"))))))))))))))))))))))))))
 ##############################################################################################################################################################################################################################################################
 #bin green
-tree_rgb_PIFL <- tree_rgb_PIFL %>% 
+tree_rgb_chamber1 <- tree_rgb_chamber1 %>% 
   mutate(green_class = ifelse(green <= 10, "1-10", 
                               ifelse(green <= 20, "11-20", 
                                      ifelse(green <= 30, "21-30",
@@ -135,7 +135,7 @@ tree_rgb_PIFL <- tree_rgb_PIFL %>%
                                                                                                                                                                                                ifelse(green <= 250, "241-250", "250-255"))))))))))))))))))))))))))
 ################################################################################################################################################################################################################################################################
 #bin blue
-tree_rgb_PIFL <- tree_rgb_PIFL %>% 
+tree_rgb_chamber1 <- tree_rgb_chamber1 %>% 
   mutate(blue_class = ifelse(blue <= 10, "1-10", 
                              ifelse(blue <= 20, "11-20", 
                                     ifelse(blue <= 30, "21-30",
@@ -165,7 +165,7 @@ tree_rgb_PIFL <- tree_rgb_PIFL %>%
 glimpse(tree_rgb_sum)
 
 #summarize by bins
-tree_rgb_sum_PIFL <- tree_rgb_PIFL %>% 
+tree_rgb_sum_chamber1 <- tree_rgb_chamber1 %>% 
   group_by(Week, Date, Species, SpeciesID, Treatment_temp, Treatment_water, red_class, green_class, blue_class) %>% 
   summarize(red = round(mean(red)),
             green = round(mean(green)),
@@ -175,15 +175,15 @@ tree_rgb_sum_PIFL <- tree_rgb_PIFL %>%
 
 #fill in summary df
 #add hex codes to summary df
-hex <- as.data.frame(rgb2hex(r = tree_rgb_sum_PIFL$red, 
-                             g = tree_rgb_sum_PIFL$green, 
-                             b = tree_rgb_sum_PIFL$blue))
+hex <- as.data.frame(rgb2hex(r = tree_rgb_sum_chamber1$red, 
+                             g = tree_rgb_sum_chamber1$green, 
+                             b = tree_rgb_sum_chamber1$blue))
 colnames(hex) <- "col_hex"
-tree_rgb_sum_PIFL <- cbind(tree_rgb_sum_PIFL, hex)
+tree_rgb_sum_chamber1 <- cbind(tree_rgb_sum_chamber1, hex)
 #reorder columns
-tree_rgb_sum_PIFL <- tree_rgb_sum_PIFL[, c(1,2,3,4,5,6,7,8,9,10,11,12,14,13)]
+tree_rgb_sum_chamber1 <- tree_rgb_sum_chamber1[, c(1,2,3,4,5,6,7,8,9,10,11,12,14,13)]
 #calculate total # pixels and percent of each color, add to summary df
-tree_rgb_sum_PIFL <- tree_rgb_sum_PIFL %>% 
+tree_rgb_sum_chamber1 <- tree_rgb_sum_chamber1 %>% 
   group_by(Week, Date, Species, SpeciesID, Treatment_temp, Treatment_water) %>% 
   mutate(col_total = sum(col_freq)) %>% 
   mutate(col_share = round(100*(col_freq/col_total), digits = 1))
@@ -194,5 +194,5 @@ tree_rgb_sum <- rbind(tree_rgb_sum_chamber1, tree_rgb_sum_chamber2, tree_rgb_sum
 
 #Remember to change date when saving!
 #write csv
-write.csv(tree_rgb_sum, "E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_September_16_2021.csv", quote=FALSE, row.names = FALSE)
+write.csv(tree_rgb_sum, "E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_October_29_2021.csv", quote=FALSE, row.names = FALSE)
 

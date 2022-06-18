@@ -13,7 +13,7 @@ Phase1_Kestrel_Meta <- read_csv("data_clean/Phase1_Kestrel_Meta.csv")
 Phase1_Dates <- read_csv("data_clean/Phase1_Dates.csv")
 Phase1_InitialData <- read_csv("data_clean/Phase1_InitialData.csv")
 Phase1_TempSettings <- read_csv("data_clean/Phase1_TempSettings.csv")
-Phase1_Kestrel <- read_csv("data_clean/Phase1_Chamber1_Kestrel.csv")
+Phase1_Kestrel <- read_csv("data_clean/Phase1_Kestrel.csv")
 Phase1_Porometer <- read_csv("data_clean/Phase1_Porometer.csv")
 Phase1_Plants <- read_csv("data_clean/Phase1_Plants.csv")
 
@@ -48,8 +48,8 @@ Phase1_meta <- merge(Phase1_all,
                      by=c("SpeciesID"))
 #temp
 Phase1_meta_temp <- merge(Phase1_all_temp,
-                     Phase1_InitialData_Treatments,
-                     by=c("SpeciesID"))
+                          Phase1_InitialData_Treatments,
+                          by=c("SpeciesID"))
 
 #Error checking
 #PercentBrown as 10, 25, 50, 75, 90
@@ -67,6 +67,6 @@ Phase1_meta_temp <- merge(Phase1_all_temp,
 #Get weather data together and match with the chamber
 #add to meta data?
 
-  
+
 
 
