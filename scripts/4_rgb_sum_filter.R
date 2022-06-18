@@ -16,7 +16,7 @@ library(tidyverse)
 
 
 #read in tree_rgb_sum_all csv
-tree_rgb_sum_all <- read_csv("E:/Data/Phase1_Data/Phase1_Photos_Data/tree_rgb_sum/tree_rgb_sum_all.csv")
+tree_rgb_sum_all <- read_csv("data_raw/photos/tree_rgb_sum_all.csv")
 
 #check that all dates are in new df
 tree_rgb_sum_all %>% 
