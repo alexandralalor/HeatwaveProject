@@ -3,7 +3,7 @@
 #allielalor@email.arizona.edu
 #allielalor@gmail.com
 #First created: 2022-06-11
-#Last updated: 2022-06-11
+#Last updated: 2022-07-06
 
 #load packages
 library(tidyverse)
@@ -66,6 +66,8 @@ Phase1_Porometer <- rbind(porometer_August_26_2021,
 glimpse((Phase1_Porometer))
 
 #make 24hr time
+
+
 Phase1_Porometer$DateTime <- strptime(Phase1_Porometer$Time, format = "%m/%d/%Y %I:%M %p")
 
 Phase1_Porometer <- Phase1_Porometer %>% 
@@ -83,10 +85,46 @@ glimpse(Phase1_Porometer)
 #convert columns
 Phase1_Porometer$Date <- as.Date(Phase1_Porometer$Date)
 
+unique(Phase1_Porometer$SpeciesID)
+unique(Phase1_Porometer$Date)
+
+#save as csv
+write.csv(Phase1_Porometer, "data_raw/porometer/Phase1_Porometer.csv", quote = FALSE, row.names = FALSE)
+
+
+################################################################################
+#combine Date and Porometer data
+################################################################################
+
+#read in csvs
+Phase1_Dates <- read_csv("data_clean/Phase1_Dates.csv")
+Phase1_Porometer <- read_csv("data_raw/porometer/Phase1_Porometer.csv")
+
+
+#add species info to Porometer data
+Phase1_Porometer <- Phase1_Porometer %>% 
+  mutate(Species = ifelse(grepl("PIED", Phase1_Porometer$SpeciesID), "PIED",
+                          ifelse(grepl("PIPO", Phase1_Porometer$SpeciesID), "PIPO",
+                                 ifelse(grepl("PIFL", Phase1_Porometer$SpeciesID), "PIFL",
+                                        ifelse(grepl("PSME", Phase1_Porometer$SpeciesID), "PSME", "PIEN")))))
+
+#filter for porometer dates
+Phase1_Dates_Porometer <- Phase1_Dates %>% 
+  filter(Variable == "Porometer") %>% 
+  select(c("Date", "Week", "Species"))
+
+#merge data
+Phase1_Porometer <- merge(Phase1_Porometer, Phase1_Dates_Porometer, by = c("Date", "Species"))
+
+#reorder columns
+Phase1_Porometer <- Phase1_Porometer[ ,c(7,8,11,1,3,12,2,6,4,5,9,10)]
+
+#arrange columns
+Phase1_Porometer <- Phase1_Porometer %>% 
+  arrange(Date, Species, SpeciesID)
+
 #save as csv
 write.csv(Phase1_Porometer, "data_clean/Phase1_Porometer.csv", quote = FALSE, row.names = FALSE)
-
-
 
 
 

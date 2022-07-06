@@ -195,6 +195,26 @@ Phase1_AvgTemp_Sum %>%
   theme_minimal()
 
 
+#All chambers
+Phase1_AvgTemp_Sum_graph <- Phase1_AvgTemp_Sum %>% 
+  filter(Kestrel == "actual", Heatwave == "no")
+
+Phase1_AvgTemp_Sum_graph %>% 
+  group_by(Phase, Chamber, Kestrel, Heatwave) %>%
+  ggplot(aes(x = as.POSIXct(DateTime),
+              y = Temperature_avg,
+              color = Chamber)) +
+  geom_point() +
+  ylim(0, 40) +
+  scale_x_datetime(date_labels = "%H%M") +
+  xlab("Time") +
+  ylab("Temperature (Celcius)") +
+  labs(title = "Average Daily Temperature Fluctuations") +
+  theme_minimal()
+
+  
+
+
 ################################################################################
 #Phase1_AvgTemp_Sum_Total
 #Take average for overall temp summary (not daily)
@@ -204,11 +224,13 @@ Phase1_AvgTemp_Sum %>%
 Phase1_AvgTemp_Sum_Total <- read_csv("data_QAQC/Phase1_AvgTemp_Sum_Total.csv")
 
 #filter for actual temps
-Phase1_AvgTemp_Sum_Total <- Phase1_AvgTemp_Sum_Total %>% 
+Phase1_AvgTemp_Sum_Total_graph <- Phase1_AvgTemp_Sum_Total %>% 
   filter(Kestrel == "actual")
 
 #Graph!
-Phase1_AvgTemp_Sum_Total %>% 
+
+#Bar graph
+Phase1_AvgTemp_Sum_Total_graph %>% 
   group_by(Heatwave) %>%
   ggplot(aes(x = Chamber,
              y = Temperature_avg,
@@ -217,7 +239,7 @@ Phase1_AvgTemp_Sum_Total %>%
   ylim(0, 40) +
   ylab("Temperature (Celcius)") +
   labs(title = "Average Temperatures") +
-  geom_text(label = Phase1_AvgTemp_Sum_Total$Temperature_avg,
+  geom_text(label = Phase1_AvgTemp_Sum_Total_graph$Temperature_avg,
             vjust = 1.5, position = position_dodge(0.9), color = "white") +
   scale_fill_brewer(palette = "Set2") +
   theme_minimal()

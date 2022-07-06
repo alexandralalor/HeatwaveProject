@@ -30,6 +30,7 @@ Phase1_TempSettings$Chamber <- as.factor(Phase1_TempSettings$Chamber)
 Phase1_TempSettings <- Phase1_TempSettings %>% 
   mutate(Kestrel = "calculated")
 
+
 #DateTime - Temperature Settings
 Phase1_TempSettings <- Phase1_TempSettings %>% 
   mutate(Time = ifelse(Time < 1000 & Time > 30, paste0("0", Phase1_TempSettings$Time), 
