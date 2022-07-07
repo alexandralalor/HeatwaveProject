@@ -124,7 +124,7 @@ Phase1_Porometer <- Phase1_Porometer %>%
   arrange(Date, Species, SpeciesID)
 
 #save as csv
+#data_clean for record keeping
 write.csv(Phase1_Porometer, "data_clean/Phase1_Porometer.csv", quote = FALSE, row.names = FALSE)
-
-
-
+#data_QAQC for error checking and manipulation
+write.csv(Phase1_Porometer, "data_QAQC/Phase1_Porometer.csv", quote = FALSE, row.names = FALSE)
