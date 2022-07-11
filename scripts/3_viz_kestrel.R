@@ -212,8 +212,6 @@ Phase1_Kestrel_AvgTemp_Sum_graph %>%
   labs(title = "Average Daily Temperature Fluctuations") +
   theme_minimal()
 
-  
-
 
 ################################################################################
 #Phase1_Kestrel_AvgTemp_Sum_Total
