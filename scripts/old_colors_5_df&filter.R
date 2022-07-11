@@ -115,6 +115,109 @@ tree_rgb_sum_filter <- tree_rgb_sum %>%
   filter(col_freq >= 1000) %>% 
   arrange(desc(col_share))
 
+#method to ignore grey colors
+#identify in color space where grey colors are, and isolate them
+#add all these colors to tree_rgb_ignore dataframe
+tree_rgb_ignore_1 <- tree_rgb_sum_all %>%
+  group_by(Date, SpeciesID) %>%
+  filter(red < 160) %>%
+  filter((red_class == green_class & red_class == blue_class))
+
+tree_rgb_ignore_2 <-tree_rgb_sum_all %>%
+  group_by(Date, SpeciesID) %>%
+  filter(red_class == "65-96" & green_class == "33-64" & blue_class == "33-64")
+
+tree_rgb_ignore_3 <- tree_rgb_sum_all %>%
+  group_by(Date, SpeciesID) %>%
+  filter(red_class == "97-128" & green_class == "65-96" & blue_class == "33-64")
+
+tree_rgb_ignore <- rbind(tree_rgb_ignore_1, tree_rgb_ignore_2, tree_rgb_ignore_3)
+
+
+# tree_rgb_sum_August_26_2021 %>% 
+#   if (tree_rgb_sum_August_26_2021$red_class %in% c("129-160","97-128","65-96","33-64","1-32")) {
+#     filter(!(red_class == green_class & red_class == blue_class))
+#   }
+# 
+#      
+#      
+# #  ifelse(red_class %in% c("129-160","97-128","65-96","33-64","1-32"), filter(!(red_class == green_class & red_class == blue_class)),{}) %>% 
+#   plot_colors_3d(sample_size = 5000, marker_size = 2.5, color_space = "RGB")
+# 
+# 
+#   filter(red < 150) %>% 
+#   filter(filter(!(red_class == green_class & red_class == blue_class))) %>% 
+#   plot_colors_3d(sample_size = 5000, marker_size = 2.5, color_space = "RGB")
+# 
+# ?ifelse
+#   
+# tree_rgb_sum_filter %>% 
+#   group_by(Date, SpeciesID) %>% 
+#   filter(col_share > 10) %>% 
+#   make_palette()
+# 
+# tree_rgb_sum_filter <- tree_rgb_sum %>% 
+#   filter(col_hex != "#707150") %>% 
+#   filter(col_hex != "#909170") %>% 
+#   filter(col_hex != "#4f5131") %>% 
+#   filter(col_hex != "#505130") %>% 
+#   filter(col_hex != "#707150") %>% 
+#   filter(col_hex != "#8f9270") %>% 
+#   filter(col_hex != "#505130") %>% 
+#   filter(col_hex != "#707250") %>%
+#   filter(col_hex != "#707151") %>%
+#   filter(col_hex != "#8e9370") %>%
+#   filter(col_hex != "#505230") %>% 
+#   filter(col_hex != "#8e9270") %>%
+#   filter(col_hex != "#4f5230") %>% 
+#   filter(col_hex != "#8f9071")
+# 
+# 
+# #grey colors: r=g=b
+# #there seems to be a good threshold of green under 150 t0 180 which filters out
+# #most grey, I just have to figure out how to make this into a list
+# 
+# tree_rgb_sum_filter <- tree_rgb_sum %>% 
+#   group_by(Date, SpeciesID) %>% 
+#   filter(green < 180) %>% 
+#   filter(!(red_class == green_class & red_class == blue_class))
+# 
+# tree_rgb_sum_filter <- tree_rgb_sum_filter %>% 
+#   group_by(Date, SpeciesID, Treatment_temp, Treatment_water) %>% 
+#   mutate(col_total = sum(col_freq)) %>% 
+#   mutate(col_share = round(100*(col_freq/col_total), digits = 1))
+# 
+# 
+# tree_rgb_sum_filter <- tree_rgb_sum %>% 
+#   filter(col_hex != "#525649") %>% 
+#   filter(col_hex != "#323629") %>% 
+#   filter(col_hex != "#555749") %>% 
+#   filter(col_hex != "#545649") %>% 
+#   filter(col_hex != "#565749") %>% 
+#   filter(col_hex != "#333429") %>% 
+#   filter(col_hex != "#555549") %>% 
+#   filter(col_hex != "#323429") %>% 
+#   filter(col_hex != "#343429") %>% 
+#   filter(col_hex != "#333529") %>% 
+#   filter(col_hex != "#747669") %>% 
+#   filter(col_hex != "#727669") %>% 
+#   filter(col_hex != "#737669") %>% 
+#   filter(col_hex != "#747769") %>% 
+#   filter(col_hex != "#757669") %>% 
+#   filter(col_hex != "#545749") %>% 
+#   filter(col_hex != "#333629") %>% 
+#   filter(col_hex != "#929789") %>%
+#   filter(col_hex != "#929689") %>%
+#   filter(col_hex != "#343529") %>%
+#   filter(col_hex != "#939689") %>%
+#   filter(col_hex != "#949689") %>%
+#   filter(col_hex != "#939789") %>%
+#   filter(col_hex != "#949789") %>% 
+#   filter(col_hex != "#505130") %>%
+#   filter(col_hex != "#949789") %>% 
+#   filter(col_hex != "#707150")
+
+
 #remove some columns if you want
 tree_rgb_sum_2 <- tree_rgb_sum %>% 
   select(-c(red_class, green_class, blue_class))

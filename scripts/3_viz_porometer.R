@@ -52,13 +52,13 @@ Phase1_Porometer_QAQC_sum <- Phase1_Porometer_QAQC %>%
 
 #Look at droughted trees
 Phase1_Porometer_QAQC_sum_graph <- Phase1_Porometer_QAQC_sum %>% 
-  filter(Treatment_water == "Drought")
+  filter(Treatment_water == "Drought") 
+  # filter(Species == "PIPO" | Species == "PIED")
 
 
 #Graphs!
 #Porometer Conductance
 Phase1_Porometer_QAQC_sum_graph %>% 
-  filter(Species == "PSME") %>% 
   group_by(Treatment_temp) %>%
   ggplot(aes(x = Week,
              y = Porometer,
@@ -74,7 +74,8 @@ Phase1_Porometer_QAQC_sum_graph %>%
            linetype = "dashed",
            size = 0.8) +
   geom_text(label = "Heatwave",
-            x = 9, y = 300, color = "red", size = 3) +
+            x = 12, y = 300, color = "red", size = 3) +
+  facet_wrap(~Species) +
   xlab("Week") +
   ylab("Stomatal Conductance") +
   labs(title = "Stomatal Conductance of Droughted Trees") +
