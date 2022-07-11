@@ -13,13 +13,13 @@ install.packages("tidyverse")
 #sudo apt-get install -y libglpk-dev
 install.packages("colorfindr")
 install.packages("sjmisc")
-install.packages("ggtern")
+#install.packages("ggtern")
 
 #load libraries
 library(tidyverse)
 library(colorfindr) #for get_colors
 library(sjmisc) #for rotate_df
-library(ggtern) #for rbg2hex
+#library(ggtern) #for rbg2hex
 
 ################################################################################
 #file naming data frames

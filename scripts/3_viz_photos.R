@@ -1,43 +1,72 @@
-#Data Viz Final Project
+#Heatwave Project Phase 1
+#Data from Phase1_Photos, filtered for grey colors AND pixel count
 #Alexandra Lalor
 #allielalor@email.arizona.edu
 #allielalor@gmail.com
 #First created: 2022-05-02
-#Last updated: 2022-05-02
+#Last updated: 2022-07-08
 
 #load libraries
 library(tidyverse)
-# library(colorfindr) #for get_colors
-# library(sjmisc) #for rotate_df
-# library(ggtern) #for rbg2hex
-# library(countcolors) #for masking and reducing black colors to one point
-# library(tools) #for file naming
+library(colorfindr) #for make_palette
 
-tree_rgb_sum_filter <- read.csv("data_raw/final_project/tree_rgb_sum_filter/tree_rgb_sum_filter_all.csv")
+#read csv
+Phase1_Photos <- read_csv("data_QAQC/Phase1_Photos.csv")
 
-#visualize
+#check data
+glimpse(Phase1_Photos)
 
-### 
-tree_rgb_filter_viz <- tree_rgb_sum_filter %>% 
-  filter(SpeciesID %in% c("PIPO23","PIPO42","PIPO45","PIPO49")) %>% 
+#check these...
+Phase1_Photos$Date <- as.Date(Phase1_Photos$Date, format = "%Y-%m-%d")
+
+#convert variables
+Phase1_Photos$Week <- as.double(Phase1_Photos$Week)
+Phase1_Photos$Species <- as.factor(Phase1_Photos$Species)
+Phase1_Photos$Treatment_temp <- as.factor(Phase1_Photos$Treatment_temp)
+Phase1_Photos$Treatment_water <- as.factor(Phase1_Photos$Treatment_water)
+Phase1_Photos$PorometerSubset <- as.factor(Phase1_Photos$PorometerSubset)
+Phase1_Photos$PercentBrown <- as.factor(Phase1_Photos$PercentBrown)
+Phase1_Photos$Dead <- as.factor(Phase1_Photos$Dead)
+Phase1_Photos$red_class <- as.factor(Phase1_Photos$red_class)
+Phase1_Photos$green_class <- as.factor(Phase1_Photos$green_class)
+Phase1_Photos$blue_class <- as.factor(Phase1_Photos$blue_class)
+
+
+#select which trees to visualize
+Phase1_Photos_graph <- Phase1_Photos %>% 
+  filter(SpeciesID %in% c("PIEN08", "PIEN42")) %>% 
   arrange(SpeciesID, Date, desc(col_share))
 
-colors <- tree_rgb_filter_viz$col_hex
 
+#save hex colors for visualization
+colors <- Phase1_Photos_graph$col_hex
 
-
-tree_rgb_filter_viz %>% 
+#graph!
+#try to find a way to arrange the y-axis by most frequent colors to least frequent
+Phase1_Photos_graph %>% 
   mutate(Treatment = ifelse(Treatment_temp == "Ambient+HW", "Drought with Heatwave", "Drought")) %>% 
   ggplot(aes(x = Week,
              y = col_share,
              fill = colors)) +
   geom_col(fill = colors) +
-  facet_wrap(~SpeciesID + Treatment) +
+  facet_wrap(~Treatment) +
   #facet_grid(rows = vars(SpeciesID)) +
-  scale_x_continuous(breaks = 1:13) +
+  scale_x_continuous(breaks = 1:36) +
   ylab("Color Percent") +
   xlab("Weeks") +
   labs(title = "Color change of droughted Ponderosa Pine seedlings over time",
        subtitle = "With and without heatwave (week 7)",
        caption = "Data collected using photographs from August 26 2021 to November 19 2021, as part of Alexandra Lalor's MS project") +
   theme_minimal()
+
+
+#colorfindr make_palette
+Phase1_Photos_graph %>%
+  filter(Week == 11, SpeciesID == "PIPO23") %>% 
+  make_palette(n = 15)
+
+
+
+
+
+
