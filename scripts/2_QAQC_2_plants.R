@@ -83,6 +83,15 @@ Phase1_Data_Weight_test <- Phase1_Data_Weight %>%
 ################################################################################
 #Check dead
 ################################################################################
+#look for NA dead
+test <- Phase1_Data %>% 
+  filter(!grepl(".5", Phase1_Data_Weight$Week)) %>% 
+  filter(is.na(Dead)) %>% 
+  select(c("SpeciesID","Week","Dead","Dead_Count"))
+
+#make sure Dead_Count does not equal 0
+#make changes to Phase1_Data in data_QAQC folder
+################################################################################
 #look for plants which come back alive
 
 #filter for weight data

@@ -60,6 +60,9 @@ Phase1_Data <- Phase1_Data %>%
   select(-c("BiomassBag_g","Bag_g","Comments")) %>% 
   arrange(SpeciesID, Week)
 Phase1_Data <- Phase1_Data[ ,c(3,4,5,6,1,2,7,8,9,10,11,12,13,14,15,16,17,18)]
+Phase1_Data <- Phase1_Data %>% 
+  mutate(Dead_Count = ifelse(Phase1_Data$Dead == "dead", 1, 0))
+
 
 ################################################################################
 # the file Phase1_Data contains all important metadata and experimental values #
