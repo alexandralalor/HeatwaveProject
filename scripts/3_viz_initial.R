@@ -17,9 +17,10 @@ Phase1_Data %>%
   ggplot(aes(x = BasalDia_mm,
              y = Height_mm,
              color = Species)) +
-  geom_point() +
+  geom_point(alpha = 0.7) +
   xlim(0,12) +
   ylim(0,600) +
   xlab("Basal Stem Diameter") +
   ylab("Height (mm)") +
+  labs(title = "Species Size Distribution") +
   theme_minimal()

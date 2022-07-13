@@ -43,8 +43,11 @@ Phase1_Data$PercentBrown <- as.factor(Phase1_Data$PercentBrown)
 Phase1_Data$Dead <- as.factor(Phase1_Data$Dead)
 
 #merge data
-Phase1_Porometer_QAQC <- merge(Phase1_Data, Phase1_Porometer, all = TRUE)
-Phase1_Porometer_QAQC <- Phase1_Porometer_QAQC[ ,c(4,5,6,7,1,2,8,9,10,11,12,13,14,3,15,16,17,18,19,20,21,22,23,24,25,26,27)]
+Phase1_Data_Porometer <- merge(Phase1_Data, Phase1_Porometer, all = TRUE)
+Phase1_Data_Porometer <- Phase1_Data_Porometer[ ,c(4,5,6,7,1,2,8,9,10,11,12,13,14,3,15,16,17,18,19,20,21,22,23,24,25,26,27,28)]
+
+#save as csv
+write.csv(Phase1_Data_Porometer, "data_QAQC/Phase1_Data_Porometer.csv", quote = FALSE, row.names = FALSE)
 
 ################################################################################
 #Test for extra conductance data
@@ -53,12 +56,12 @@ Phase1_Porometer_QAQC <- Phase1_Porometer_QAQC[ ,c(4,5,6,7,1,2,8,9,10,11,12,13,1
 #test to see if plants not in porometer subset have porometer readings.
 
 #filter for NA values
-Phase1_Porometer_QAQC_1.1 <- Phase1_Porometer_QAQC %>% 
+Phase1_Data_Porometer_1.1 <- Phase1_Data_Porometer %>% 
   filter(!is.na(Conductance)) %>% 
   arrange(SpeciesID, Week)
 
 #isolate errors. should be 0.
-Phase1_Porometer_QAQC_1.1_test <- Phase1_Porometer_QAQC_1.1 %>% 
+Phase1_Data_Porometer_1.1_test <- Phase1_Data_Porometer_1.1 %>% 
   select(c("PorometerSubset","Date","Week","Species","SpeciesID","Porometer","Conductance")) %>% 
   filter(PorometerSubset == "no")
 
@@ -66,40 +69,43 @@ Phase1_Porometer_QAQC_1.1_test <- Phase1_Porometer_QAQC_1.1 %>%
 #test to see if plants in porometer subset have porometer readings.
 
 #filter for NA values
-Phase1_Porometer_QAQC_1.2 <- Phase1_Porometer_QAQC %>% 
+Phase1_Data_Porometer_1.2 <- Phase1_Data_Porometer %>% 
   filter(!is.na(Porometer)) %>% 
   arrange(SpeciesID, Week)
 
 #isolate errors, find NA values should be 0.
-Phase1_Porometer_QAQC_1.2_test <- Phase1_Porometer_QAQC_1.2 %>% 
+Phase1_Data_Porometer_1.2_test <- Phase1_Data_Porometer_1.2 %>% 
   select(c("PorometerSubset","Date", "Week","Species","SpeciesID","Porometer","Conductance")) %>% 
   filter(is.na(Conductance))
+
+#one missing porometer reading 
 
 
 #test to find duplicate porometer readings
 
 #filter for Porometer Subset and NA values
-Phase1_Porometer_QAQC_1.3 <- Phase1_Porometer_QAQC %>% 
+Phase1_Data_Porometer_1.3 <- Phase1_Data_Porometer %>% 
   filter(PorometerSubset == "yes", !is.na(Conductance)) %>% 
   arrange(SpeciesID, Week)
 
 #Check for duplicates
-Phase1_Porometer_QAQC_1.3_test <- Phase1_Porometer_QAQC_1.3 %>%
+Phase1_Data_Porometer_1.3_test <- Phase1_Data_Porometer_1.3 %>%
   select(c("PorometerSubset","Date","Week","Species","SpeciesID","Porometer","Conductance")) %>%
   group_by(SpeciesID, Week) %>% 
   mutate(duplicate = n()>1) %>% 
   filter(duplicate == "TRUE")
 
 
+
 #test to see if plants have porometer readings after measurements stop
 
 #filter for Porometer Subset and NA values
-Phase1_Porometer_QAQC_1.4 <- Phase1_Porometer_QAQC %>% 
+Phase1_Data_Porometer_1.4 <- Phase1_Data_Porometer %>% 
   filter(PorometerSubset == "yes", !is.na(Conductance)) %>% 
   arrange(SpeciesID, Week)
 
 #isolate errors, find NA values. Should be 0
-Phase1_Porometer_QAQC_1.4_test <- Phase1_Porometer_QAQC_1.4 %>% 
+Phase1_Data_Porometer_1.4_test <- Phase1_Data_Porometer_1.4 %>% 
   select(c("PorometerSubset","Date","Week","Species","SpeciesID","Porometer","Conductance")) %>% 
   filter(is.na(Porometer))
 
@@ -112,24 +118,21 @@ Phase1_Porometer_QAQC_1.4_test <- Phase1_Porometer_QAQC_1.4 %>%
 ################################################################################
 
 #filter for PorometerSubset plants
-Phase1_Porometer_QAQC_2 <- Phase1_Porometer_QAQC %>% 
+Phase1_Data_Porometer_2 <- Phase1_Data_Porometer %>% 
   filter(PorometerSubset == "yes") %>% 
   arrange(SpeciesID, Week)
 
-Phase1_Porometer_QAQC_2 <- Phase1_Porometer_QAQC_2 %>% 
+Phase1_Data_Porometer_2 <- Phase1_Data_Porometer_2 %>% 
   select(c("PorometerSubset","Date","Week","Species","SpeciesID","Porometer","Conductance")) %>% 
-  mutate(Difference = ifelse(Phase1_Porometer_QAQC_2$Porometer == Phase1_Porometer_QAQC_2$Conductance, 
+  mutate(Difference = ifelse(Phase1_Data_Porometer_2$Porometer == Phase1_Data_Porometer_2$Conductance, 
                              "no","yes"))
 
 #QAQC check, should all be "no"
-unique(Phase1_Porometer_QAQC_2$Difference)
+unique(Phase1_Data_Porometer_2$Difference)
 
 #isolate errors
-Phase1_Porometer_QAQC_2_test <- Phase1_Porometer_QAQC_2 %>% 
+Phase1_Data_Porometer_2_test <- Phase1_Data_Porometer_2 %>% 
   filter(Difference == "yes")
 
 #make changes to Phase1_Data in data_QAQC folder
 ################################################################################
-
-#save as csv
-write.csv(Phase1_Porometer_QAQC, "data_QAQC/Phase1_Porometer_QAQC.csv", quote = FALSE, row.names = FALSE)

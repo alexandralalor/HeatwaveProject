@@ -3,119 +3,76 @@
 #allielalor@email.arizona.edu
 #allielalor@gmail.com
 #First created: 2022-07-07
-#Last updated: 2022-07-12
+#Last updated: 2022-07-13
 
 #load tidyverse
 library(tidyverse)
 library(cobs) #for conreg, concave/convex package
 
 #read CSVs
-Phase1_Data <- read_csv("data_QAQC/Phase1_Data.csv")
+Phase1_Data_Weight <- read_csv("data_QAQC/Phase1_Data_Weight.csv")
+
+#check out data
+glimpse(Phase1_Data_Weight)
+
+#convert variables
+#if needed, convert time from double <dbl> to character <chr>
+Phase1_Data_Weight$Phase <- as.factor(Phase1_Data_Weight$Phase)
+Phase1_Data_Weight$Chamber <- as.factor(Phase1_Data_Weight$Chamber)
+Phase1_Data_Weight$ScientificName <- as.factor(Phase1_Data_Weight$ScientificName)
+Phase1_Data_Weight$CommonName <- as.factor(Phase1_Data_Weight$CommonName)
+Phase1_Data_Weight$Species <- as.factor(Phase1_Data_Weight$Species)
+Phase1_Data_Weight$Treatment_temp <- as.factor(Phase1_Data_Weight$Treatment_temp)
+Phase1_Data_Weight$Treatment_water <- as.factor(Phase1_Data_Weight$Treatment_water)
+Phase1_Data_Weight$PorometerSubset <- as.factor(Phase1_Data_Weight$PorometerSubset)
+Phase1_Data_Weight$Whorls <- as.factor(Phase1_Data_Weight$Whorls)
+Phase1_Data_Weight$PercentBrown <- as.factor(Phase1_Data_Weight$PercentBrown)
+Phase1_Data_Weight$Dead <- as.factor(Phase1_Data_Weight$Dead)
+
 
 ################################################################################
-#first, add info to weight data
-#WeightMin, WeightMax, WaterWeight_Base, WaterWeight_Calc, PercentWater, Weight_Est
+#Find average weight data for graphing
 ################################################################################
 
-#Calculate WeightMin and WeightMax for each individual plant
-Phase1_Data_Weight_add_1 <- Phase1_Data %>% 
-  filter(Treatment_water == "Drought") %>% 
-  group_by(SpeciesID) %>% 
-  mutate(WeightMin = min(Weight_g, na.rm = TRUE),
-         WeightMax = max(Weight_g, na.rm = TRUE)) %>% 
-  select(Species, SpeciesID, Week, WeightMin, WeightMax)
-
-#Add data to Phase1_Data_Weight
-Phase1_Data_Weight <- merge(Phase1_Data, Phase1_Data_Weight_add_1, by = c("Species","SpeciesID", "Week"), all = TRUE)
-
-#Calculate WaterWeight_Base, Waterweight_Calc, and PercentWater for each plant
-#WaterWeight_Base = how many grams of water did the plant start out with?
-#WaterWeight_Calc = how many grams of water does a plant have weekly?
-#PercentWater = what percent water does a plant have weekly?
-# -- all assuming WeightMin is completely dry and WeightMax is at field capacity
+#filter for weight data
 Phase1_Data_Weight <- Phase1_Data_Weight %>% 
-  mutate(WaterWeight_Base = WeightMax - WeightMin,
-         WaterWeight_Calc = Weight_g - WeightMin) %>% 
-  mutate(PercentWater = 100*(WaterWeight_Calc/WaterWeight_Base))
+  filter(!grepl(".5", Phase1_Data_Weight$Week, fixed = TRUE), !is.nan(Weight_Est))
 
-#Calculate Weight_Est
-#Weight_Est = estimated weight of plants which have died and dropped out of study
-#assuming WeightMin is completely dry, and as the lowest weight
-Phase1_Data_Weight_add_2 <- Phase1_Data_Weight %>% 
-  filter(!grepl(".5", Phase1_Data_Weight$Week, fixed = TRUE)) %>% 
-  filter(Treatment_water == "Drought", is.na(PercentBrown)) %>% 
-  mutate(Weight_Est = ifelse(Dead == "dead", WeightMin, Weight_g)) %>% 
-  select(c("Species","SpeciesID","Week","Weight_Est"))
-
-#Add data to Phase1_Data_Weight
-Phase1_Data_Weight <- merge(Phase1_Data_Weight, Phase1_Data_Weight_add_2, by = c("Species","SpeciesID", "Week"), all = TRUE)
-
-#Combine all weight data to include Weight_Est
-Phase1_Data_Weight <- Phase1_Data_Weight %>% 
-  mutate(Weight_Est = ifelse(is.na(Weight_Est), Phase1_Data_Weight$Weight_g, Phase1_Data_Weight$Weight_Est))
-
-#Now convert to NA during missing christmas readings
-Phase1_Data_Weight_testing_1 <- Phase1_Data_Weight
-Phase1_Data_Weight_testing_1$Weight_Est1 <- ifelse(Phase1_Data_Weight_testing_1$Species == "PIFL" & Phase1_Data_Weight_testing_1$Week == 16, NA, Phase1_Data_Weight_testing_1$Weight_Est)
-Phase1_Data_Weight <- Phase1_Data_Weight_testing_1
-Phase1_Data_Weight_testing_2 <- Phase1_Data_Weight
-Phase1_Data_Weight_testing_2$Weight_Est2 <- ifelse(Phase1_Data_Weight_testing_2$Species == "PSME" & Phase1_Data_Weight_testing_2$Week == 16, NA, Phase1_Data_Weight_testing_2$Weight_Est1)
-Phase1_Data_Weight <- Phase1_Data_Weight_testing_2
-Phase1_Data_Weight_testing_3 <- Phase1_Data_Weight
-Phase1_Data_Weight_testing_3$Weight_Est <- ifelse(Phase1_Data_Weight_testing_3$Species == "PIED" & Phase1_Data_Weight_testing_3$Week == 18, NA, Phase1_Data_Weight_testing_3$Weight_Est2)
-Phase1_Data_Weight <- Phase1_Data_Weight_testing_3
-
-#last, remove extra columns
-Phase1_Data_Weight <- Phase1_Data_Weight %>% 
-  select(-c("Weight_Est1","Weight_Est2"))
-
-# #check conversions
-# Phase1_Data_Weight_check <- Phase1_Data_Weight %>% 
-#   filter(!grepl(".5", Phase1_Data_Weight$Week, fixed = TRUE)) %>% 
-#   filter(Treatment_water == "Drought") %>% 
-#   group_by(Species, SpeciesID, Week, Treatment_temp, Treatment_water) %>% 
-#   summarize(Dead_Count = sum(Dead_Count),
-#             Weight_Est = round(mean(Weight_Est, na.rm = T), digits = 0),
-#             Weight_Est1 = round(mean(Weight_Est1, na.rm = T), digits = 0),
-#             Weight_Est2 = round(mean(Weight_Est2, na.rm = T), digits = 0)) %>% 
-#   arrange(Species, Week, SpeciesID)
-
-################################################################################
-#Next, find average weight data for graphing
-################################################################################
-
-#first, remove 1/2 weeks, filter for drought
-Phase1_Data_Weight_Avg_1 <- Phase1_Data_Weight %>% 
-  filter(!grepl(".5", Phase1_Data_Weight$Week, fixed = TRUE)) %>% 
-  filter(Treatment_water == "Drought") %>% 
-  group_by(Species, SpeciesID, Week, Treatment_temp, Treatment_water) %>% 
+#average data 
+Phase1_Data_Weight_Avg <- Phase1_Data_Weight %>%
+  group_by(ScientificName, CommonName, Species, Week, Treatment_temp, Treatment_water) %>%
   summarize(Dead_Count = sum(Dead_Count),
-            Weight_Est = round(mean(Weight_Est, na.rm = T), digits = 0))
-#next, remove NaN values, and find Species average
-Phase1_Data_Weight_Avg <- Phase1_Data_Weight_Avg_1 %>%
-  filter(!is.nan(Weight_Est)) %>%
-  group_by(Species, Week, Treatment_temp, Treatment_water) %>%
-  summarize(Dead_Count = sum(Dead_Count),
-            Weight_Est = round(mean(Weight_Est, na.rm = T), digits = 0))
+            PercentDead = 100*(Dead_Count/20),
+            Weight_Est = round(mean(Weight_Est, na.rm = T), digits = 0),
+            WeightMin = round(mean(WeightMin, na.rm = T), digits = 0),
+            WeightMax = round(mean(WeightMax, na.rm = T), digits = 0),
+            WaterWeight_Base = round(mean(WaterWeight_Base, na.rm = T), digits = 0),
+            WaterWeight_Calc = round(mean(WaterWeight_Calc, na.rm = T), digits = 0),
+            PercentWater = round(mean(PercentWater, na.rm = T), digits = 0)) %>% 
+  arrange(Species, Week)
+
+#save as csv
+write.csv(Phase1_Data_Weight_Avg, "data_QAQC/Phase1_Data_Weight_Avg.csv", quote = FALSE, row.names = FALSE)
+
 
 ################################################################################
 #Graph! Weight Data
 ################################################################################
 
-#Not averaged
+#Weight over time (not averaged)
 Phase1_Data_Weight %>% 
   filter(Treatment_water == "Drought", Species == "PIED") %>% 
   group_by(Treatment_temp) %>% 
   ggplot(aes(x = Week,
-             y = Weight_g,
+             y = Weight_Est,
              color = Species)) +
   geom_point() +
-  geom_point(data = Phase1_Data_Weight %>% filter(SpeciesID == "PIED07", Week < 19),
+  geom_point(data = Phase1_Data_Weight %>% filter(SpeciesID == "PIED07"),
              size = 1.7,
              color = "black",
              fill = "black",
              shape = 21) +
-  geom_point(data = Phase1_Data_Weight %>% filter(SpeciesID == "PIED33", Week < 15),
+  geom_point(data = Phase1_Data_Weight %>% filter(SpeciesID == "PIED33"),
              size = 1.7,
              color = "black",
              fill = "black",
@@ -124,23 +81,168 @@ Phase1_Data_Weight %>%
   facet_wrap(~Treatment_temp) +
   theme_minimal()
 
-#Averaged
+#Weight over time (averaged)
 Phase1_Data_Weight_Avg %>% 
-  group_by(Species, Treatment_temp) %>%
+  filter(Treatment_temp == "Drought") %>%
+  group_by(Species) %>%
   ggplot(aes(x = Week,
              y = Weight_Est,
              color = Species)) +
-  geom_point() +
+  geom_point(alpha = 0.5) +
+  geom_line() +
+  # geom_errorbar(aes(x = Week, ymin=Weight_Est-SD, ymax=Weight_Est+SD),
+  #              width=0.1, color='black', alpha = 0.5) +
+  ylim(200, 800) +
+  xlim(0,36) +
   annotate("segment",
            x = 7, xend = 7,
            y = 200, yend = 800,
            color = "red",
            linetype = "dashed",
-           size = 0.8) +
+           size = 0.6) +
   geom_text(label = "Heatwave",
             x = 9, y = 800, color = "red", size = 3) +
-  #geom_smooth(method = 'loess', se = FALSE) +
   facet_wrap(~Treatment_temp) +
+  xlab("Week") +
+  ylab("Total Weight (g)") +
+  labs(title = "Weight of Droughted Trees") +
+  theme_minimal()
+
+#Water weight over time (averaged)
+Phase1_Data_Weight_Avg %>% 
+  filter(Treatment_temp == "Drought") %>%
+  group_by(Species) %>%
+  ggplot(aes(x = Week,
+             y = WaterWeight_Calc,
+             color = Species)) +
+  geom_point() +
+  geom_line() +
+  # geom_errorbar(aes(x = Week, ymin=Weight_Est-SD, ymax=Weight_Est+SD),
+  #              width=0.1, color='black', alpha = 0.5) +
+  ylim(0, 400) +
+  xlim(0,36) +
+  annotate("segment",
+           x = 7, xend = 7,
+           y = 0, yend = 400,
+           color = "red",
+           linetype = "dashed",
+           size = 0.6) +
+  geom_text(label = "Heatwave",
+            x = 11, y = 400, color = "red", size = 3) +
+  facet_wrap(~Treatment_temp) +
+  xlab("Week") +
+  ylab("Water Weight (g)") +
+  labs(title = "Water Weight of Droughted Trees") +
+  theme_minimal()
+
+#Percent water over time (averaged)
+Phase1_Data_Weight_Avg %>% 
+  filter(Treatment_temp == "Drought") %>%
+  group_by(Species) %>%
+  ggplot(aes(x = Week,
+             y = PercentWater,
+             color = Species)) +
+  geom_point() +
+  geom_line() +
+  # geom_errorbar(aes(x = Week, ymin=Weight_Est-SD, ymax=Weight_Est+SD),
+  #              width=0.1, color='black', alpha = 0.5) +
+  ylim(0, 100) +
+  xlim(0,36) +
+  annotate("segment",
+           x = 7, xend = 7,
+           y = 0, yend = 100,
+           color = "red",
+           linetype = "dashed",
+           size = 0.6) +
+  geom_text(label = "Heatwave",
+            x = 11, y = 100, color = "red", size = 3) +
+  facet_wrap(~Treatment_temp) +
+  xlab("Week") +
+  ylab("Percent Water") +
+  labs(title = "Percent Soil Water Capacity of Droughted Trees") +
+  theme_minimal()
+
+
+#Water weight over time, comparing species
+#add line when %Dead > 50%, or second line graph with % dead
+Phase1_Data_Weight_Avg %>% 
+  filter(Treatment_temp == "Drought") %>%
+  group_by(Species, Treatment_temp) %>%
+  ggplot(aes(x = Week,
+             y = WaterWeight_Calc,
+             color = Treatment_temp)) +
+  geom_point(alpha = 0.5) +
+  geom_line() +
+  # geom_errorbar(aes(x = Week, ymin=Weight_Est-SD, ymax=Weight_Est+SD),
+  #              width=0.1, color='black', alpha = 0.5) +
+  ylim(0, 400) +
+  xlim(0,36) +
+  annotate("segment",
+           x = 7, xend = 7,
+           y = 0, yend = 400,
+           color = "red",
+           linetype = "dashed",
+           size = 0.6) +
+  # geom_text(label = "Heatwave",
+  #           x = 11, y = 400, color = "red", size = 3) +
+  facet_wrap(~CommonName) +
+  xlab("Week") +
+  ylab("Water Weight (g)") +
+  labs(title = "Water Weight of Droughted Trees") +
+  theme_minimal() +
+  scale_color_discrete(direction = -1)
+
+#Percent water over time, comparing species
+#add line when %Dead > 50%, or second line graph with % dead
+Phase1_Data_Weight_Avg %>% 
+  filter(Treatment_temp == "Drought") %>%
+  group_by(Species, Treatment_temp) %>%
+  ggplot(aes(x = Week,
+             y = PercentWater,
+             color = Treatment_temp)) +
+  geom_point(alpha = 0.5) +
+  geom_line() +
+  # geom_errorbar(aes(x = Week, ymin=Weight_Est-SD, ymax=Weight_Est+SD),
+  #              width=0.1, color='black', alpha = 0.5) +
+  ylim(0, 100) +
+  xlim(0,36) +
+  annotate("segment",
+           x = 7, xend = 7,
+           y = 0, yend = 100,
+           color = "red",
+           linetype = "dashed",
+           size = 0.6) +
+  # geom_text(label = "Heatwave",
+  #           x = 11, y = 400, color = "red", size = 3) +
+  facet_wrap(~CommonName) +
+  xlab("Week") +
+  ylab("Water Weight (g)") +
+  labs(title = "Percent Soil Water Capacity of Droughted Trees") +
+  theme_minimal() +
+  scale_color_discrete(direction = -1)
+
+
+################################################################################
+#not sure how useful these are, but other graph ideas
+
+#boxplot
+Phase1_Data_Weight %>% 
+  filter(Dead == "dead", Treatment_temp == "Drought") %>% 
+  group_by(Species) %>% 
+  ggplot(aes(x = Species,
+             y = PercentWater,
+             color = Species)) +
+  geom_boxplot()
+
+#PercentDead vs PercentWater
+Phase1_Data_Weight_Avg %>% 
+  filter(Dead_Count > 0, Treatment_temp == "Drought") %>% 
+  ggplot(aes(x = PercentDead,
+             y = PercentWater,
+             color = Species)) +
+  geom_point() +
+  xlim(0,100) +
+  ylim(0,100) +
   theme_minimal()
 
 ################################################################################
@@ -167,105 +269,29 @@ Phase1_Data_Weight_Avg %>%
 # lines(rc, col = 2)
 
 ################################################################################
-#
+#Additional tests
 ################################################################################
 
-
-# Phase1_Data_Weight_avg <- Phase1_Data_Weight %>% 
-#   filter(Treatment_water == "Drought", Dead == "dead", !is.na(Weight_g)) %>% 
+# Phase1_Data_Weight_Avg_test <- Phase1_Data_Weight %>%
+#   filter(Treatment_water == "Drought", Dead == "dead", !is.na(Weight_Est)) %>%
+#   group_by(Species, Week, Dead) %>%
+#   summarize(Weight_Est = mean(Weight_Est),
+#             Dead_Count = sum(Dead_Count)) %>%
+#   filter(Dead_Count > 1, Week > 7) %>%
+#   group_by(Species) %>%
+#   summarize(AvgDryWeight = round(mean(Weight_Est), digits = 0))
+# 
+# Phase1_Data_Weight_Avg_Sum_test <- Phase1_Data_Weight %>% 
+#   filter(Dead == "dead") %>% 
 #   group_by(Species, Week, Dead) %>% 
-#   summarize(Weight = mean(Weight_g),
-#             Dead = sum(No.Dead)) %>% 
-#   filter(Dead > 1, Week > 7) %>% 
+#   summarize(Dead_Count = sum(Dead_Count),
+#             AvgDeadWeight = mean(Weight_Est),
+#             AvgDeadPercentWater = mean(PercentWater)) %>% 
+#   filter(Week > 7, Dead > 1) %>% 
 #   group_by(Species) %>% 
-#   summarize(AvgDryWeight = round(mean(Weight), digits = 0))
+#   summarize(AvgDeadWeight = mean(AvgDeadWeight, na.rm = T),
+#             AvgDeadPercentWater = mean(AvgDeadPercentWater, na.rm = T))
 
-
-Phase1_Data_Weight_graph_sum <- Phase1_Data_Weight_graph %>% 
-  filter(Dead == "dead") %>% 
-  group_by(Species, Week, Dead) %>% 
-  summarize(Dead = sum(No.Dead),
-            AvgDeadWeight = mean(Weight_g),
-            AvgDeadPercentWater = mean(PercentWater)) %>% 
-  filter(Week > 7, Dead > 1) %>% 
-  group_by(Species) %>% 
-  summarize(AvgDeadWeight = mean(AvgDeadWeight),
-            AvgDeadPercentWater = mean(AvgDeadPercentWater))
-            
-
-Phase1_Data_Weight %>% 
-  group_by(Species) %>% 
-  filter(Dead == "dead", Week > 7) %>% 
-  ggplot(aes(x = Species,
-             y = PercentWater,
-             color = Species)) +
-  geom_boxplot()
-
-Phase1_Data_Weight %>% 
-  group_by(Species, Week) %>%
-  filter(Species == "PIED") %>% 
-  ggplot(aes(x = Week,
-             y = Weight_g,
-             color = Species)) +
-  geom_point()
-
-Phase1_Data_Weight_graph_1 <- Phase1_Data_Weight_graph %>% 
-  group_by(Species, Week, Treatment_temp, Treatment_water) %>% 
-  summarize(Weight_g = mean(Weight_g),
-            DryWeight = mean(DryWeight),
-            WetWeight = mean(WetWeight),
-            WaterWeight_Baseline = mean(WaterWeight_Baseline),
-            WaterWeight_Calc = mean(WaterWeight_Calc),
-            PercentWater = mean(PercentWater),
-            Dead = sum(Dead),
-            PercentDead = 100*(Dead/20))
-
-Phase1_Data_Weight_graph_1 %>% 
-  filter(Dead > 0) %>% 
-  ggplot(aes(x = PercentDead,
-             y = PercentWater,
-             color = Species)) +
-  geom_point() +
-  xlim(0,100) +
-  ylim(0,100) +
-  theme_minimal()
-
-#Graphs!
-#Weight
-Phase1_Data_Weight_graph_1 %>% 
-  group_by(Species) %>%
-  #filter(Species == "PIPO") %>% 
-  ggplot(aes(x = Week,
-             y = Weight_g,
-             color = Species)) +
-  geom_point() +
-  geom_line() +
-  # geom_errorbar(aes(x = Week, ymin=Weight_g-SD, ymax=Weight_g+SD),
-  #              width=0.1, color='black', alpha = 0.5) +
-  ylim(200, 800) +
-  xlim(0,36) +
-  annotate("segment",
-           x = 7, xend = 7,
-           y = 200, yend = 800,
-           color = "red",
-           linetype = "dashed",
-           size = 0.8) +
-  # annotate("segment",
-  #          x = 0, xend = 36,
-  #          y = 386, yend = 386,
-  #          color = "black",
-  #          linetype = "dashed",
-  #          size = 0.8) +
-  geom_text(label = "Heatwave",
-            x = 9, y = 800, color = "red", size = 3) +
-  facet_wrap(~Treatment_temp) +
-  xlab("Week") +
-  ylab("Weight (g)") +
-  labs(title = "Weight of Droughted Trees") +
-  theme_minimal()
-
-
-################################################################################
 
 # #test to replace NaN values
 # Phase1_Data_Weight_add_3 <- Phase1_Data_Weight_Avg_1 %>% 
