@@ -23,7 +23,6 @@ Phase1_Dates$Chamber <- as.factor(Phase1_Dates$Chamber)
 
 Phase1_InitialData$Phase <- as.factor(Phase1_InitialData$Phase)
 Phase1_InitialData$Chamber <- as.factor(Phase1_InitialData$Chamber)
-Phase1_InitialData$Whorls <- as.factor(Phase1_InitialData$Whorls)
 
 Phase1_TempSettings$Phase <- as.factor(Phase1_TempSettings$Phase)
 Phase1_TempSettings$Chamber <- as.factor(Phase1_TempSettings$Chamber)

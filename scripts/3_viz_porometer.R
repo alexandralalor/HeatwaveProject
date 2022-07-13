@@ -31,8 +31,6 @@ Phase1_Data_Porometer$Species <- as.factor(Phase1_Data_Porometer$Species)
 Phase1_Data_Porometer$Treatment_temp <- as.factor(Phase1_Data_Porometer$Treatment_temp)
 Phase1_Data_Porometer$Treatment_water <- as.factor(Phase1_Data_Porometer$Treatment_water)
 Phase1_Data_Porometer$PorometerSubset <- as.factor(Phase1_Data_Porometer$PorometerSubset)
-Phase1_Data_Porometer$Whorls <- as.factor(Phase1_Data_Porometer$Whorls)
-Phase1_Data_Porometer$PercentBrown <- as.factor(Phase1_Data_Porometer$PercentBrown)
 Phase1_Data_Porometer$Dead <- as.factor(Phase1_Data_Porometer$Dead)
 
 
@@ -63,9 +61,13 @@ write.csv(Phase1_Data_Porometer_Avg, "data_QAQC/Phase1_Data_Porometer_Avg.csv", 
 #Graph! Porometer Data
 ################################################################################
 
+#read CSVs
+Phase1_Data_Porometer_Avg <- read_csv("data_QAQC/Phase1_Data_Porometer_Avg.csv")
+
+
 #Porometer Conductance
-Phase1_Data_Porometer_sum_graph %>% 
-  filter(Treatment_temp == "Drought") %>%
+Phase1_Data_Porometer_Avg %>% 
+  filter(Treatment_water == "Drought") %>%
   group_by(Treatment_temp) %>%
   ggplot(aes(x = Week,
              y = Porometer,
@@ -90,11 +92,11 @@ Phase1_Data_Porometer_sum_graph %>%
   scale_color_discrete(direction = -1)
 
 #Porometer Temperatures
-Phase1_Data_Porometer_sum_graph %>%
-  filter(Treatment_temp == "Drought") %>%
+Phase1_Data_Porometer_Avg %>%
+  filter(Treatment_water == "Drought") %>%
   group_by(Species) %>%
   ggplot(aes(x = Week,
-             y = Temperature,
+             y = Temperature_C,
              color = Species)) +
   geom_point() +
   ylim(0, 40) +
@@ -104,11 +106,11 @@ Phase1_Data_Porometer_sum_graph %>%
   theme_minimal()
 
 #Porometer Leaf Sensor RH
-Phase1_Data_Porometer_sum_graph %>% 
-  filter(Treatment_temp == "Drought") %>%
+Phase1_Data_Porometer_Avg %>% 
+  filter(Treatment_water == "Drought") %>%
   group_by(Species) %>%
   ggplot(aes(x = Week,
-             y = LeafSensor,
+             y = LeafSensor_PercentRH,
              color = Species)) +
   geom_point() +
   ylim(0, 100) +
@@ -118,11 +120,11 @@ Phase1_Data_Porometer_sum_graph %>%
   theme_minimal()
 
 #Porometer Filter Sensor RH
-Phase1_Data_Porometer_sum_graph %>% 
-  filter(Treatment_temp == "Drought") %>%
+Phase1_Data_Porometer_Avg %>% 
+  filter(Treatment_water == "Drought") %>%
   group_by(Species) %>%
   ggplot(aes(x = Week,
-             y = FilterSensor,
+             y = FilterSensor_PercentRH,
              color = Species)) +
   geom_point() +
   ylim(0, 40) +

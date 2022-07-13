@@ -16,7 +16,6 @@ Phase1_Data_Weight <- read_csv("data_QAQC/Phase1_Data_Weight.csv")
 glimpse(Phase1_Data_Weight)
 
 #convert variables
-#if needed, convert time from double <dbl> to character <chr>
 Phase1_Data_Weight$Phase <- as.factor(Phase1_Data_Weight$Phase)
 Phase1_Data_Weight$Chamber <- as.factor(Phase1_Data_Weight$Chamber)
 Phase1_Data_Weight$ScientificName <- as.factor(Phase1_Data_Weight$ScientificName)
@@ -25,8 +24,6 @@ Phase1_Data_Weight$Species <- as.factor(Phase1_Data_Weight$Species)
 Phase1_Data_Weight$Treatment_temp <- as.factor(Phase1_Data_Weight$Treatment_temp)
 Phase1_Data_Weight$Treatment_water <- as.factor(Phase1_Data_Weight$Treatment_water)
 Phase1_Data_Weight$PorometerSubset <- as.factor(Phase1_Data_Weight$PorometerSubset)
-Phase1_Data_Weight$Whorls <- as.factor(Phase1_Data_Weight$Whorls)
-Phase1_Data_Weight$PercentBrown <- as.factor(Phase1_Data_Weight$PercentBrown)
 Phase1_Data_Weight$Dead <- as.factor(Phase1_Data_Weight$Dead)
 
 
@@ -59,6 +56,10 @@ write.csv(Phase1_Data_Weight_Avg, "data_QAQC/Phase1_Data_Weight_Avg.csv", quote 
 #Graph! Weight Data
 ################################################################################
 
+#read CSVs
+Phase1_Data_Weight_Avg <- read_csv("data_QAQC/Phase1_Data_Weight_Avg.csv")
+
+
 #Weight over time (not averaged)
 Phase1_Data_Weight %>% 
   filter(Treatment_water == "Drought", Species == "PIED") %>% 
@@ -83,7 +84,7 @@ Phase1_Data_Weight %>%
 
 #Weight over time (averaged)
 Phase1_Data_Weight_Avg %>% 
-  filter(Treatment_temp == "Drought") %>%
+  filter(Treatment_water == "Drought") %>%
   group_by(Species) %>%
   ggplot(aes(x = Week,
              y = Weight_Est,
@@ -110,7 +111,7 @@ Phase1_Data_Weight_Avg %>%
 
 #Water weight over time (averaged)
 Phase1_Data_Weight_Avg %>% 
-  filter(Treatment_temp == "Drought") %>%
+  filter(Treatment_water == "Drought") %>%
   group_by(Species) %>%
   ggplot(aes(x = Week,
              y = WaterWeight_Calc,
@@ -137,7 +138,7 @@ Phase1_Data_Weight_Avg %>%
 
 #Percent water over time (averaged)
 Phase1_Data_Weight_Avg %>% 
-  filter(Treatment_temp == "Drought") %>%
+  filter(Treatment_water == "Drought") %>%
   group_by(Species) %>%
   ggplot(aes(x = Week,
              y = PercentWater,
@@ -166,7 +167,7 @@ Phase1_Data_Weight_Avg %>%
 #Water weight over time, comparing species
 #add line when %Dead > 50%, or second line graph with % dead
 Phase1_Data_Weight_Avg %>% 
-  filter(Treatment_temp == "Drought") %>%
+  filter(Treatment_water == "Drought") %>%
   group_by(Species, Treatment_temp) %>%
   ggplot(aes(x = Week,
              y = WaterWeight_Calc,
@@ -195,7 +196,7 @@ Phase1_Data_Weight_Avg %>%
 #Percent water over time, comparing species
 #add line when %Dead > 50%, or second line graph with % dead
 Phase1_Data_Weight_Avg %>% 
-  filter(Treatment_temp == "Drought") %>%
+  filter(Treatment_water == "Drought") %>%
   group_by(Species, Treatment_temp) %>%
   ggplot(aes(x = Week,
              y = PercentWater,
@@ -227,7 +228,7 @@ Phase1_Data_Weight_Avg %>%
 
 #boxplot
 Phase1_Data_Weight %>% 
-  filter(Dead == "dead", Treatment_temp == "Drought") %>% 
+  filter(Dead == "dead", Treatment_water == "Drought") %>% 
   group_by(Species) %>% 
   ggplot(aes(x = Species,
              y = PercentWater,
@@ -236,7 +237,7 @@ Phase1_Data_Weight %>%
 
 #PercentDead vs PercentWater
 Phase1_Data_Weight_Avg %>% 
-  filter(Dead_Count > 0, Treatment_temp == "Drought") %>% 
+  filter(Dead_Count > 0, Treatment_water == "Drought") %>% 
   ggplot(aes(x = PercentDead,
              y = PercentWater,
              color = Species)) +

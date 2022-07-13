@@ -38,8 +38,6 @@ Phase1_Data$Species <- as.factor(Phase1_Data$Species)
 Phase1_Data$Treatment_temp <- as.factor(Phase1_Data$Treatment_temp)
 Phase1_Data$Treatment_water <- as.factor(Phase1_Data$Treatment_water)
 Phase1_Data$PorometerSubset <- as.factor(Phase1_Data$PorometerSubset)
-Phase1_Data$Whorls <- as.factor(Phase1_Data$Whorls)
-Phase1_Data$PercentBrown <- as.factor(Phase1_Data$PercentBrown)
 Phase1_Data$Dead <- as.factor(Phase1_Data$Dead)
 
 #merge data

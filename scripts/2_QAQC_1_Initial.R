@@ -1,4 +1,4 @@
-#QAQC - merge meta data with plant data
+#QAQC - merge initial data with plant data
 #Alexandra Lalor
 #allielalor@email.arizona.edu
 #allielalor@gmail.com
@@ -31,10 +31,8 @@ Phase1_InitialData$Species <- as.factor(Phase1_InitialData$Species)
 Phase1_InitialData$Treatment_temp <- as.factor(Phase1_InitialData$Treatment_temp)
 Phase1_InitialData$Treatment_water <- as.factor(Phase1_InitialData$Treatment_water)
 Phase1_InitialData$PorometerSubset <- as.factor(Phase1_InitialData$PorometerSubset)
-Phase1_InitialData$Whorls <- as.factor(Phase1_InitialData$Whorls)
 
 Phase1_Plants$Species <- as.factor(Phase1_Plants$Species)
-Phase1_Plants$PercentBrown <- as.factor(Phase1_Plants$PercentBrown)
 Phase1_Plants$Dead <- as.factor(Phase1_Plants$Dead)
 
 #check values
