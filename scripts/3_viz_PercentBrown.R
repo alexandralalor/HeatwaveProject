@@ -28,3 +28,12 @@ Phase1_Data$Whorls <- as.factor(Phase1_Data$Whorls)
 Phase1_Data$PercentBrown <- as.factor(Phase1_Data$PercentBrown)
 Phase1_Data$Dead <- as.factor(Phase1_Data$Dead)
 
+
+################################################################################
+#Find average percent brown data for graphing
+################################################################################
+
+#filter for porometer data
+Phase1_Data_PercentBrown <- Phase1_Data %>% 
+  filter(!is.na(PercentBrown))
+
