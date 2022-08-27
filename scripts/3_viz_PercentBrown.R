@@ -1,6 +1,6 @@
 #Data viz - percent brown
 #Alexandra Lalor
-#allielalor@email.arizona.edu
+#allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-07-13
 #Last updated: 2022-07-13
@@ -77,16 +77,22 @@ write.csv(Phase1_Data_PercentBrown_Avg, "data_QAQC/Phase1_Data_PercentBrown_Avg.
 #read CSVs
 Phase1_Data_PercentBrown_Avg <- read_csv("data_QAQC/Phase1_Data_PercentBrown_Avg.csv")
 
+unique(Phase1_Data_PercentBrown_Avg$CommonName)
 
 # A data frame with labels for each facet
-HW_label <- data.frame(Species = c("PIPO","PIED","PIFL","PSME","PIEN"),
-                        Treatment_temp = "Ambient_HW",
-                        Heatwave = "Heatwave")
+HW_label <- data.frame(CommonName = c("Ponderosa Pine","Pinyon Pine","Limber Pine","Douglas fir","Engelman Spruce"),
+                       Species = c("PIPO","PIED","PIFL","PSME","PIEN"),
+                       Treatment_temp = "Ambient_HW",
+                       Heatwave = "Heatwave")
 
-HW_rect <- data.frame(Species = c("PIPO","PIED","PIFL","PSME","PIEN"),
+HW_rect <- data.frame(CommonName = c("Ponderosa Pine","Pinyon Pine","Limber Pine","Douglas fir","Engelman Spruce"),
+                      Species = c("PIPO","PIED","PIFL","PSME","PIEN"),
                       Treatment_temp = "Ambient_HW",
                       Week = 7,
-                      PercentBrown_Est = 100)
+                      PercentBrown_Est = 100,
+                      Weight_Est = 100,
+                      WaterWeight_Calc = 100,
+                      PercentWater = 100)
 
 
 #Percent brown over time (averaged)
@@ -95,7 +101,7 @@ Phase1_Data_PercentBrown_Avg %>%
   group_by(Treatment_temp) %>% 
   ggplot(aes(x = Week,
              y = PercentBrown_Est,
-             color = Species)) +
+             color = CommonName)) +
   geom_point() +
   geom_line() +
   ylim(0, 100) +

@@ -2,7 +2,7 @@
 #To summarize data from all pixels.
 #This means creating bins and grouping colors, as well as cleaning up some columns
 #Alexandra Lalor
-#allielalor@email.arizona.edu
+#allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-05-02
 #Last updated: 2022-06-18

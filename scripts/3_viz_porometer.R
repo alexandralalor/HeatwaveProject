@@ -1,6 +1,6 @@
 #Data viz - porometer
 #Alexandra Lalor
-#allielalor@email.arizona.edu
+#allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-07-07
 #Last updated: 2022-07-13
@@ -81,7 +81,7 @@ Phase1_Data_Porometer_Avg %>%
            y = 0, yend = 350,
            color = "red",
            linetype = "dashed",
-           size = 0.5) +
+           size = 0.4) +
   geom_text(label = "Heatwave",
             x = 12, y = 300, color = "red", size = 3) +
   facet_wrap(~CommonName) +
@@ -97,7 +97,7 @@ Phase1_Data_Porometer_Avg %>%
   group_by(Species) %>%
   ggplot(aes(x = Week,
              y = Temperature_C,
-             color = Species)) +
+             color = CommonName)) +
   geom_point() +
   ylim(0, 40) +
   xlab("Week") +
@@ -111,7 +111,7 @@ Phase1_Data_Porometer_Avg %>%
   group_by(Species) %>%
   ggplot(aes(x = Week,
              y = LeafSensor_PercentRH,
-             color = Species)) +
+             color = CommonName)) +
   geom_point() +
   ylim(0, 100) +
   xlab("Week") +
@@ -125,7 +125,7 @@ Phase1_Data_Porometer_Avg %>%
   group_by(Species) %>%
   ggplot(aes(x = Week,
              y = FilterSensor_PercentRH,
-             color = Species)) +
+             color = CommonName)) +
   geom_point() +
   ylim(0, 40) +
   xlab("Week") +

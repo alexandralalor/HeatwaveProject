@@ -1,12 +1,13 @@
 #Data viz - initial data
 #Alexandra Lalor
-#allielalor@email.arizona.edu
+#allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-07-11
 #Last updated: 2022-07-12
 
 #load tidyverse
 library(tidyverse)
+library(scales)
 
 #read CSVs
 Phase1_Data <- read_csv("data_QAQC/Phase1_Data.csv")
@@ -35,11 +36,14 @@ Phase1_Data %>%
   group_by(Species) %>% 
   ggplot(aes(x = BasalDia_mm,
              y = Height_mm,
-             color = Species)) +
-  geom_point(alpha = 0.7) +
-  xlim(0,12) +
-  ylim(0,600) +
+             color = CommonName)) +
+  geom_point(alpha = 0.03) +
+  #geom_point(aes(size = Phase1_Data$Biomass_g)) +
+  xlim(2,11) +
+  ylim(0,500) +
   xlab("Basal Stem Diameter") +
   ylab("Height (mm)") +
   labs(title = "Species Size Distribution") +
+  scale_color_discrete(guide = guide_legend(override.aes = list(alpha = 1, size = 2))) +
   theme_minimal()
+

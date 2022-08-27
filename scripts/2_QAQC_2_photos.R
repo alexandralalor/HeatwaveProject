@@ -2,7 +2,7 @@
 #Data taken from tree_rgb_sum_filter
 #Moving from filtering grey colors to finding thresholds for pixel %
 #Alexandra Lalor
-#allielalor@email.arizona.edu
+#allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-07-08
 #Last updated: 2022-07-08

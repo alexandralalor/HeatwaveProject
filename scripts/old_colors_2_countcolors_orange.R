@@ -1,6 +1,6 @@
 #testing countcolors
 #Alexandra Lalor
-#allielalor@email.arizona.edu
+#allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-03-23
 #Last updated: 2022-03-23

@@ -1,6 +1,6 @@
 #QAQC - porometer
 #Alexandra Lalor
-#allielalor@email.arizona.edu
+#allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-07-06
 #Last updated: 2022-07-07

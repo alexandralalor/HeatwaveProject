@@ -2,7 +2,7 @@
 #Data taken from tree_rgb_sum_all
 #Moving from processing photos to cleaning up data and filtering grey colors
 #Alexandra Lalor
-#allielalor@email.arizona.edu
+#allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-05-02
 #Last updated: 2022-07-08

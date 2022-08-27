@@ -2,7 +2,7 @@
 #Create data frame of rgb pixel colors for each photo, save with file name information
 #This is my attempt to loop all the dates rather than go one at a time
 #Alexandra Lalor
-#allielalor@email.arizona.edu
+#allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-06-18
 #Last updated: 2022-06-18

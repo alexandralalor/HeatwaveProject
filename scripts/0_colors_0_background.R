@@ -1,6 +1,6 @@
 #1st step - Python
 #Alexandra Lalor
-#allielalor@email.arizona.edu
+#allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-04-19
 #Last updated: 2022-04-19

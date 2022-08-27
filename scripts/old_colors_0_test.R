@@ -1,6 +1,6 @@
 #using the "Munsell Plant Tissue Color Book 2012 revision"
 #Alexandra Lalor
-#allielalor@email.arizona.edu
+#allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-03-01
 #Last updated: 2022-05-10

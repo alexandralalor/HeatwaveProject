@@ -1,6 +1,6 @@
 #Data analysis/viz script - Phase 1 kestrel
 #Alexandra Lalor
-#allielalor@email.arizona.edu
+#allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-02-01
 #Last updated: 2022-06-18
@@ -19,7 +19,7 @@ library(ggplot2)
 #read in clean csvs
 Phase1_Kestrel_AvgTemp <- read_csv("data_QAQC/Phase1_Kestrel_AvgTemp.csv")
 
-#add fake date to make graph
+#add placeholder date to make graph
 Phase1_Kestrel_AvgTemp <- Phase1_Kestrel_AvgTemp %>% 
   mutate(Date = as.Date("2021-10-15"))
 Phase1_Kestrel_AvgTemp$DateTime <- paste(Phase1_Kestrel_AvgTemp$Date, " ", Phase1_Kestrel_AvgTemp$Time)
@@ -94,7 +94,7 @@ Phase1_Kestrel_AvgTemp %>%
 #read csv
 Phase1_Kestrel_AvgTemp_Sum <- read_csv("data_QAQC/Phase1_Kestrel_AvgTemp_Sum.csv")
 
-#add fake date to make graph
+#add placeholder date to make graph
 Phase1_Kestrel_AvgTemp_Sum <- Phase1_Kestrel_AvgTemp_Sum %>% 
   mutate(Date = as.Date("2021-10-15"))
 Phase1_Kestrel_AvgTemp_Sum$DateTime <- paste(Phase1_Kestrel_AvgTemp_Sum$Date, " ", Phase1_Kestrel_AvgTemp_Sum$Time)

@@ -1,6 +1,6 @@
 #kaplan meier survival curve analysis
 #Alexandra Lalor
-#allielalor@email.arizona.edu
+#allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-02-01
 #Last updated: 2022-07-12
@@ -45,7 +45,11 @@ Phase1_Data <- Phase1_Data %>%
 Phase1_Data$Heatwave_graph <- str_c(Phase1_Data$CommonName, "_", Phase1_Data$Heatwave_graph)
 Phase1_Data$Heatwave_graph[is.na(Phase1_Data$Heatwave_graph)] <- "X"
 Phase1_Data <- Phase1_Data %>% 
-  mutate(Heatwave_graph = ifelse(Phase1_Data$Heatwave_graph == "X", Phase1_Data$CommonName, Phase1_Data$Heatwave_graph))
+  mutate(Heatwave_graph = ifelse(Phase1_Data$Heatwave_graph == "X" & Phase1_Data$CommonName == "Ponderosa Pine", "Ponderosa Pine", 
+                                 ifelse(Phase1_Data$Heatwave_graph == "X" & Phase1_Data$CommonName == "Pinyon Pine", "Pinyon Pine",
+                                        ifelse(Phase1_Data$Heatwave_graph == "X" & Phase1_Data$CommonName == "Limber Pine", "Limber Pine",
+                                               ifelse(Phase1_Data$Heatwave_graph == "X" & Phase1_Data$CommonName == "Engelman Spruce", "Engelman Spruce",
+                                                      ifelse(Phase1_Data$Heatwave_graph == "X" & Phase1_Data$CommonName == "Douglas fir", "Douglas fir", Phase1_Data$Heatwave_graph))))))
 
 
 #Kaplan Meier Survival Curve - combined
