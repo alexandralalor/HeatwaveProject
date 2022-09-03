@@ -25,6 +25,9 @@ Phase1_Data_Weight$Treatment_temp <- as.factor(Phase1_Data_Weight$Treatment_temp
 Phase1_Data_Weight$Treatment_water <- as.factor(Phase1_Data_Weight$Treatment_water)
 Phase1_Data_Weight$PorometerSubset <- as.factor(Phase1_Data_Weight$PorometerSubset)
 Phase1_Data_Weight$Dead <- as.factor(Phase1_Data_Weight$Dead)
+Phase1_Data_Weight$Dead_Count <- as.factor(Phase1_Data_Weight$Dead_Count)
+Phase1_Data_Weight$Heatwave_graph <- as.factor(Phase1_Data_Weight$Heatwave_graph)
+Phase1_Data_Weight$Heatwave <- as.factor(Phase1_Data_Weight$Heatwave)
 
 
 ################################################################################

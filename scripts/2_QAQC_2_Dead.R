@@ -24,6 +24,10 @@ Phase1_Data$Treatment_temp <- as.factor(Phase1_Data$Treatment_temp)
 Phase1_Data$Treatment_water <- as.factor(Phase1_Data$Treatment_water)
 Phase1_Data$PorometerSubset <- as.factor(Phase1_Data$PorometerSubset)
 Phase1_Data$Dead <- as.factor(Phase1_Data$Dead)
+Phase1_Data$Dead_Count <- as.factor(Phase1_Data$Dead_Count)
+Phase1_Data$Heatwave_graph <- as.factor(Phase1_Data$Heatwave_graph)
+Phase1_Data$Heatwave <- as.factor(Phase1_Data$Heatwave)
+
 
 
 ################################################################################
@@ -31,7 +35,7 @@ Phase1_Data$Dead <- as.factor(Phase1_Data$Dead)
 ################################################################################
 #look for NA dead
 test <- Phase1_Data %>% 
-  filter(!grepl(".5", Phase1_Data_Weight$Week)) %>% 
+  filter(!grepl(".5", Phase1_Data$Week)) %>% 
   filter(is.na(Dead)) %>% 
   select(c("SpeciesID","Week","Dead","Dead_Count"))
 

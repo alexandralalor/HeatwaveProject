@@ -62,6 +62,33 @@ Phase1_Data <- Phase1_Data %>%
   mutate(Dead_Count = ifelse(Phase1_Data$Dead == "dead", 1, 0))
 
 
+#create new heatwave variables for graphing
+Phase1_Data <- Phase1_Data %>% 
+  mutate(Heatwave_graph = Treatment_temp) %>% 
+  separate(Heatwave_graph, sep = "_",
+           into = c("Ambient", "Heatwave_graph")) %>% 
+  mutate(Heatwave = Heatwave_graph)
+
+Phase1_Data$Heatwave[is.na(Phase1_Data$Heatwave)] <- "no"
+Phase1_Data <- Phase1_Data %>% 
+  mutate(Heatwave = ifelse(Phase1_Data$Heatwave == "HW", "yes", "no"))
+Phase1_Data <- Phase1_Data %>% 
+  mutate(Heatwave_graph = ifelse(Phase1_Data$Heatwave_graph == "HW", "heatwave", Phase1_Data$Heatwave_graph))
+
+Phase1_Data$Heatwave_graph <- str_c(Phase1_Data$CommonName, "_", Phase1_Data$Heatwave_graph)
+Phase1_Data$Heatwave_graph[is.na(Phase1_Data$Heatwave_graph)] <- "X"
+Phase1_Data <- Phase1_Data %>% 
+  mutate(Heatwave_graph = ifelse(Phase1_Data$Heatwave_graph == "X" & Phase1_Data$CommonName == "Ponderosa Pine", "Ponderosa Pine", 
+                                 ifelse(Phase1_Data$Heatwave_graph == "X" & Phase1_Data$CommonName == "Pinyon Pine", "Pinyon Pine",
+                                        ifelse(Phase1_Data$Heatwave_graph == "X" & Phase1_Data$CommonName == "Limber Pine", "Limber Pine",
+                                               ifelse(Phase1_Data$Heatwave_graph == "X" & Phase1_Data$CommonName == "Engelman Spruce", "Engelman Spruce",
+                                                      ifelse(Phase1_Data$Heatwave_graph == "X" & Phase1_Data$CommonName == "Douglas fir", "Douglas fir", Phase1_Data$Heatwave_graph))))))
+
+Phase1_Data <- Phase1_Data %>% 
+  select(-("Ambient"))
+
+
+
 ################################################################################
 # the file Phase1_Data contains all important metadata and experimental values #
 #         use this file to make changes found through the QAQC process         #
@@ -70,4 +97,3 @@ Phase1_Data <- Phase1_Data %>%
 
 #save as csv
 write.csv(Phase1_Data, "data_QAQC/Phase1_Data.csv", quote = FALSE, row.names = FALSE)
-

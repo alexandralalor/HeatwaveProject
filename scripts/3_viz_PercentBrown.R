@@ -24,6 +24,9 @@ Phase1_Data_PercentBrown$Treatment_temp <- as.factor(Phase1_Data_PercentBrown$Tr
 Phase1_Data_PercentBrown$Treatment_water <- as.factor(Phase1_Data_PercentBrown$Treatment_water)
 Phase1_Data_PercentBrown$PorometerSubset <- as.factor(Phase1_Data_PercentBrown$PorometerSubset)
 Phase1_Data_PercentBrown$Dead <- as.factor(Phase1_Data_PercentBrown$Dead)
+Phase1_Data_PercentBrown$Dead_Count <- as.factor(Phase1_Data_PercentBrown$Dead_Count)
+Phase1_Data_PercentBrown$Heatwave_graph <- as.factor(Phase1_Data_PercentBrown$Heatwave_graph)
+Phase1_Data_PercentBrown$Heatwave <- as.factor(Phase1_Data_PercentBrown$Heatwave)
 
 
 ################################################################################
