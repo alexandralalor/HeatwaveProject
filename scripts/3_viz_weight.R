@@ -5,7 +5,7 @@
 #First created: 2022-07-07
 #Last updated: 2022-07-13
 
-#load tidyverse
+#load packages
 library(tidyverse)
 #library(cobs) #for conreg, concave/convex package
 
@@ -25,7 +25,6 @@ Phase1_Data_Weight$Treatment_temp <- as.factor(Phase1_Data_Weight$Treatment_temp
 Phase1_Data_Weight$Treatment_water <- as.factor(Phase1_Data_Weight$Treatment_water)
 Phase1_Data_Weight$PorometerSubset <- as.factor(Phase1_Data_Weight$PorometerSubset)
 Phase1_Data_Weight$Dead <- as.factor(Phase1_Data_Weight$Dead)
-Phase1_Data_Weight$Dead_Count <- as.factor(Phase1_Data_Weight$Dead_Count)
 Phase1_Data_Weight$Heatwave_graph <- as.factor(Phase1_Data_Weight$Heatwave_graph)
 Phase1_Data_Weight$Heatwave <- as.factor(Phase1_Data_Weight$Heatwave)
 
@@ -34,15 +33,16 @@ Phase1_Data_Weight$Heatwave <- as.factor(Phase1_Data_Weight$Heatwave)
 #Find average weight data for graphing
 ################################################################################
 
-#filter for weight data
-Phase1_Data_Weight <- Phase1_Data_Weight %>% 
-  filter(!grepl(".5", Phase1_Data_Weight$Week, fixed = TRUE), !is.nan(Weight_Est))
+Phase1_Data_Weight_1 <- Phase1_Data_Weight %>% 
+  filter(!is.na(Weight_Est))
+
 
 #average data 
 Phase1_Data_Weight_Avg <- Phase1_Data_Weight %>%
   group_by(ScientificName, CommonName, Species, Week, Treatment_temp, Treatment_water) %>%
   summarize(Dead_Count = sum(Dead_Count),
             PercentDead = 100*(Dead_Count/20),
+            Weight_g = round(mean(Weight_g, na.rm = T), digits = 0),
             Weight_Est = round(mean(Weight_Est, na.rm = T), digits = 0),
             WeightMin = round(mean(WeightMin, na.rm = T), digits = 0),
             WeightMax = round(mean(WeightMax, na.rm = T), digits = 0),
@@ -132,11 +132,11 @@ Phase1_Data_Weight_Avg %>%
             color = "red") +
   scale_y_continuous(name="WaterWeight_Calc", sec.axis=sec_axis(~./scaleFactor_2, name="PercentDead")) +
   annotate("segment",
-         x = 7, xend = 7,
-         y = 0, yend = 400,
-         color = "red",
-         linetype = "dashed",
-         size = 0.6) +
+           x = 7, xend = 7,
+           y = 0, yend = 400,
+           color = "red",
+           linetype = "dashed",
+           size = 0.6) +
   facet_wrap(~Treatment_temp) +
   xlab("Week") +
   ylab("Water Weight (g)") +
@@ -168,12 +168,12 @@ Phase1_Data_Weight_Avg %>%
   #           fill = "red",
   #           color = "red",
   #           alpha = 0.05) +
-  annotate("segment",
-           x = 7, xend = 7,
-           y = 0, yend = 400,
-           color = "red",
-           linetype = "dashed",
-           size = 0.6) +
+annotate("segment",
+         x = 7, xend = 7,
+         y = 0, yend = 400,
+         color = "red",
+         linetype = "dashed",
+         size = 0.6) +
   facet_wrap(~Treatment_temp) +
   xlab("Week") +
   ylab("Water Weight (g)") +
@@ -200,11 +200,11 @@ Phase1_Data_Weight_Avg %>%
   ylim(0, 100) +
   xlim(0,36) +
   annotate("segment",
-         x = 7, xend = 7,
-         y = 0, yend = 100,
-         color = "red",
-         linetype = "dashed",
-         size = 0.6) +
+           x = 7, xend = 7,
+           y = 0, yend = 100,
+           color = "red",
+           linetype = "dashed",
+           size = 0.6) +
   facet_wrap(~Species) +
   xlab("Week") +
   ylab("Percent Water") +
@@ -235,12 +235,12 @@ Phase1_Data_Weight_Avg %>%
   #           fill = "red",
   #           color = "red",
   #           alpha = 0.05) +
-  annotate("segment",
-           x = 7, xend = 7,
-           y = 0, yend = 100,
-           color = "red",
-           linetype = "dashed",
-           size = 0.6) +
+annotate("segment",
+         x = 7, xend = 7,
+         y = 0, yend = 100,
+         color = "red",
+         linetype = "dashed",
+         size = 0.6) +
   facet_wrap(~Treatment_temp) +
   xlab("Week") +
   ylab("Percent Water") +

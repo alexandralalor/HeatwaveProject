@@ -32,7 +32,6 @@ Phase1_Data_Porometer$Treatment_temp <- as.factor(Phase1_Data_Porometer$Treatmen
 Phase1_Data_Porometer$Treatment_water <- as.factor(Phase1_Data_Porometer$Treatment_water)
 Phase1_Data_Porometer$PorometerSubset <- as.factor(Phase1_Data_Porometer$PorometerSubset)
 Phase1_Data_Porometer$Dead <- as.factor(Phase1_Data_Porometer$Dead)
-Phase1_Data_Porometer$Dead_Count <- as.factor(Phase1_Data_Porometer$Dead_Count)
 Phase1_Data_Porometer$Heatwave_graph <- as.factor(Phase1_Data_Porometer$Heatwave_graph)
 Phase1_Data_Porometer$Heatwave <- as.factor(Phase1_Data_Porometer$Heatwave)
 
@@ -60,6 +59,7 @@ Phase1_Data_Porometer_Avg <- Phase1_Data_Porometer %>%
 write.csv(Phase1_Data_Porometer_Avg, "data_QAQC/Phase1_Data_Porometer_Avg.csv", quote = FALSE, row.names = FALSE)
 
 
+
 ################################################################################
 #Graph! Porometer Data
 ################################################################################
@@ -71,20 +71,22 @@ Phase1_Data_Porometer <- Phase1_Data_Porometer %>%
 Phase1_Data_Porometer_PIPO <- Phase1_Data_Porometer %>% 
   filter(Species == "PIPO")
 
+#SD???
+Phase1_Data_Porometer <- Phase1_Data_Porometer %>% 
+  group_by(Week) %>%
+  mutate(SD = sd(Porometer))
+
+
 #Porometer Conductance
-Phase1_Data_Porometer %>% 
+Phase1_Data_Porometer_PIPO %>% 
   #filter(Species == "PIPO") %>% 
   ggplot(aes(x = Week,
              y = Porometer,
              color = Treatment_temp)) +
   geom_point() +
-  #geom_line() +
-  geom_errorbar(aes(x = Week, 
-                    ymin=Phase1_Data_Porometer$Porometer - Phase1_Data_Porometer$SD, 
-                    ymax=Phase1_Data_Porometer$Porometer + Phase1_Data_Porometer$SD),
-               width=0.1, color='black', alpha = 0.5) +
+  geom_line() +
   ylim(0, 600) +
-  xlim(0,40) +
+  xlim(0,18) +
   annotate("segment",
            x = 7, xend = 7,
            y = 0, yend = 350,
@@ -107,7 +109,9 @@ Phase1_Data_Porometer %>%
 ################################################################################
 #read CSVs
 Phase1_Data_Porometer_Avg <- read_csv("data_QAQC/Phase1_Data_Porometer_Avg.csv")
-
+Phase1_Data_Porometer_Avg <- Phase1_Data_Porometer_Avg %>% 
+  group_by(Week) %>%
+  mutate(SD = sd(Porometer))
 
 #Porometer Conductance
 Phase1_Data_Porometer_Avg %>% 
@@ -126,6 +130,10 @@ Phase1_Data_Porometer_Avg %>%
            color = "red",
            linetype = "dashed",
            size = 0.4) +
+  geom_errorbar(aes(x = Week,
+                    ymin = (Phase1_Data_Porometer_PIPO$Porometer - Phase1_Data_Porometer_PIPO$SD),
+                    ymax = (Phase1_Data_Porometer_PIPO$Porometer + Phase1_Data_Porometer_PIPO$SD))) +
+  #width = 0.1, color='black', alpha = 0.5)) +
   geom_text(label = "Heatwave",
             x = 12, y = 300, color = "red", size = 3) +
   facet_wrap(~CommonName) +

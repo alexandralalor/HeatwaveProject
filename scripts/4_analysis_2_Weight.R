@@ -83,14 +83,14 @@ stress_week_PIEN <- stress_week_PIEN %>%
 
 
 stress_week_filter <- stress_week_PIED %>% 
-  filter(SpeciesID == "PIED03")
+  filter(SpeciesID == "PIED06")
 
 
 #validataion
 #Weight over time (averaged)
 Phase1_Data_Weight %>% 
   filter(Treatment_water == "Drought") %>% 
-  filter(SpeciesID == "PIED03") %>% 
+  filter(SpeciesID == "PIED06") %>% 
   ggplot(aes(x = Week,
              y = Weight_g,
              color = Treatment_water)) +
@@ -134,8 +134,25 @@ Phase1_Data_Weight <- Phase1_Data_Weight %>%
   group_by(Species) %>% 
   arrange(SpeciesID, Week)
 
+################################################################################
+# Other Calculations
+Phase1_Data_Weight <- read_csv("data_analysis/Phase1_Data_Weight.csv")
+
+# Average stress week by species and treatment
+# Remember that watered trees don't have a stress week
+Phase1_Data_Weight <- Phase1_Data_Weight %>%
+  group_by(Heatwave_graph) %>%
+  mutate(Stress_Week_Avg = mean(Stress_Week_Avg, na.rm = T))
+
+# SD
 Phase1_Data_Weight <- Phase1_Data_Weight %>% 
-  mutate(Stress_Week_Start = Week - Stress_Week)
+  group_by(Species, Week, Treatment_temp, Treatment_water) %>%
+  mutate(SD_Total = sd(Weight_g, na.rm = T),
+         SD_Water = sd(WaterWeight_Calc, na.rm = T))
+
+# Stress Week Start
+# Phase1_Data_Weight <- Phase1_Data_Weight %>% 
+#   mutate(Stress_Week_Start = Week - Stress_Week)
 
 #save csv
 write.csv(Phase1_Data_Weight, "data_analysis/Phase1_Data_Weight.csv", quote = FALSE, row.names = FALSE)

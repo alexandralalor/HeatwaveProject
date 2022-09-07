@@ -24,7 +24,6 @@ Phase1_Data$Treatment_temp <- as.factor(Phase1_Data$Treatment_temp)
 Phase1_Data$Treatment_water <- as.factor(Phase1_Data$Treatment_water)
 Phase1_Data$PorometerSubset <- as.factor(Phase1_Data$PorometerSubset)
 Phase1_Data$Dead <- as.factor(Phase1_Data$Dead)
-Phase1_Data$Dead_Count <- as.factor(Phase1_Data$Dead_Count)
 Phase1_Data$Heatwave_graph <- as.factor(Phase1_Data$Heatwave_graph)
 Phase1_Data$Heatwave <- as.factor(Phase1_Data$Heatwave)
 
@@ -114,6 +113,13 @@ Phase1_Data_Weight <- Phase1_Data_Weight %>%
   mutate(PercentWater = 100*(WaterWeight_Calc/WaterWeight_Base))
 
 Phase1_Data_Weight <- Phase1_Data_Weight[ ,c(4,5,6,7,1,2,8,9,10,11,12,13,14,3,15,16,17,18,19,20,21,22,23,24,25,26,27)]
+
+
+#clean up data, remove half weeks
+#filter for weight data
+Phase1_Data_Weight <- Phase1_Data_Weight %>% 
+  filter(!grepl(".5", Phase1_Data_Weight$Week, fixed = TRUE))
+
 
 #save as csv
 write.csv(Phase1_Data_Weight, "data_QAQC/Phase1_Data_Weight.csv", quote = FALSE, row.names = FALSE)
