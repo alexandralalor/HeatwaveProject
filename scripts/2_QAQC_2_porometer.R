@@ -53,7 +53,6 @@ Phase1_Data_Porometer <- Phase1_Data_Porometer %>%
   filter(!grepl(".5", Phase1_Data_Porometer$Week, fixed = TRUE), 
          PorometerSubset == "yes")
 
-
 #save as csv
 write.csv(Phase1_Data_Porometer, "data_QAQC/Phase1_Data_Porometer.csv", quote = FALSE, row.names = FALSE)
 
@@ -143,4 +142,52 @@ Phase1_Data_Porometer_2_test <- Phase1_Data_Porometer_2 %>%
   filter(Difference == "yes")
 
 #make changes to Phase1_Data in data_QAQC folder
+################################################################################
+
+
+################################################################################
+# Porometer_Est
+################################################################################
+
+#read csv
+Phase1_Data_Porometer <- read_csv("data_QAQC/Phase1_Data_Porometer.csv")
+
+#Next, add info to porometer data
+#Porometer_Est: 
+#to keep plants in the study after they die, change porometer reading to 0
+
+Phase1_Data_Porometer_add_1 <- Phase1_Data_Porometer %>% 
+  filter(Dead == "dead", is.na(Porometer)) %>% 
+  mutate(Porometer_Est = 0) %>% 
+  select(c("Species","SpeciesID","Week","Porometer_Est"))
+
+#Add data to Phase1_Data_Porometer
+Phase1_Data_Porometer <- merge(Phase1_Data_Porometer, Phase1_Data_Porometer_add_1, by = c("Species","SpeciesID", "Week"), all = TRUE)
+
+#Combine data to include Poromter_Est
+Phase1_Data_Porometer <- Phase1_Data_Porometer %>% 
+  mutate(Porometer_Est = ifelse(is.na(Porometer_Est), Phase1_Data_Porometer$Porometer, Phase1_Data_Porometer$Porometer_Est))
+
+#Now convert to NA during missing christmas readings
+Phase1_Data_Porometer_testing_1 <- Phase1_Data_Porometer
+Phase1_Data_Porometer_testing_1$Porometer_Est1 <- ifelse(Phase1_Data_Porometer_testing_1$Species == "PSME" & Phase1_Data_Porometer_testing_1$Week == 17, NA, Phase1_Data_Porometer_testing_1$Porometer_Est)
+Phase1_Data_Porometer <- Phase1_Data_Porometer_testing_1
+Phase1_Data_Porometer_testing_2 <- Phase1_Data_Porometer
+Phase1_Data_Porometer_testing_2$Porometer_Est <- ifelse(Phase1_Data_Porometer_testing_2$Species == "PSME" & Phase1_Data_Porometer_testing_2$Week == 18, NA, Phase1_Data_Porometer_testing_2$Porometer_Est1)
+Phase1_Data_Porometer <- Phase1_Data_Porometer_testing_2
+# Phase1_Data_Porometer_testing_3 <- Phase1_Data_Porometer
+# Phase1_Data_Porometer_testing_3$Porometer_Est <- ifelse(Phase1_Data_Porometer_testing_3$Species == "PIED" & Phase1_Data_Porometer_testing_3$Week == 18, NA, Phase1_Data_Porometer_testing_3$Porometer_Est2)
+# Phase1_Data_Porometer <- Phase1_Data_Porometer_testing_3
+
+#last, remove extra columns
+Phase1_Data_Porometer <- Phase1_Data_Porometer %>% 
+  select(-c("Porometer_Est1"))
+
+
+#rearrange columns
+Phase1_Data_Porometer <- Phase1_Data_Porometer[ ,c(4,5,6,7,1,2,8,9,10,11,12,13,14,3,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31)]
+
+#save as csv
+write.csv(Phase1_Data_Porometer, "data_QAQC/Phase1_Data_Porometer.csv", quote = FALSE, row.names = FALSE)
+
 ################################################################################

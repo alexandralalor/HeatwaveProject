@@ -8,9 +8,6 @@
 
 #load packages
 library(tidyverse)
-library(rootSolve) #find where y crosses 0
-# install.packages("stats")
-# library(stats)
 
 #read CSVs
 Phase1_Data_Porometer <- read_csv("data_QAQC/Phase1_Data_Porometer.csv")
@@ -50,8 +47,8 @@ Phase1_Data_Porometer_test <- Phase1_Data_Porometer
 
 #create stress levels (yes, no, maybe) based on porometer reading
 Phase1_Data_Porometer_test <- Phase1_Data_Porometer_test %>% 
-  mutate(Stress_Level = ifelse(Porometer < 100 & Week > 1, "yes",
-                               ifelse(Porometer < 200 & Porometer >= 100 & Week > 1, "maybe", "no")))
+  mutate(Stress_Level = ifelse(Porometer_Est < 100 & Week > 1, "yes",
+                               ifelse(Porometer_Est < 200 & Porometer_Est >= 100 & Week > 1, "maybe", "no")))
 
 # identify threshold points for each stress level
 Phase1_Data_Porometer_test_add_1 <- Phase1_Data_Porometer_test %>% 
@@ -127,7 +124,7 @@ Phase1_Data_Porometer_1 <- merge(Phase1_Data_Porometer, Phase1_Data_Porometer_ad
 
 
 #reorder and rearrange columns
-Phase1_Data_Porometer_1 <- Phase1_Data_Porometer_1[, c(3,4,5,6,7,1,8,9,10,11,12,13,14,2,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32)]
+Phase1_Data_Porometer_1 <- Phase1_Data_Porometer_1[, c(3,4,5,6,7,1,8,9,10,11,12,13,14,2,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33)]
 Phase1_Data_Porometer <- Phase1_Data_Porometer_1 %>% 
   group_by(Species) %>% 
   arrange(SpeciesID, Week)
@@ -154,7 +151,7 @@ Phase1_Data_Porometer <- merge(Phase1_Data_Porometer, Phase1_Data_Porometer_add,
 # SD
 Phase1_Data_Porometer <- Phase1_Data_Porometer %>% 
   group_by(Species, Week, Treatment_temp, Treatment_water) %>%
-  mutate(SD = sd(Porometer, na.rm = T))
+  mutate(SD = sd(Porometer_Est, na.rm = T))
 
 #save as csv
 write.csv(Phase1_Data_Porometer, "data_analysis/Phase1_Data_Porometer.csv", quote = FALSE, row.names = FALSE)

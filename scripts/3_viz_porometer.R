@@ -42,14 +42,14 @@ Phase1_Data_Porometer$Heatwave <- as.factor(Phase1_Data_Porometer$Heatwave)
 
 #filter for porometer data
 Phase1_Data_Porometer <- Phase1_Data_Porometer %>% 
-  filter(PorometerSubset == "yes", !is.na(Porometer))
+  filter(!is.na(Porometer_Est))
 
 #average data 
 Phase1_Data_Porometer_Avg <- Phase1_Data_Porometer %>%
   group_by(ScientificName, CommonName, Species, Week, Treatment_temp, Treatment_water) %>% 
   summarize(Dead_Count = sum(Dead_Count),
             PercentDead = 100*(Dead_Count/20),
-            Porometer = mean(Porometer),
+            Porometer_Est = mean(Porometer_Est),
             Temperature_C = mean(Temperature_C),
             LeafSensor_PercentRH = mean(LeafSensor_PercentRH),
             FilterSensor_PercentRH = mean(FilterSensor_PercentRH)) %>% 
@@ -71,20 +71,20 @@ Phase1_Data_Porometer <- Phase1_Data_Porometer %>%
 Phase1_Data_Porometer_PIPO <- Phase1_Data_Porometer %>% 
   filter(Species == "PIPO")
 
-#SD???
+#SD
 Phase1_Data_Porometer <- Phase1_Data_Porometer %>% 
-  group_by(Week) %>%
-  mutate(SD = sd(Porometer))
+  group_by(Species, Week, Treatment_temp, Treatment_water) %>%
+  mutate(SD = sd(Porometer_Est, na.rm = T))
 
 
 #Porometer Conductance
 Phase1_Data_Porometer_PIPO %>% 
   #filter(Species == "PIPO") %>% 
   ggplot(aes(x = Week,
-             y = Porometer,
+             y = Porometer_Est,
              color = Treatment_temp)) +
   geom_point() +
-  geom_line() +
+  #geom_line() +
   ylim(0, 600) +
   xlim(0,18) +
   annotate("segment",
@@ -109,9 +109,10 @@ Phase1_Data_Porometer_PIPO %>%
 ################################################################################
 #read CSVs
 Phase1_Data_Porometer_Avg <- read_csv("data_QAQC/Phase1_Data_Porometer_Avg.csv")
+#SD
 Phase1_Data_Porometer_Avg <- Phase1_Data_Porometer_Avg %>% 
-  group_by(Week) %>%
-  mutate(SD = sd(Porometer))
+  group_by(Species, Week, Treatment_temp, Treatment_water) %>%
+  mutate(SD = sd(Porometer_Est, na.rm = T))
 
 #Porometer Conductance
 Phase1_Data_Porometer_Avg %>% 

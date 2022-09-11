@@ -147,7 +147,7 @@ Phase1_Data_Weight <- Phase1_Data_Weight %>%
 # SD
 Phase1_Data_Weight <- Phase1_Data_Weight %>% 
   group_by(Species, Week, Treatment_temp, Treatment_water) %>%
-  mutate(SD_Total = sd(Weight_g, na.rm = T),
+  mutate(SD_Total = sd(Weight_Est, na.rm = T),
          SD_Water = sd(WaterWeight_Calc, na.rm = T))
 
 # Stress Week Start
