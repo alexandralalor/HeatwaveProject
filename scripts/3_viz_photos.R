@@ -26,10 +26,11 @@ Phase1_Photos$Treatment_temp <- as.factor(Phase1_Photos$Treatment_temp)
 Phase1_Photos$Treatment_water <- as.factor(Phase1_Photos$Treatment_water)
 Phase1_Photos$PorometerSubset <- as.factor(Phase1_Photos$PorometerSubset)
 Phase1_Photos$Dead <- as.factor(Phase1_Photos$Dead)
-Phase1_Photos$red_class <- as.factor(Phase1_Photos$red_class)
-Phase1_Photos$green_class <- as.factor(Phase1_Photos$green_class)
-Phase1_Photos$blue_class <- as.factor(Phase1_Photos$blue_class)
+# Phase1_Photos$red_class <- as.factor(Phase1_Photos$red_class)
+# Phase1_Photos$green_class <- as.factor(Phase1_Photos$green_class)
+# Phase1_Photos$blue_class <- as.factor(Phase1_Photos$blue_class)
 
+################################################################################
 
 #select which trees to visualize
 Phase1_Photos_graph <- Phase1_Photos %>% 

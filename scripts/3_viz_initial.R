@@ -49,3 +49,20 @@ Phase1_Data %>%
   scale_color_discrete(guide = guide_legend(override.aes = list(alpha = 1, size = 2))) +
   theme_minimal()
 
+#size boxplot
+Phase1_Data %>% 
+  group_by(Species) %>% 
+  ggplot(aes(x = Species,
+             y = Height_mm,
+             color = CommonName)) +
+  geom_boxplot() +
+  #geom_point(aes(size = Phase1_Data$Biomass_g)) +
+  #xlim(2,11) +
+  ylim(0,600) +
+  xlab("Basal Stem Diameter") +
+  ylab("Height (mm)") +
+  labs(title = "Species Size Distribution") +
+  scale_color_discrete(guide = guide_legend(override.aes = list(alpha = 1, size = 2))) +
+  theme_minimal() +
+  theme(legend.position = "none")
+

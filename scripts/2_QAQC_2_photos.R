@@ -5,7 +5,7 @@
 #allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-07-08
-#Last updated: 2022-07-08
+#Last updated: 2022-09-12
 
 #load libraries
 library(tidyverse)
@@ -41,6 +41,13 @@ Phase1_Photos %>%
   group_by(Week, Date, Species, SpeciesID, Treatment_temp, Treatment_water) %>% 
   summarize(percent = sum(col_share))
 
+Phase1_Photos <- Phase1_Photos %>% 
+  mutate(Treatment_temp = ifelse(Treatment_temp == "Ambient+HW", "Ambient_HW", "Ambient"))
+
+#save csv
+write.csv(Phase1_Photos, "data_QAQC/Phase1_Photos.csv", quote=FALSE, row.names = FALSE)
+
+
 ################################################################################
 
 #combine with meta data
@@ -52,10 +59,12 @@ glimpse(Phase1_Data)
 Phase1_Data_add <- Phase1_Data %>%
   select(-c("Species","Treatment_temp","Treatment_water"))
 
-Phase1_Photos <- merge(Phase1_Data_add, Phase1_Photos, by = c("Week", "SpeciesID"))
-Phase1_Photos <- Phase1_Photos[ ,c(1,16,17,2,18,19,7,12,13,14,15,20,21,22,23,24,25,26,27,28,29)]
+Phase1_Data_Photos <- merge(Phase1_Data_add, Phase1_Photos, by = c("Week", "SpeciesID"))
+Phase1_Data_Photos <- Phase1_Data_Photos[ ,c(1,19,20,2,21,22,7,12,13,14,15,16,17,18,23,24,25,26,27,28,29,30,31,32)]
+Phase1_Data_Photos <- Phase1_Data_Photos %>%
+  select(-c("Date"))
 
 ################################################################################
 
 #save csv
-write.csv(Phase1_Photos, "data_QAQC/Phase1_Photos.csv", quote=FALSE, row.names = FALSE)
+write.csv(Phase1_Data_Photos, "data_QAQC/Phase1_Data_Photos.csv", quote=FALSE, row.names = FALSE)
