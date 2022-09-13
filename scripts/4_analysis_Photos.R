@@ -35,7 +35,7 @@ Phase1_Data_Photos_1 <- merge(Phase1_Data_Photos_add, Phase1_Data_add,
                             by = c("Species", "SpeciesID", "Treatment_temp", "Treatment_water"), all.y = T)
 
 #reorder columns
-Phase1_Data_Photos_1 <- Phase1_Data_Photos_1[, c(18,1,2,3,4,19,20,21,22,23,5,6,7,8,9,10,11,12,13,14,16,17)]
+Phase1_Data_Photos_1 <- Phase1_Data_Photos_1[, c(26,1,2,3,4,27,28,29,30,31,13,14,15,16,17,18,19,20,21,22,23,24,25)]
 
 #combine df
 Phase1_Data_Photos <- merge(Phase1_Data_Photos, Phase1_Data_Photos_1, all = T)
@@ -58,9 +58,9 @@ Phase1_Data_Photos <- read_csv("data_analysis/Phase1_Data_Photos.csv")
 
 Phase1_Data_Photos_Avg <- Phase1_Data_Photos %>% 
   group_by(Week, Species, Treatment_temp, Treatment_water, red_class, green_class, blue_class) %>% 
-  summarize(red = round(mean(red)),
-            green = round(mean(green)),
-            blue = round(mean(blue)),
+  summarize(red = round(mean(red, na.rm = T)),
+            green = round(mean(green, na.rm = T)),
+            blue = round(mean(blue, na.rm = T)),
             col_freq = sum(col_freq))
 
 #fill in summary df

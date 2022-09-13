@@ -20,15 +20,15 @@ tree_rgb_sum_filter <- read_csv("data_clean/Phase1_Photos.csv")
 #1/2 of the data points, but only about ~1% of the total data. Seems to be the 
 #best choice to maximize data while reducing file size!
 
-#test impact of removing small pixels
-tree_rgb_small_percent <- tree_rgb_filter_viz %>% 
-  filter(col_freq <= 100)
-tree_rgb_big_percent <- tree_rgb_filter_viz %>% 
-  filter(col_freq > 100)
-
-#check out a histogram to see pixel distribution before and after
-hist(tree_rgb_sum_filter$col_freq, breaks = 200) #before
-hist(Phase1_Photos$col_freq, breaks = 200) #after
+# #test impact of removing small pixels
+# tree_rgb_small_percent <- tree_rgb_filter_viz %>% 
+#   filter(col_freq <= 100)
+# tree_rgb_big_percent <- tree_rgb_filter_viz %>% 
+#   filter(col_freq > 100)
+# 
+# #check out a histogram to see pixel distribution before and after
+# hist(tree_rgb_sum_filter$col_freq, breaks = 200) #before
+# hist(Phase1_Photos$col_freq, breaks = 200) #after
 
 
 #filter to exclude infrequent colors
@@ -60,7 +60,7 @@ Phase1_Data_add <- Phase1_Data %>%
   select(-c("Species","Treatment_temp","Treatment_water"))
 
 Phase1_Data_Photos <- merge(Phase1_Data_add, Phase1_Photos, by = c("Week", "SpeciesID"))
-Phase1_Data_Photos <- Phase1_Data_Photos[ ,c(1,19,20,2,21,22,7,12,13,14,15,16,17,18,23,24,25,26,27,28,29,30,31,32)]
+Phase1_Data_Photos_1 <- Phase1_Data_Photos[ ,c(1,19,20,2,21,22,7,12,13,14,15,16,17,18,23,24,25,26,27,28,29,30,31,32)]
 Phase1_Data_Photos <- Phase1_Data_Photos %>%
   select(-c("Date"))
 
