@@ -972,6 +972,73 @@ Phase1_Data_Porometer_Avg %>%
         legend.text = element_text(size = 5),
         legend.title = element_blank())
 ```
+#testing with colors
+```{r}
+Phase1_Data_Porometer_Avg %>% 
+  ggplot(aes(x = Week,
+             y = Porometer_Est,
+             color = Treatment_temp)) +
+  geom_point() +
+  geom_line() +
+  ylim(0, 350) +
+  xlim(0,36) +
+  annotate("segment",
+           x = 7, xend = 7,
+           y = 0, yend = 350,
+           color = "red",
+           linetype = "dashed",
+           size = 0.4) +
+  # annotate("segment",
+  #          x = 0, xend = 36,
+  #          y = 90, yend = 90,
+  #          color = "black",
+  #          linetype = "solid",
+  #          size = 0.4) +
+  geom_rect(data = subset(Porometer_Stress_Label, CommonName == "Ponderosa Pine"),
+           aes(xmin = Week, xmax = Week,
+               ymin = ymin, ymax = ymax1),
+           color = "black",
+           linetype = "dashed",
+           size = 0.4) +
+  geom_rect(data = subset(Porometer_Stress_Label, CommonName == "Pinyon Pine"),
+           aes(xmin = Week, xmax = Week,
+               ymin = ymin, ymax = ymax1),
+           color = "black",
+           linetype = "dashed",
+           size = 0.4) +
+  geom_rect(data = subset(Porometer_Stress_Label, CommonName == "Limber Pine"),
+           aes(xmin = Week, xmax = Week,
+               ymin = ymin, ymax = ymax1),
+           color = "black",
+           linetype = "dashed",
+           size = 0.4) +
+  geom_rect(data = subset(Porometer_Stress_Label, CommonName == "Douglas fir"),
+           aes(xmin = Week, xmax = Week,
+               ymin = ymin, ymax = ymax1),
+           color = "black",
+           linetype = "dashed",
+           size = 0.4) +
+  geom_rect(data = subset(Porometer_Stress_Label, CommonName == "Engelman Spruce"),
+           aes(xmin = Week, xmax = Week,
+               ymin = ymin, ymax = ymax1),
+           color = "black",
+           linetype = "dashed",
+           size = 0.4) +
+  geom_errorbar(aes(x = Phase1_Data_Porometer_Avg$Week,
+                    ymin = (Phase1_Data_Porometer_Avg$Porometer_Est - Phase1_Data_Porometer_Avg$SD_Avg),
+                    ymax = (Phase1_Data_Porometer_Avg$Porometer_Est + Phase1_Data_Porometer_Avg$SD_Avg))) +
+  geom_text(label = "Heatwave",
+            x = 12, y = 300, color = "red", size = 3) +
+  facet_wrap(~CommonName) +
+  xlab("Week") +
+  ylab("Stomatal Conductance") +
+  labs(title = "Stomatal Conductance of Droughted Trees") +
+  theme_minimal() +
+  scale_color_discrete(direction = -1) +
+  theme(legend.position = "bottom",
+        legend.text = element_text(size = 5),
+        legend.title = element_blank())
+```
 
 
 # KM Curve (Drought)

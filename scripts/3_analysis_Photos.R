@@ -196,13 +196,13 @@ Phase1_Data_Porometer_Avg %>%
         legend.title = element_blank())
 
 ################################################################################
-
+Pha
 # YES!
 # must arrange according to order of graph display
 # First, all ambient displayed (week 1 - end). Then all hw (week 1-end)
 # So, arrange by treatment_temp, then week. 
-Phase1_Photos_graph <- Phase1_Photos_Avg %>% 
-  filter(Treatment_water == "Drought") %>% 
+Phase1_Photos_graph <- Phase1_Data_Photos_Avg %>% 
+  filter(Treatment_water == "Watered") %>% 
   filter(Species == "PIED") %>% 
   arrange(Species, Treatment_temp, Week, green_only, desc(red_only))
 

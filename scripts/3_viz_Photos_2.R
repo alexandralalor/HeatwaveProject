@@ -20,7 +20,7 @@ Phase1_Data_Photos_Avg <- read_csv("data_analysis/Phase1_Data_Photos_Avg.csv")
 # So, arrange by treatment_temp, then week. 
 Phase1_Data_Photos_graph <- Phase1_Data_Photos_Avg %>% 
   filter(Treatment_water == "Drought") %>% 
-  filter(Species == "PIED") %>% 
+  filter(Species == "PIPO") %>% 
   arrange(Species, Treatment_temp, Week, green_only, desc(red_only))
 
 #save hex colors for visualization
@@ -37,12 +37,12 @@ Phase1_Data_Photos_graph %>%
   facet_wrap(~Treatment_temp) +
   # facet_grid(rows = vars(Species),
   #            cols = vars(Treatment_temp)) +
-  # annotate("rect",
-  #          xmin = 6.5, xmax = 7.5,
-  #          ymin = 0, ymax = 100,
-  #          color = "red",
-  #          alpha = 0,
-  #          size = 0.3) +
+  annotate("rect",
+           xmin = 6.5, xmax = 7.5,
+           ymin = 0, ymax = 100,
+           color = "red",
+           alpha = 0,
+           size = 0.3) +
   scale_x_continuous(breaks = 1:22) +
   ylab("Color Percent") +
   xlab("Weeks") +
