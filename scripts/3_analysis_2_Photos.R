@@ -4,7 +4,7 @@
 #allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-09-11
-#Last updated: 2022-09-12
+#Last updated: 2022-09-18
 
 #load packages
 library(tidyverse)
@@ -14,23 +14,38 @@ library(colorfindr) #for 3d color plots
 #read csv
 Phase1_Data_Photos <- read_csv("data_analysis/Phase1_Data_Photos.csv")
 
+
+################################################################################
+# SD
+################################################################################
+
+Phase1_Data_Photos <- Phase1_Data_Photos %>% 
+  group_by(Species, Week, Treatment_temp, Treatment_water) %>%
+  mutate(SD_PercentRed = sd(PercentRed, na.rm = T))
+
+
+#save csv
+write.csv(Phase1_Data_Photos, "data_analysis/Phase1_Data_Photos.csv", quote = FALSE, row.names = FALSE)
+
+
+
 ################################################################################
 # find average
 ################################################################################
 
-
 # it seems like, over time, blue stays the same, red increases, and green decreases
-
 # goal: find average rgb across all individuals per species for each week
-# script from 0_colors_rgb_sum, with modifications
-# seems to work pretty well
 
 Phase1_Data_Photos_Avg <- Phase1_Data_Photos %>% 
   group_by(Week, Species, Treatment_temp, Treatment_water, red_class, green_class, blue_class) %>% 
-  summarize(red = round(mean(red, na.rm = T)),
+  summarize(Dead_Count = sum(Dead_Count),
+            red = round(mean(red, na.rm = T)),
             green = round(mean(green, na.rm = T)),
             blue = round(mean(blue, na.rm = T)),
-            col_freq = sum(col_freq))
+            col_freq = sum(col_freq),
+            PercentGreen = mean(PercentGreen, na.rm = T),
+            PercentRed = mean(PercentRed, na.rm = T),
+            SD_PercentRed = mean(SD_PercentRed, na.rm = T))
 
 #fill in summary df
 #add hex codes to summary df
@@ -40,24 +55,21 @@ hex <- as.data.frame(rgb2hex(r = Phase1_Data_Photos_Avg$red,
 colnames(hex) <- "col_hex"
 Phase1_Data_Photos_Avg <- cbind(Phase1_Data_Photos_Avg, hex)
 #reorder columns
-Phase1_Data_Photos_Avg <- Phase1_Data_Photos_Avg[, c(1,2,3,4,5,6,7,8,9,10,12,11)]
+Phase1_Data_Photos_Avg <- Phase1_Data_Photos_Avg[, c(1,2,3,4,8,5,6,7,9,10,11,16,12,13,14,15)]
 
 #calculate total # pixels and percent of each color, add to summary df
 Phase1_Data_Photos_Avg <- Phase1_Data_Photos_Avg %>% 
   group_by(Week, Species, Treatment_temp, Treatment_water) %>% 
   mutate(col_total = sum(col_freq)) %>% 
   mutate(col_share = round(100*(col_freq/col_total), digits = 1))
+#reorder columns
+Phase1_Data_Photos_Avg <- Phase1_Data_Photos_Avg[, c(1,2,3,4,5,6,7,8,9,10,11,12,13,17,18,14,15,16)]
 
 #Separates green and brown
 Phase1_Data_Photos_Avg <- Phase1_Data_Photos_Avg %>% 
-  group_by(Treatment_temp, Species, Week) %>% 
-  mutate(green_only = ifelse(green >= red, green, NA),
-         red_only = ifelse(green < red, red, NA))
-
-# #test separation of green and brown
-# Phase1_Data_Photos_Avg %>%
-#   filter(Week == 1, red_only > 0) %>% 
-#   plot_colors_3d(sample_size = 10000, marker_size = 2.5, color_space = "RGB")
+  group_by(Week, Species, Treatment_temp, Treatment_water) %>% 
+  mutate(PercentGreen = mean(PercentGreen, na.rm = T),
+         PercentRed = mean(PercentRed, na.rm = T))
 
 #save csv
 write.csv(Phase1_Data_Photos_Avg, "data_analysis/Phase1_Data_Photos_Avg.csv", quote=FALSE, row.names = FALSE)
@@ -68,27 +80,7 @@ write.csv(Phase1_Data_Photos_Avg, "data_analysis/Phase1_Data_Photos_Avg.csv", qu
 
 
 
-##########################3
-#filter for NAs
-Phase1_Data_Porometer <- Phase1_Data_Porometer %>% 
-  filter(!is.na(Porometer_Est)) %>% 
-  mutate(Stress_Week = ifelse(Treatment_water == "Watered", NA, Stress_Week))
 
-#Avg Porometer
-Phase1_Data_Porometer_Avg <- Phase1_Data_Porometer %>%
-  group_by(ScientificName, CommonName, Species, Week, Treatment_temp, Treatment_water) %>% 
-  summarize(Dead_Count = sum(Dead_Count),
-            PercentDead = 100*(Dead_Count/20),
-            Porometer_Est = mean(Porometer_Est, na.rm = T),
-            Temperature_C = mean(Temperature_C, na.rm = T),
-            LeafSensor_PercentRH = mean(LeafSensor_PercentRH, na.rm = T),
-            FilterSensor_PercentRH = mean(FilterSensor_PercentRH, na.rm = T),
-            SD_Avg = mean(SD, na.rm = T),
-            Stress_Week_Avg = round(mean(Stress_Week, na.rm = TRUE), digits = 1)) %>% 
-  arrange(Species, Week)
-
-Phase1_Data_Porometer_Avg <- Phase1_Data_Porometer_Avg %>%
-  filter(Treatment_water == "Drought")
 
 #################################################################################
 

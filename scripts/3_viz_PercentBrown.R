@@ -29,55 +29,11 @@ Phase1_Data_PercentBrown$Heatwave <- as.factor(Phase1_Data_PercentBrown$Heatwave
 
 
 ################################################################################
-#Find average percent brown data for graphing
-################################################################################
-
-#filter for percent brown data
-Phase1_Data_PercentBrown <- Phase1_Data_PercentBrown %>% 
-  filter(!is.na(PercentBrown_Est))
-
-## Test how many species are in each treatment type
-# test <- Phase1_InitialData %>% 
-#   filter(Species == "PIED", Treatment_water == "Drought", Treatment_temp == "Ambient_HW")
-# test <- Phase1_InitialData %>% 
-#   filter(Species == "PIED", Treatment_water == "Drought", Treatment_temp == "Ambient")
-# test <- Phase1_InitialData %>% 
-#   filter(Species == "PIPO", Treatment_water == "Drought", Treatment_temp == "Ambient_HW")
-# test <- Phase1_InitialData %>% 
-#   filter(Species == "PIPO", Treatment_water == "Drought", Treatment_temp == "Ambient")
-# test <- Phase1_InitialData %>% 
-#   filter(Species == "PIFL", Treatment_water == "Drought", Treatment_temp == "Ambient_HW")
-# test <- Phase1_InitialData %>% 
-#   filter(Species == "PIFL", Treatment_water == "Drought", Treatment_temp == "Ambient")
-# test <- Phase1_InitialData %>% 
-#   filter(Species == "PIEN", Treatment_water == "Drought", Treatment_temp == "Ambient_HW")
-# test <- Phase1_InitialData %>% 
-#   filter(Species == "PIEN", Treatment_water == "Drought", Treatment_temp == "Ambient")
-# test <- Phase1_InitialData %>% 
-#   filter(Species == "PSME", Treatment_water == "Drought", Treatment_temp == "Ambient_HW")
-# test <- Phase1_InitialData %>% 
-#   filter(Species == "PSME", Treatment_water == "Drought", Treatment_temp == "Ambient")
-
-
-#average data 
-Phase1_Data_PercentBrown_Avg <- Phase1_Data_PercentBrown %>%
-  group_by(ScientificName, CommonName, Species, Week, Treatment_temp, Treatment_water) %>%
-  summarize(Dead_Count = sum(Dead_Count),
-            PercentDead = ifelse(Species == "PIED" & Treatment_temp == "Ambient", 
-                                 100*(Dead_Count/19), 100*(Dead_Count/20)),
-            PercentBrown_Est = round(mean(PercentBrown_Est, na.rm = T), digits = 0)) %>%
-  arrange(Species, Week)
-
-#save as csv
-write.csv(Phase1_Data_PercentBrown_Avg, "data_QAQC/Phase1_Data_PercentBrown_Avg.csv", quote = FALSE, row.names = FALSE)
-
-
-################################################################################
 #Graph! Percent Brown Data
 ################################################################################
 
 #read CSVs
-Phase1_Data_PercentBrown_Avg <- read_csv("data_QAQC/Phase1_Data_PercentBrown_Avg.csv")
+Phase1_Data_PercentBrown_Avg <- read_csv("data_analysis/Phase1_Data_PercentBrown_Avg.csv")
 
 unique(Phase1_Data_PercentBrown_Avg$CommonName)
 
