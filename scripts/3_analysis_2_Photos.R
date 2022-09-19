@@ -1,5 +1,5 @@
 #Heatwave Project Phase 1
-#combine color data and poromter data
+#combine color data and porometer data
 #Alexandra Lalor
 #allielalor@arizona.edu
 #allielalor@gmail.com
@@ -9,46 +9,15 @@
 #load packages
 library(tidyverse)
 library(ggtern) #for rbg2hex
+library(colorfindr) #for 3d color plots
 
-#read_csv
-Phase1_Data <- read_csv("data_QAQC/Phase1_Data.csv")
-Phase1_Data_Photos <- read_csv("data_QAQC/Phase1_Data_Photos.csv")
-
-
-#create df to add to photos, to include trees without pictures (retain sample size)
-Phase1_Data_add <- Phase1_Data %>% 
-  filter(!grepl(".5", Phase1_Data$Week, fixed = TRUE)) %>% 
-  filter(Dead == "dead", is.na(Weight_g)) %>% 
-  select(c("Week", "Species", "SpeciesID", "Treatment_temp", "Treatment_water", "PorometerSubset",
-           "Weight_g", "Porometer", "PercentBrown", "Dead"))
-
-Phase1_Data_Photos_add <- Phase1_Data_Photos %>% 
-  group_by(SpeciesID) %>% 
-  filter(Week == max(Week))
-Phase1_Data_Photos_add <- Phase1_Data_Photos_add %>% 
-  select(-c("Week", "PorometerSubset", "Weight_g", "Porometer", "PercentBrown", 
-            "Dead"))
-
-
-#add last week data to Phase1_Data_add
-Phase1_Data_Photos_1 <- merge(Phase1_Data_Photos_add, Phase1_Data_add, 
-                            by = c("Species", "SpeciesID", "Treatment_temp", "Treatment_water"), all.y = T)
-
-#reorder columns
-Phase1_Data_Photos_1 <- Phase1_Data_Photos_1[, c(26,1,2,3,4,27,28,29,30,31,13,14,15,16,17,18,19,20,21,22,23,24,25)]
-
-#combine df
-Phase1_Data_Photos <- merge(Phase1_Data_Photos, Phase1_Data_Photos_1, all = T)
-
-
-#save csv
-write.csv(Phase1_Data_Photos, "data_analysis/Phase1_Data_Photos.csv", quote=FALSE, row.names = FALSE)
-
+#read csv
+Phase1_Data_Photos <- read_csv("data_analysis/Phase1_Data_Photos.csv")
 
 ################################################################################
 # find average
 ################################################################################
-Phase1_Data_Photos <- read_csv("data_analysis/Phase1_Data_Photos.csv")
+
 
 # it seems like, over time, blue stays the same, red increases, and green decreases
 

@@ -44,27 +44,51 @@ Phase1_Photos %>%
 Phase1_Photos <- Phase1_Photos %>% 
   mutate(Treatment_temp = ifelse(Treatment_temp == "Ambient+HW", "Ambient_HW", "Ambient"))
 
-#save csv
-write.csv(Phase1_Photos, "data_QAQC/Phase1_Photos.csv", quote=FALSE, row.names = FALSE)
-
-
 ################################################################################
+#combine photo data with meta data
 
-#combine with meta data
+#read csv
 Phase1_Data <- read_csv("data_QAQC/Phase1_Data.csv")
 
-glimpse(Phase1_Photos)
-glimpse(Phase1_Data)
-
+#combine
 Phase1_Data_add <- Phase1_Data %>%
   select(-c("Species","Treatment_temp","Treatment_water"))
 
 Phase1_Data_Photos <- merge(Phase1_Data_add, Phase1_Photos, by = c("Week", "SpeciesID"))
-Phase1_Data_Photos_1 <- Phase1_Data_Photos[ ,c(1,19,20,2,21,22,7,12,13,14,15,16,17,18,23,24,25,26,27,28,29,30,31,32)]
+Phase1_Data_Photos <- Phase1_Data_Photos[ ,c(1,19,20,2,21,22,7,12,13,14,15,16,17,18,23,24,25,26,27,28,29,30,31,32)]
 Phase1_Data_Photos <- Phase1_Data_Photos %>%
   select(-c("Date"))
 
 ################################################################################
+# creating "photos_est" by adding back in lost photos
+# create df to add to photos, to include trees without pictures (retain sample size)
 
+Phase1_Data_add <- Phase1_Data %>% 
+  filter(!grepl(".5", Phase1_Data$Week, fixed = TRUE)) %>% 
+  filter(Dead == "dead", is.na(Weight_g)) %>% 
+  select(c("Week", "Species", "SpeciesID", "Treatment_temp", "Treatment_water", "PorometerSubset",
+           "Weight_g", "Porometer", "PercentBrown", "Dead"))
+
+Phase1_Data_Photos_add <- Phase1_Data_Photos %>% 
+  group_by(SpeciesID) %>% 
+  filter(Week == max(Week))
+Phase1_Data_Photos_add <- Phase1_Data_Photos_add %>% 
+  select(-c("Week", "PorometerSubset", "Weight_g", "Porometer", "PercentBrown", 
+            "Dead"))
+
+
+#add last week data to Phase1_Data_add
+Phase1_Data_Photos_1 <- merge(Phase1_Data_Photos_add, Phase1_Data_add, 
+                              by = c("Species", "SpeciesID", "Treatment_temp", "Treatment_water"), all.y = T)
+
+#reorder columns
+Phase1_Data_Photos_1 <- Phase1_Data_Photos_1[, c(26,1,2,3,4,27,28,29,30,31,13,14,15,16,17,18,19,20,21,22,23,24,25)]
+
+#combine df
+Phase1_Data_Photos <- merge(Phase1_Data_Photos, Phase1_Data_Photos_1, all = T)
+
+
+################################################################################
 #save csv
 write.csv(Phase1_Data_Photos, "data_QAQC/Phase1_Data_Photos.csv", quote=FALSE, row.names = FALSE)
+
