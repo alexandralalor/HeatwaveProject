@@ -10,7 +10,7 @@ library(tidyverse)
 library(survival)
 
 #read CSVs
-Phase1_Data <- read_csv("data_QAQC/Phase1_Data.csv")
+Phase1_Data <- read_csv("data_analysis/Phase1_Data.csv")
 
 #check out data
 glimpse(Phase1_Data)
@@ -28,6 +28,7 @@ Phase1_Data$Dead <- as.factor(Phase1_Data$Dead)
 Phase1_Data$Dead_Count <- as.factor(Phase1_Data$Dead_Count)
 Phase1_Data$Heatwave_graph <- as.factor(Phase1_Data$Heatwave_graph)
 Phase1_Data$Heatwave <- as.factor(Phase1_Data$Heatwave)
+
 
 
 #summary stats

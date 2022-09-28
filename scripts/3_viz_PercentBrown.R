@@ -35,8 +35,6 @@ Phase1_Data_PercentBrown$Heatwave <- as.factor(Phase1_Data_PercentBrown$Heatwave
 #read CSVs
 Phase1_Data_PercentBrown_Avg <- read_csv("data_analysis/Phase1_Data_PercentBrown_Avg.csv")
 
-unique(Phase1_Data_PercentBrown_Avg$CommonName)
-
 # A data frame with labels for each facet
 HW_label <- data.frame(CommonName = c("Ponderosa Pine","Pinyon Pine","Limber Pine","Douglas fir","Engelman Spruce"),
                        Species = c("PIPO","PIED","PIFL","PSME","PIEN"),
@@ -52,14 +50,16 @@ HW_rect <- data.frame(CommonName = c("Ponderosa Pine","Pinyon Pine","Limber Pine
                       WaterWeight_Calc = 100,
                       PercentWater = 100)
 
+Phase1_Data_PercentBrown_graph <- Phase1_Data_PercentBrown_Avg %>% 
+  filter(Treatment_water == "Drought")
 
 #Percent brown over time (averaged)
-Phase1_Data_PercentBrown_Avg %>% 
-  filter(Treatment_water == "Drought") %>% 
+Phase1_Data_PercentBrown_graph %>% 
+  #filter(Treatment_water == "Drought") %>% 
   group_by(Treatment_temp) %>% 
   ggplot(aes(x = Week,
              y = PercentBrown_Est,
-             color = CommonName)) +
+             color = Species)) +
   geom_point() +
   geom_line() +
   ylim(0, 100) +
@@ -76,4 +76,7 @@ Phase1_Data_PercentBrown_Avg %>%
             fill = "red",
             color = "red",
             alpha = 0.05) +
+  geom_errorbar(aes(x = Phase1_Data_PercentBrown_graph$Week,
+                    ymin = (Phase1_Data_PercentBrown_graph$PercentBrown_Est - Phase1_Data_PercentBrown_graph$SD_PercentBrown),
+                    ymax = (Phase1_Data_PercentBrown_graph$PercentBrown_Est + Phase1_Data_PercentBrown_graph$SD_PercentBrown))) +
   theme_minimal()

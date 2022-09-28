@@ -8,7 +8,7 @@
 
 #load packages
 library(tidyverse)
-library(ggtern) #for rbg2hex
+# library(ggtern) #for rbg2hex
 
 #read_csv
 Phase1_Data_Photos_Avg <- read_csv("data_analysis/Phase1_Data_Photos_Avg.csv")
@@ -20,7 +20,7 @@ Phase1_Data_Photos_Avg <- read_csv("data_analysis/Phase1_Data_Photos_Avg.csv")
 # So, arrange by treatment_temp, then week. 
 Phase1_Data_Photos_graph <- Phase1_Data_Photos_Avg %>% 
   filter(Treatment_water == "Drought") %>% 
-  filter(Species == "PIPO") %>% 
+  filter(Species == "PIFL") %>% 
   arrange(Species, Treatment_temp, Week, green_only, desc(red_only))
 
 #save hex colors for visualization
@@ -43,6 +43,9 @@ Phase1_Data_Photos_graph %>%
            color = "red",
            alpha = 0,
            size = 0.3) +
+  geom_errorbar(aes(x = Phase1_Data_Photos_graph$Week,
+                    ymin = (Phase1_Data_Photos_graph$PercentGreen - Phase1_Data_Photos_graph$SD_PercentRed),
+                    ymax = (Phase1_Data_Photos_graph$PercentGreen + Phase1_Data_Photos_graph$SD_PercentRed)))
   scale_x_continuous(breaks = 1:22) +
   ylab("Color Percent") +
   xlab("Weeks") +

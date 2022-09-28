@@ -24,10 +24,22 @@ Phase1_Data_Photos <- Phase1_Data_Photos %>%
   mutate(SD_PercentRed = sd(PercentRed, na.rm = T))
 
 
+################################################################################
+# Samples sizes per week
+################################################################################
+
+summary_1 <- Phase1_Data_Photos %>% 
+  group_by(Species, Treatment_temp, Treatment_water, Week) %>% 
+  summarize(SampleSize_Weekly_Photos = length(unique(SpeciesID)))
+
+Phase1_Data_Photos <- merge(Phase1_Data_Photos, summary_1, all.x = T)
+
+#rearrange columns
+Phase1_Data_Photos <- Phase1_Data_Photos[ ,c(1,2,5,3,4,6,29,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28)]
+
+
 #save csv
 write.csv(Phase1_Data_Photos, "data_analysis/Phase1_Data_Photos.csv", quote = FALSE, row.names = FALSE)
-
-
 
 ################################################################################
 # find average
@@ -38,7 +50,8 @@ write.csv(Phase1_Data_Photos, "data_analysis/Phase1_Data_Photos.csv", quote = FA
 
 Phase1_Data_Photos_Avg <- Phase1_Data_Photos %>% 
   group_by(Week, Species, Treatment_temp, Treatment_water, red_class, green_class, blue_class) %>% 
-  summarize(Dead_Count = sum(Dead_Count),
+  summarize(SampleSize_Weekly_Photos = mean(SampleSize_Weekly_Photos),
+            Dead_Count = sum(Dead_Count),
             red = round(mean(red, na.rm = T)),
             green = round(mean(green, na.rm = T)),
             blue = round(mean(blue, na.rm = T)),
@@ -54,18 +67,23 @@ hex <- as.data.frame(rgb2hex(r = Phase1_Data_Photos_Avg$red,
                              b = Phase1_Data_Photos_Avg$blue))
 colnames(hex) <- "col_hex"
 Phase1_Data_Photos_Avg <- cbind(Phase1_Data_Photos_Avg, hex)
-#reorder columns
-Phase1_Data_Photos_Avg <- Phase1_Data_Photos_Avg[, c(1,2,3,4,8,5,6,7,9,10,11,16,12,13,14,15)]
 
 #calculate total # pixels and percent of each color, add to summary df
 Phase1_Data_Photos_Avg <- Phase1_Data_Photos_Avg %>% 
   group_by(Week, Species, Treatment_temp, Treatment_water) %>% 
   mutate(col_total = sum(col_freq)) %>% 
   mutate(col_share = round(100*(col_freq/col_total), digits = 1))
-#reorder columns
-Phase1_Data_Photos_Avg <- Phase1_Data_Photos_Avg[, c(1,2,3,4,5,6,7,8,9,10,11,12,13,17,18,14,15,16)]
 
-#Separates green and brown
+#reorder columns
+Phase1_Data_Photos_Avg <- Phase1_Data_Photos_Avg[, c(1,2,3,4,8,9,5,6,7,10,11,12,17,13,18,19,14,15,16)]
+
+
+#separate green and brown
+Phase1_Data_Photos_Avg <- Phase1_Data_Photos_Avg %>% 
+  mutate(green_only = ifelse(green >= red, green, NA),
+         red_only = ifelse(green < red, red, NA))
+
+#percent green / brown
 Phase1_Data_Photos_Avg <- Phase1_Data_Photos_Avg %>% 
   group_by(Week, Species, Treatment_temp, Treatment_water) %>% 
   mutate(PercentGreen = mean(PercentGreen, na.rm = T),
@@ -75,14 +93,12 @@ Phase1_Data_Photos_Avg <- Phase1_Data_Photos_Avg %>%
 write.csv(Phase1_Data_Photos_Avg, "data_analysis/Phase1_Data_Photos_Avg.csv", quote=FALSE, row.names = FALSE)
 
 
-
-
-
-
-
-
-
 #################################################################################
+
+
+
+
+
 
 #combine df
 test <- merge(Phase1_Photos_Avg, Phase1_Data_Porometer_Avg, 

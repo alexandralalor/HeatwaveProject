@@ -92,3 +92,42 @@ Phase1_Data_Photos <- merge(Phase1_Data_Photos, Phase1_Data_Photos_1, all = T)
 #save csv
 write.csv(Phase1_Data_Photos, "data_QAQC/Phase1_Data_Photos.csv", quote=FALSE, row.names = FALSE)
 
+
+################################################################################
+#fix errors
+################################################################################
+
+#read csv
+Phase1_Data_Photos <- read_csv("data_QAQC/Phase1_Data_Photos.csv")
+
+#fix PIED35 == Drought
+Phase1_Data_Photos <- Phase1_Data_Photos %>% 
+  mutate(Treatment_water = ifelse(SpeciesID == "PIED35", "Drought", Treatment_water))
+
+#fix PIEN Week 10 - add in watered
+fix <- Phase1_Data_Photos_test %>% 
+  filter(Species == "PIEN", Week == 10, Treatment_temp == "Ambient") %>% 
+  group_by(SpeciesID) %>% 
+  summarize(water = unique(Treatment_water))
+    
+Phase1_Data_Photos <- Phase1_Data_Photos %>% 
+  mutate(Treatment_water = ifelse(SpeciesID == "PIEN26" | SpeciesID == "PIEN27" | SpeciesID == "PIEN28" | SpeciesID == "PIEN29" | SpeciesID == "PIEN30", 
+                                  "Watered", Treatment_water))
+
+
+#fix Week 16 (PIED) and Week 18 (PSME/PIFL)
+#this was Christmas, no photos taken
+fix <- Phase1_Data_Photos %>% 
+  filter(Species == "PIED", Week == 18, Treatment_temp == "Ambient") %>% 
+  group_by(SpeciesID) %>% 
+  summarize(water = unique(Treatment_water))
+
+Phase1_Data_Photos <- subset(Phase1_Data_Photos, !(Week == 18 & Species == "PIED"))
+Phase1_Data_Photos <- subset(Phase1_Data_Photos, !(Week == 16 & Species == "PIFL"))
+Phase1_Data_Photos <- subset(Phase1_Data_Photos, !(Week == 16 & Species == "PSME"))
+
+################################################################################
+#save csv
+write.csv(Phase1_Data_Photos, "data_QAQC/Phase1_Data_Photos.csv", quote=FALSE, row.names = FALSE)
+
+
