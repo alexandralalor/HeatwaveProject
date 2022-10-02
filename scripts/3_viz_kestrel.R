@@ -242,3 +242,11 @@ Phase1_Kestrel_AvgTemp_Sum_Total_graph %>%
   scale_fill_brewer(palette = "Set2") +
   theme_minimal()
 
+################################################################################
+# mean and range of temp differences in chambers
+Phase1_Kestrel_AvgTemp %>% 
+  filter(Kestrel != "calculated") %>% 
+  group_by(Chamber, Heatwave) %>% 
+  summarise(mean = mean(Temperature_avg),
+            min = min(Temperature_avg),
+            max = max(Temperature_avg))

@@ -68,7 +68,7 @@ Dead_Week %>%
 #boxplot
 Dead_Week %>% 
   group_by(Species, Treatment_temp) %>% 
-  arrange(Dead_Week_round) %>% 
+  arrange(Dead_Week) %>% 
   #filter(Species == "PIFL") %>% 
   ggplot(aes(x = Dead_Week,
              y = reorder(Species, Dead_Week, mean),
