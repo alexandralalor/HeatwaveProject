@@ -1,3 +1,9 @@
+#Data analysis - equations
+#Alexandra Lalor
+#allielalor@arizona.edu
+#allielalor@gmail.com
+#First created: 2022-09-15
+#Last updated: 2022-10-10
 
 #load packages
 library(tidyverse)
@@ -60,7 +66,7 @@ heatwave <- read.csv("data_analysis/Dead_Week.csv")
 # heatwave_filter <- heatwave %>% 
 #   filter(SpeciesID != "PIFL16")
 
-heatwave_summary_test <- heatwave %>% 
+heatwave_summary <- heatwave %>% 
   group_by(Species, Treatment_temp) %>% 
   summarize(n = length(Dead_Week),
             df = length(Dead_Week) - 1,
@@ -71,12 +77,13 @@ heatwave_summary_test <- heatwave %>%
             Q3 = round(quantile(Dead_Week, probs = 0.75), digits = 1),
             var = round(var(Dead_Week), digits = 2),
             SD = round(sd(Dead_Week), digits = 2),
-            SE = round(se(Dead_Week), digits = 2),
+            SE = round(se(Dead_Week), digits = 2))
             #CV = round(cv(Dead_Week), digits = 2),
-            t.critical = round(abs(qt(1 - (alpha/tails), (length(Dead_Week) - 1))), digits = 3))
+            #t.critical = round(abs(qt(1 - (alpha/tails), (length(Dead_Week) - 1))), digits = 3))
 
-heatwave_summary_test <- heatwave_summary_test %>% 
-  mutate(CI_lower_mean = round(mean - (t.critical * SE), digits = 2),
+heatwave_summary <- heatwave_summary %>% 
+  mutate(half_width = t.critical * SE,
+         CI_lower_mean = round(mean - (t.critical * SE), digits = 2),
          CI_upper_mean = round(mean + (t.critical * SE), digits = 2),
          CI_lower_med = round(median - (t.critical * SE), digits = 2),
          CI_upper_med = round(median + (t.critical * SE), digits = 2),
@@ -94,9 +101,9 @@ write.csv(heatwave_summary, "data_analysis/heatwave_summary.csv", quote = FALSE,
 heatwave_summary <- read_csv("data_analysis/heatwave_summary.csv")
 
 # #PIPO
-# amb <- heatwave_summary %>% 
+# amb <- heatwave_summary %>%
 #   filter(Species == "PIPO", Treatment_temp == "Ambient")
-# hw <- heatwave_summary %>% 
+# hw <- heatwave_summary %>%
 #   filter(Species == "PIPO", Treatment_temp == "Ambient_HW")
 # #PIED
 # amb <- heatwave_summary %>%
@@ -228,10 +235,11 @@ heatwave_summary <- read_csv("data_analysis/heatwave_summary.csv")
 
 # drought only = mean_o
 # drought + HW = mean
-mean_o <- amb$Q1
-mean <- hw$Q1
+mean_o <- amb$mean
+mean <- hw$mean
 SE_pool <- amb$SE_pool
 df <- hw$df
+
 
 
 ## t-statistic = [(mean - mean_o) - 0] / SE_pool
@@ -263,16 +271,59 @@ heatwave_summary <- merge(heatwave_summary, stats_df, by = "Species")
 write.csv(heatwave_summary, "data_analysis/heatwave_summary.csv", quote = FALSE, row.names = FALSE)
 
 
+################################################################################
+# difference
+heatwave_summary <- read_csv("data_analysis/heatwave_summary.csv")
+
+heatwave_summary_test <- heatwave_summary %>% 
+  select(Species, df, Treatment_temp, mean, median, Q1)
+heatwave_summary_amb <- heatwave_summary_test %>% 
+  filter(Treatment_temp == "Ambient") %>% 
+  mutate(mean_amb = mean,
+         median_amb = median,
+         Q1_amb = Q1,
+         df_amb = df) %>% 
+  select("Species","mean_amb","median_amb","Q1_amb","df_amb")
+heatwave_summary_hw <- heatwave_summary_test %>% 
+  filter(Treatment_temp == "Ambient_HW") %>% 
+  mutate(mean_hw = mean,
+         median_hw = median,
+         Q1_hw = Q1,
+         df_hw = df) %>% 
+  select("Species","mean_hw","median_hw","Q1_hw","df_hw")
+heatwave_summary_calc <- merge(heatwave_summary_amb, heatwave_summary_hw)
+heatwave_summary_calc <- heatwave_summary_calc %>% 
+  mutate(mean_diff = abs(mean_amb - mean_hw),
+         median_diff = abs(median_amb - median_hw),
+         Q1_diff = abs(Q1_amb - Q1_hw),
+         df_all = df_amb + df_hw) %>% 
+  select("Species","df_all")
+
+heatwave_summary <- merge(heatwave_summary, heatwave_summary_calc, by = "Species")
+
+
+heatwave_summary <- heatwave_summary %>% 
+  mutate(t.critical.all = round(abs(qt(1 - (alpha/tails), df_all)), digits = 3),
+         half_width_diff = t.critical.all * SE_pool,
+         CI_lower_diff_mean = round(mean_diff - half_width_diff, digits = 2),
+         CI_upper_diff_mean = round(mean_diff + half_width_diff, digits = 2),
+         CI_lower_diff_med = round(median_diff - half_width_diff, digits = 2),
+         CI_upper_diff_med = round(median_diff + half_width_diff, digits = 2),
+         CI_lower_diff_Q1 = round(Q1_diff - half_width_diff, digits = 2),
+         CI_upper_diff_Q1 = round(Q1_diff + half_width_diff, digits = 2))
+
+#save csv
+write.csv(heatwave_summary, "data_analysis/heatwave_summary.csv", quote = FALSE, row.names = FALSE)
 
 
 
+#################################################################################
 
+# t-statistic = [(mean - mean_o) - 0] / SE_pool
 
-
-
-
-
-
+heatwave_summary <- heatwave_summary %>% 
+  mutate(t.stat.all_mean = mean_diff / SE_pool,
+         p.all_mean = (pt(-abs(t.stat.all_mean), df_all)))
 
 
 

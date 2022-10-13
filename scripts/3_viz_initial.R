@@ -55,12 +55,26 @@ Phase1_Data %>%
   ggplot(aes(x = Species,
              y = Height_mm,
              color = CommonName)) +
-  geom_boxplot() +
-  #geom_point(aes(size = Phase1_Data$Biomass_g)) +
-  #xlim(2,11) +
+  geom_point() +
   ylim(0,600) +
   xlab("Basal Stem Diameter") +
   ylab("Height (mm)") +
+  labs(title = "Species Size Distribution") +
+  scale_color_discrete(guide = guide_legend(override.aes = list(alpha = 1, size = 2))) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+
+#size boxplot
+Phase1_Data %>% 
+  group_by(Species) %>% 
+  ggplot(aes(x = Species,
+             y = BasalDia_mm,
+             color = CommonName)) +
+  geom_boxplot() +
+  #ylim(0,.03) +
+  xlab("Species") +
+  ylab("Basal Diameter (mm)") +
   labs(title = "Species Size Distribution") +
   scale_color_discrete(guide = guide_legend(override.aes = list(alpha = 1, size = 2))) +
   theme_minimal() +
@@ -70,16 +84,80 @@ Phase1_Data %>%
 Phase1_Data %>% 
   group_by(Species) %>% 
   ggplot(aes(x = Species,
-             y = Biomass_g/Height_mm,
+             y = Biomass_g,
              color = CommonName)) +
   geom_boxplot() +
-  #geom_point(aes(size = Phase1_Data$Biomass_g)) +
-  #xlim(2,11) +
-  ylim(0,.03) +
-  xlab("Basal Stem Diameter") +
-  ylab("Height (mm)") +
+  #ylim(0,.03) +
+  xlab("Species") +
+  ylab("Biomass (g)") +
   labs(title = "Species Size Distribution") +
   scale_color_discrete(guide = guide_legend(override.aes = list(alpha = 1, size = 2))) +
   theme_minimal() +
   theme(legend.position = "none")
 
+#size boxplot
+Phase1_Data %>% 
+  group_by(Species) %>% 
+  ggplot(aes(x = Species,
+             y = Whorls,
+             color = CommonName)) +
+  geom_boxplot() +
+  ylim(0,8) +
+  xlab("Species") +
+  ylab("Whorls") +
+  labs(title = "Species Size Distribution") +
+  scale_color_discrete(guide = guide_legend(override.aes = list(alpha = 1, size = 2))) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+
+################################################################################
+#density
+# basal diameter to area
+# pi*(basaldai/2)^2
+# basal area * height = volume
+Phase1_Data_test <- Phase1_Data %>% 
+  mutate(Volume = Height_mm * (pi * (BasalDia_mm / 2)^2))
+
+#density boxplot
+Phase1_Data_test %>% 
+  group_by(Species) %>% 
+  ggplot(aes(x = Species,
+             y = Biomass_g / Volume,
+             color = CommonName)) +
+  geom_boxplot() +
+  #geom_point(aes(size = Phase1_Data$Biomass_g)) +
+  #xlim(2,11) +
+  #ylim(0,.03) +
+  xlab("Species") +
+  ylab("Volume (g/mm^3)") +
+  labs(title = "Species Size Distribution") +
+  scale_color_discrete(guide = guide_legend(override.aes = list(alpha = 1, size = 2))) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+#################################################################################
+# calculations
+
+Phase1_Data %>% 
+  group_by(Species) %>% 
+  summarize(mean = mean(Height_mm),
+            range_min = min(Height_mm),
+            range_max = max(Height_mm))
+Phase1_Data %>% 
+  group_by(Species) %>% 
+  summarize(mean = mean(BasalDia_mm),
+            range_min = min(BasalDia_mm),
+            range_max = max(BasalDia_mm))
+
+Phase1_Data %>% 
+  filter(Treatment_water == "Drought") %>% 
+  group_by(Species) %>% 
+  summarize(mean = mean(Biomass_g),
+            range_min = min(Biomass_g),
+            range_max = max(Biomass_g))
+
+Phase1_Data %>% 
+  #filter(Treatment_water == "Drought") %>% 
+  group_by(Species, Treatment_temp, Treatment_water) %>% 
+  summarize(N = length(unique(SpeciesID)))

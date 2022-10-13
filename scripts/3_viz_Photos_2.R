@@ -8,7 +8,7 @@
 
 #load packages
 library(tidyverse)
-# library(ggtern) #for rbg2hex
+library(ggtern) #for ternary diagram
 
 #read_csv
 Phase1_Data_Photos_Avg <- read_csv("data_analysis/Phase1_Data_Photos_Avg.csv")
@@ -20,7 +20,7 @@ Phase1_Data_Photos_Avg <- read_csv("data_analysis/Phase1_Data_Photos_Avg.csv")
 # So, arrange by treatment_temp, then week. 
 Phase1_Data_Photos_graph <- Phase1_Data_Photos_Avg %>% 
   filter(Treatment_water == "Drought") %>% 
-  filter(Species == "PIFL") %>% 
+  filter(Species == "PSME") %>% 
   arrange(Species, Treatment_temp, Week, green_only, desc(red_only))
 
 #save hex colors for visualization
@@ -45,11 +45,65 @@ Phase1_Data_Photos_graph %>%
            size = 0.3) +
   geom_errorbar(aes(x = Phase1_Data_Photos_graph$Week,
                     ymin = (Phase1_Data_Photos_graph$PercentGreen - Phase1_Data_Photos_graph$SD_PercentRed),
-                    ymax = (Phase1_Data_Photos_graph$PercentGreen + Phase1_Data_Photos_graph$SD_PercentRed)))
+                    ymax = (Phase1_Data_Photos_graph$PercentGreen + Phase1_Data_Photos_graph$SD_PercentRed))) +
   scale_x_continuous(breaks = 1:22) +
   ylab("Color Percent") +
   xlab("Weeks") +
   labs(title = "Color - PIED") +
   theme_minimal()
 
+  
+################################################################################
+
+Phase1_Data <- read_csv("data_analysis/Phase1_Data.csv")
+sum <- Phase1_Data %>% 
+  filter(!is.na(Dead_Week)) %>% 
+  group_by(Species, Treatment_temp) %>% 
+  summarize(Dead_Week = mean(Dead_Week),
+            stress = mean(Dead_Week/2))
+
+Phase1_Data_Photos_graph <- Phase1_Data_Photos_Avg %>% 
+  filter(Treatment_water == "Drought") %>% 
+  # filter(Species == "PIPO") %>% 
+  # filter(Week == 1 | Week == 5 | Week == 10) %>% 
+  # filter(Species == "PIED") %>% 
+  # filter(Week == 1 | Week == 7 | Week == 14) %>% 
+  # filter(Species == "PIFL") %>%
+  # filter(Week == 1 | Week == 15 | Week == 30) %>%
+  # filter(Species == "PSME") %>%
+  # filter(Week == 1 | Week == 9 | Week == 18) %>%
+  filter(Species == "PIEN") %>%
+  filter(Week == 1 | Week == 10 | Week == 20) %>%
+  arrange(Species, Treatment_temp, Week, green_only, desc(red_only))
+
+#save hex colors for visualization
+colors <- Phase1_Data_Photos_graph$col_hex
+labs <- c("Start", "Stress", "Dead")
+
+Phase1_Data_Photos_graph %>% 
+  ggplot(aes(x = red,
+             y = green,
+             color = colors)) +
+  geom_point(color = colors,
+             size = 7) +
+  geom_abline(intercept = 0,
+              slope = 1,
+              linetype = "dashed",
+              size = 0.3) +
+  facet_wrap(~Week) +
+  theme_minimal()
+
+################################################################################
+
+Phase1_Data_Photos_graph %>% 
+  ggtern(aes(x = red,
+             y = green,
+             z = blue)) +
+  geom_point(color = colors) +
+  facet_wrap(~Week) +
+  theme_minimal()
+
+ternary(x, dg = FALSE, hg = FALSE, means = TRUE, pca = FALSE, colour = NULL)
+  
+ggtern(data=sampfile, aes(x=Xa,y=Xb, z=Xc)) + geom_point()
   

@@ -1,3 +1,9 @@
+#Data analysis - transformations
+#Alexandra Lalor
+#allielalor@arizona.edu
+#allielalor@gmail.com
+#First created: 2022-09-15
+#Last updated: 2022-10-10
 
 #load packages
 library(tidyverse)

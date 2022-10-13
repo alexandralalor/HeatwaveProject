@@ -13,7 +13,7 @@ library(ggplot2)
 library(ggfortify)
 
 #read CSVs
-Phase1_Data <- read_csv("data_QAQC/Phase1_Data.csv")
+Phase1_Data <- read_csv("data_analysis/Phase1_Data.csv")
 
 #check out data
 glimpse(Phase1_Data)
@@ -40,29 +40,30 @@ autoplot(km_species_fit)
 #summary stats
 range(Phase1_Data$Week)
 
+Phase1_Data <- Phase1_Data %>% 
+  filter(Treatment_temp == "Ambient")
 
 #Kaplan Meier Survival Curve - separated by treatment
-km_treatment_fit <- survfit(Surv(Week, Dead_Count)~Heatwave_graph, data=Phase1_Data)
+km_treatment_fit <- survfit(Surv(Week, Dead_Count)~Species, data=Phase1_Data)
 summary(km_treatment_fit)
 
 autoplot(km_treatment_fit) +
-  scale_fill_brewer(palette = "Paired") +
-  scale_color_brewer(palette = "Paired") +
+  # scale_fill_brewer(palette = "Paired") +
+  # scale_color_brewer(palette = "Paired") +
   scale_x_continuous(breaks = seq(0 , 36, by = 4)) +
-  annotate("segment",
-           x = 7, xend = 7,
-           y = 0, yend = 1,
-           color = "red",
-           linetype = "dashed",
-           size = 0.8) +
-  geom_text(label = "Heatwave",
-            x = 5, y = 0.78, color = "red", size = 3) +
+  # annotate("segment",
+  #          x = 7, xend = 7,
+  #          y = 0, yend = 1,
+  #          color = "red",
+  #          linetype = "dashed",
+  #          size = 0.8) +
+  # geom_text(label = "Heatwave",
+  #           x = 5, y = 0.78, color = "red", size = 3) +
   xlab("Weeks") +
-  ylab("Survivorship") +
+  #ylab("Survivorship") +
   labs(title = "Kaplan Meier Survival Curve: Heatwave Effects by Species",
        color = "Species_Treatment", fill = "Species_Treatment") +
   theme_bw()
-
 
 
 #Kaplan Meier Survival Curve - separated by treatment - STRESS WEEK
@@ -77,8 +78,109 @@ autoplot(km_treatment_fit_stress) +
   scale_color_brewer(palette = "Paired") +
   scale_x_continuous(breaks = seq(0 , 36, by = 4)) +
   xlab("Weeks after Stress Point") +
-  ylab("Survivorship") +
+  #ylab("Survivorship") +
   labs(title = "Kaplan Meier Survival Curve: Heatwave Effects by Species",
        color = "Species_Treatment", fill = "Species_Treatment") +
   theme_bw()
+
+#################################################################################
+heatwave_summary <- read_csv("data_analysis/heatwave_summary.csv")
+
+heatwave_summary %>% 
+  filter(Treatment_temp == "Ambient") %>% 
+  ggplot(aes(x = median,
+             y = reorder(Species, median),
+             color = Species)) +
+  geom_point() +
+  xlim(0,36) +
+  #scale_x_continuous(breaks = seq(0 , 36, by = 4)) +
+  xlab("Median Death Date, 95% C.I.") +
+  ylab("Species") +
+  geom_errorbar(aes(xmin = CI_lower_med, xmax = CI_upper_med)) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+################################################################################
+
+Phase1_Data_Avg <- Phase1_Data %>% 
+  #filter(SpeciesID != "PIFL16") %>%
+  group_by(Species, Treatment_temp, Treatment_water, Week) %>%
+  summarize(Dead_Count = sum(Dead_Count))
+Phase1_Data_Avg <- Phase1_Data_Avg %>% 
+  mutate(Live_Count = 20 - Dead_Count,
+         Survivorship = ((Live_Count/20)*100))
+
+Phase1_Data_Avg %>% 
+  filter(Treatment_water == "Drought", !is.na(Dead_Count)) %>% 
+  group_by(Species, Treatment_temp) %>% 
+  ggplot(aes(x = Week,
+             y = Survivorship,
+             color = Treatment_temp)) +
+  geom_point() +
+  geom_line() +
+  facet_wrap(~Species) +
+  theme_minimal() +
+  scale_color_discrete(direction = -1)
+
+Phase1_Data_Avg %>% 
+  filter(Treatment_water == "Drought", !is.na(Dead_Count)) %>% 
+  group_by(Species, Treatment_temp) %>% 
+  ggplot(aes(x = Week,
+             y = Survivorship,
+             color = Species,
+             fill = Treatment_temp)) +
+  geom_point() +
+  geom_line() +
+  #facet_wrap(~Species) +
+  theme_minimal() +
+  scale_color_discrete(direction = -1)
+
+###################################################################################
+#Dead Week data
+Dead_Week <- Phase1_Data %>% 
+  filter(Treatment_water == "Drought") %>% 
+  group_by(Species, Treatment_temp, Dead_Week) %>% 
+  summarize(SpeciesID = unique(SpeciesID))
+
+Dead_Week <- Dead_Week %>% 
+  mutate(Dead_Week_round = rnd(Dead_Week))
+
+
+#histogram
+Dead_Week %>% 
+  group_by(Species, Treatment_temp) %>% 
+  ggplot(aes(x = Dead_Week,
+             fill = Treatment_temp)) +
+  geom_histogram(binwidth = 1) +
+  scale_fill_discrete(direction = -1) +
+  #ylim(0, 12.5) +
+  xlim(0, 40) +
+  facet_grid(reorder(Species, Dead_Week, mean) ~ Treatment_temp) +
+  theme_minimal()
+
+
+#boxplot
+Dead_Week %>% 
+  group_by(Species, Treatment_temp) %>% 
+  arrange(Dead_Week) %>% 
+  #filter(Species == "PIFL") %>% 
+  ggplot(aes(x = Dead_Week,
+             y = reorder(Species, Dead_Week, mean),
+             fill = Treatment_temp)) +
+  geom_boxplot() +
+  xlim(0, 40) +
+  ylab("Species") +
+  annotate("segment",
+           x = 7, xend = 7,
+           y = 0, yend = 6,
+           color = "red",
+           linetype = "dashed",
+           size = 0.4) +
+  theme_minimal() +
+  scale_fill_discrete(direction = -1)
+
+
+
+
+
 
