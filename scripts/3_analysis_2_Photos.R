@@ -41,6 +41,30 @@ Phase1_Data_Photos <- Phase1_Data_Photos[ ,c(1,2,5,3,4,6,29,7,8,9,10,11,12,13,14
 #save csv
 write.csv(Phase1_Data_Photos, "data_analysis/Phase1_Data_Photos.csv", quote = FALSE, row.names = FALSE)
 
+
+################################################################################
+# Add dead week and stress weeks to photos data
+################################################################################
+
+Phase1_Data_All <- read_csv("data_analysis/Phase1_Data_All.csv")
+
+Phase1_Data_add <- Phase1_Data_All %>% 
+  filter(Treatment_water == "Drought") %>% 
+  group_by(SpeciesID) %>% 
+  select(c("Dead_Week", "Stress_Week_Weight", "Stress_Week_Porometer")) %>% 
+  summarize(Dead_Week = mean(Dead_Week),
+            Stress_Week_Weight = round(mean(Stress_Week_Weight, na.rm = T), digits = 0),
+            Stress_Week_Porometer = mean(Stress_Week_Porometer, na.rm = T))
+
+Phase1_Data_Photos <- merge(Phase1_Data_Photos, Phase1_Data_add, by = "SpeciesID", all.x = T)
+
+Phase1_Data_Photos <- Phase1_Data_Photos %>% 
+  arrange(SpeciesID, Week)
+
+#save csv
+write.csv(Phase1_Data_Photos, "data_analysis/Phase1_Data_Photos.csv", quote = FALSE, row.names = FALSE)
+
+
 ################################################################################
 # find average
 ################################################################################
@@ -75,7 +99,7 @@ Phase1_Data_Photos_Avg <- Phase1_Data_Photos_Avg %>%
   mutate(col_share = round(100*(col_freq/col_total), digits = 1))
 
 #reorder columns
-Phase1_Data_Photos_Avg <- Phase1_Data_Photos_Avg[, c(1,2,3,4,8,9,5,6,7,10,11,12,17,13,18,19,14,15,16)]
+#Phase1_Data_Photos_Avg <- Phase1_Data_Photos_Avg[, c(1,2,3,4,8,9,5,6,7,10,11,12,17,13,18,19,14,15,16)]
 
 
 #separate green and brown
@@ -91,18 +115,6 @@ Phase1_Data_Photos_Avg <- Phase1_Data_Photos_Avg %>%
 
 #save csv
 write.csv(Phase1_Data_Photos_Avg, "data_analysis/Phase1_Data_Photos_Avg.csv", quote=FALSE, row.names = FALSE)
-
-
-#################################################################################
-
-
-
-
-
-
-#combine df
-test <- merge(Phase1_Photos_Avg, Phase1_Data_Porometer_Avg, 
-              by = c("Species", "Week", "Treatment_temp"), all.x = T)
 
 
 

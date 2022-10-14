@@ -60,6 +60,10 @@ summary_2 <- Phase1_Data_Weight %>%
 
 Phase1_Data_Weight <- merge(Phase1_Data_Weight, summary_2, all.x = T)
 
+Phase1_Data_Weight <- Phase1_Data_Weight %>% 
+  mutate(Stress_Week_Weight = Stress_Week) %>% 
+  select(-c("Stress_Week", "Stress_Week_Avg"))
+
 #save csv
 write.csv(Phase1_Data_Weight, "data_analysis/Phase1_Data_Weight.csv", quote = FALSE, row.names = FALSE)
 

@@ -147,11 +147,11 @@ stress_week_new <- stress_week_new %>%
 #add to Phase1_Data_Weights
 Phase1_Data_Weight <- merge(Phase1_Data_Weight, stress_week_new, by = "SpeciesID", all = T)
 
-#reorder and rearrange columns
-Phase1_Data_Weight <- Phase1_Data_Weight[, c(2,3,4,5,6,1,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28)]
-Phase1_Data_Weight <- Phase1_Data_Weight %>% 
-  group_by(Species) %>% 
-  arrange(SpeciesID, Week)
+# #reorder and rearrange columns
+# Phase1_Data_Weight <- Phase1_Data_Weight[, c(4,5,6,7,1,2,3,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,30,31,32,33,29)]
+# Phase1_Data_Weight <- Phase1_Data_Weight %>% 
+#   group_by(Species) %>% 
+#   arrange(SpeciesID, Week)
 
 
 #save csv

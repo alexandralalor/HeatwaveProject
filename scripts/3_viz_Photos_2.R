@@ -8,7 +8,7 @@
 
 #load packages
 library(tidyverse)
-library(ggtern) #for ternary diagram
+library(ggtern) #for ternary diagram and rgb2hex
 
 #read_csv
 Phase1_Data_Photos_Avg <- read_csv("data_analysis/Phase1_Data_Photos_Avg.csv")
@@ -54,56 +54,190 @@ Phase1_Data_Photos_graph %>%
 
   
 ################################################################################
+# gridded color view, three time points (start, stress, dead)
+################################################################################
 
-Phase1_Data <- read_csv("data_analysis/Phase1_Data.csv")
-sum <- Phase1_Data %>% 
-  filter(!is.na(Dead_Week)) %>% 
-  group_by(Species, Treatment_temp) %>% 
-  summarize(Dead_Week = mean(Dead_Week),
-            stress = mean(Dead_Week/2))
+#read_csv
+Phase1_Data_Photos <- read_csv("data_analysis/Phase1_Data_Photos.csv")
+Phase1_Data_Photos_Avg <- read_csv("data_analysis/Phase1_Data_Photos_Avg.csv")
+Phase1_Data_All_Avg <- read_csv("data_analysis/Phase1_Data_All_Avg.csv")
 
-Phase1_Data_Photos_graph <- Phase1_Data_Photos_Avg %>% 
+#add infor to Phase1_Data_Photos
+Phase1_Data_Photos_Avg_add <- Phase1_Data_Photos_Avg %>% 
+  group_by(Species, Treatment_temp, Treatment_water, Week) %>% 
+  summarize(PercentGreen_Avg = mean(PercentGreen, na.rm = T),
+            PercentRed_Avg = mean(PercentRed, na.rm = T))
+
+Phase1_Data_All_Avg_add <- Phase1_Data_All_Avg %>% 
+  group_by(Species, Treatment_temp, Treatment_water, Week) %>% 
+  summarize(Dead_Week_Avg = round(mean(Dead_Week_Avg), digits = 1),
+            Stress_Week_Avg_Weight = round(mean(Stress_Week_Avg_Weight), digits = 1),
+            Stress_Week_Avg_Porometer = round(mean(Stress_Week_Avg_Porometer), digits = 1))
+
+Phase1_Data_Photos_add <- merge(Phase1_Data_Photos_Avg_add, Phase1_Data_All_Avg_add,
+                                by = c("Species", "Treatment_temp","Treatment_water", "Week"), all.x = T)
+
+Phase1_Data_Photos <- merge(Phase1_Data_Photos, Phase1_Data_Photos_add, 
+                            by = c("Species", "Treatment_temp","Treatment_water", "Week"), all.x = T)
+
+Phase1_Data_Photos <- Phase1_Data_Photos %>% 
+  mutate(Dead_Week = round(Dead_Week))
+
+
+#add info about stress  weeks
+Phase1_Data_Photos_graph <- Phase1_Data_Photos %>% 
   filter(Treatment_water == "Drought") %>% 
-  # filter(Species == "PIPO") %>% 
-  # filter(Week == 1 | Week == 5 | Week == 10) %>% 
-  # filter(Species == "PIED") %>% 
-  # filter(Week == 1 | Week == 7 | Week == 14) %>% 
-  # filter(Species == "PIFL") %>%
-  # filter(Week == 1 | Week == 15 | Week == 30) %>%
-  # filter(Species == "PSME") %>%
-  # filter(Week == 1 | Week == 9 | Week == 18) %>%
-  filter(Species == "PIEN") %>%
-  filter(Week == 1 | Week == 10 | Week == 20) %>%
+  filter(Week == 1 | Week == Dead_Week | Week == Stress_Week_Weight | Week == Stress_Week_Porometer) %>% 
   arrange(Species, Treatment_temp, Week, green_only, desc(red_only))
 
-#save hex colors for visualization
-colors <- Phase1_Data_Photos_graph$col_hex
-labs <- c("Start", "Stress", "Dead")
+Phase1_Data_Photos_graph <- Phase1_Data_Photos_graph %>% 
+  mutate(Order = ifelse(Week == 1, "Start", 
+                        ifelse(Week == Dead_Week, "Dead", 
+                               ifelse(Week == Stress_Week_Weight, "Stress_Weight", "Stress_Porometer")))) %>% 
+  mutate(across(Order, factor, levels = c("Start", "Stress_Weight", "Stress_Porometer", "Dead")))
 
+
+#############
+#summarize for bar graphs
+Phase1_Data_Photos_graph_bar <- Phase1_Data_Photos_graph %>% 
+  filter(Treatment_water == "Drought") %>% 
+  group_by(Species, Treatment_temp, Order, red_class, green_class, blue_class) %>% 
+  summarize(red = round(mean(red)),
+            green = round(mean(green)),
+            blue = round(mean(blue)),
+            col_freq = sum(col_freq),
+            Dead_Week_Avg = round(mean(Dead_Week_Avg, na.rm = T), digits = 1),
+            Stress_Week_Avg_Weight = round(mean(Stress_Week_Avg_Weight, na.rm = T), digits = 1),
+            Stress_Week_Avg_Porometer = round(mean(Stress_Week_Avg_Porometer, na.rm = T), digits = 1))
+
+
+#fill in summary df
+#add hex codes to summary df
+hex <- as.data.frame(rgb2hex(r = Phase1_Data_Photos_graph_bar$red, 
+                             g = Phase1_Data_Photos_graph_bar$green, 
+                             b = Phase1_Data_Photos_graph_bar$blue))
+colnames(hex) <- "col_hex"
+Phase1_Data_Photos_graph_bar <- cbind(Phase1_Data_Photos_graph_bar, hex)
+#calculate total # pixels and percent of each color, add to summary df
+Phase1_Data_Photos_graph_bar <- Phase1_Data_Photos_graph_bar %>% 
+  group_by(Species, Treatment_temp, Order) %>% 
+  mutate(col_total = sum(col_freq)) %>% 
+  mutate(col_share = round(100*(col_freq/col_total), digits = 1))
+#separate green and brown
+Phase1_Data_Photos_graph_bar <- Phase1_Data_Photos_graph_bar %>% 
+  mutate(green_only = ifelse(green >= red, green, NA),
+         red_only = ifelse(green < red, red, NA)) %>%
+  arrange(Species, Treatment_temp, Order, green_only, desc(red_only))  
+##################################
+
+# # Viz with stress_weight
+# Phase1_Data_Photos_graph_w <- Phase1_Data_Photos_graph %>% 
+#   filter(Order != "Stress_Porometer")
+# # Viz with stress_porometer
+# Phase1_Data_Photos_graph_p <- Phase1_Data_Photos_graph %>% 
+#   filter(Order != "Stress_Weight")
+
+#save hex colors for visualization
+size <- Phase1_Data_Photos_graph$col_share
+colors <- Phase1_Data_Photos_graph$col_hex
+# colors_w <- Phase1_Data_Photos_graph_w$col_hex
+# colors_p <- Phase1_Data_Photos_graph_p$col_hex
+
+#viz with both stress weeks
 Phase1_Data_Photos_graph %>% 
   ggplot(aes(x = red,
              y = green,
              color = colors)) +
   geom_point(color = colors,
-             size = 7) +
+             size = size*2) +
   geom_abline(intercept = 0,
               slope = 1,
               linetype = "dashed",
               size = 0.3) +
-  facet_wrap(~Week) +
+  facet_grid(Species ~ Order) +
   theme_minimal()
 
+#viz with stress_weight
+Phase1_Data_Photos_graph_w %>% 
+  ggplot(aes(x = red,
+             y = green,
+             color = colors_w)) +
+  geom_point(color = colors_w,
+             size = 2) +
+  geom_abline(intercept = 0,
+              slope = 1,
+              linetype = "dashed",
+              size = 0.3) +
+  facet_grid(Species ~ Order) +
+  theme_minimal()
+
+#viz with stress_porometer
+Phase1_Data_Photos_graph_p %>% 
+  ggplot(aes(x = red,
+             y = green,
+             color = colors_p)) +
+  geom_point(color = colors_p,
+             size = 2) +
+  geom_abline(intercept = 0,
+              slope = 1,
+              linetype = "dashed",
+              size = 0.3) +
+  facet_grid(Species ~ Order) +
+  theme_minimal()
+
+
+# #just PSME
+# Phase1_Data_Photos_graph_PSME <- Phase1_Data_Photos_graph %>% 
+#   filter(Species == "PSME")
+# colors_PSME <- Phase1_Data_Photos_graph_PSME$col_hex
+# size_PSME <- Phase1_Data_Photos_graph_PSME$col_share
+# #viz with both stress weeks - PSME
+# Phase1_Data_Photos_graph_PSME %>% 
+#   ggplot(aes(x = red,
+#              y = green,
+#              color = colors_PSME)) +
+#   geom_point(color = colors_PSME,
+#              size = size_PSME*2) +
+#   geom_abline(intercept = 0,
+#               slope = 1,
+#               linetype = "dashed",
+#               size = 0.3) +
+#   facet_grid(Species ~ Order) +
+#   theme_minimal()
+
+
+################################################################################
+# bar graph view, three time points (start, stress, dead)
+################################################################################
+
+Phase1_Data_Photos_graph_bar <- Phase1_Data_Photos_graph_bar %>% 
+  filter(Treatment_temp == "Ambient")
+
+#set colors
+colors_bar <- Phase1_Data_Photos_graph_bar$col_hex
+
+#bar graph viz, all stress weeks
+Phase1_Data_Photos_graph_bar %>% 
+  ggplot(aes(x = Order,
+             y = col_share,
+             fill = colors_bar)) +
+  geom_col(fill = colors_bar) +
+  facet_grid(Species ~ .) +
+  ylab("Color Percent") +
+  xlab("Weeks") +
+  labs(title = "Color") +
+  theme_minimal()
+
+
+################################################################################
+# Ternary
 ################################################################################
 
 Phase1_Data_Photos_graph %>% 
   ggtern(aes(x = red,
              y = green,
              z = blue)) +
-  geom_point(color = colors) +
-  facet_wrap(~Week) +
+  geom_point(color = colors,
+             size = 1) +
+  facet_grid(Species ~ Order) +
   theme_minimal()
-
-ternary(x, dg = FALSE, hg = FALSE, means = TRUE, pca = FALSE, colour = NULL)
-  
-ggtern(data=sampfile, aes(x=Xa,y=Xb, z=Xc)) + geom_point()
-  

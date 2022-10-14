@@ -58,6 +58,10 @@ summary_2 <- Phase1_Data_Porometer %>%
   
 Phase1_Data_Porometer <- merge(Phase1_Data_Porometer, summary_2, all.x = T)
 
+Phase1_Data_Porometer <- Phase1_Data_Porometer %>% 
+  mutate(Stress_Week_Porometer = Stress_Week) %>% 
+  select(-c("Stress_Week"))
+
 
 #save as csv
 write.csv(Phase1_Data_Porometer, "data_analysis/Phase1_Data_Porometer.csv", quote = FALSE, row.names = FALSE)
