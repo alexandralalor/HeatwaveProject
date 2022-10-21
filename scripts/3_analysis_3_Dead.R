@@ -142,9 +142,42 @@ Phase1_Data_All_Avg <- Phase1_Data_All_Avg %>%
 #save csv
 write.csv(Phase1_Data_All_Avg, "data_analysis/Phase1_Data_All_Avg.csv", quote = FALSE, row.names = FALSE)
 
+
+################################################################################
+# Photos data add
 ################################################################################
 
+#read_csv
+Phase1_Data_Photos <- read_csv("data_analysis/Phase1_Data_Photos.csv")
+Phase1_Data_Photos_Avg <- read_csv("data_analysis/Phase1_Data_Photos_Avg.csv")
+Phase1_Data_All_Avg <- read_csv("data_analysis/Phase1_Data_All_Avg.csv")
 
+#add info to Phase1_Data_Photos
+Phase1_Data_Photos_Avg_add <- Phase1_Data_Photos_Avg %>% 
+  group_by(Species, Treatment_temp, Treatment_water, Week) %>% 
+  summarize(PercentGreen_Avg = mean(PercentGreen, na.rm = T),
+            PercentRed_Avg = mean(PercentRed, na.rm = T))
+
+Phase1_Data_All_Avg_add <- Phase1_Data_All_Avg %>% 
+  group_by(Species, Treatment_temp, Treatment_water, Week) %>% 
+  summarize(Dead_Week_Avg = round(mean(Dead_Week_Avg), digits = 1),
+            Stress_Week_Avg_Weight = round(mean(Stress_Week_Avg_Weight), digits = 1),
+            Stress_Week_Avg_Porometer = round(mean(Stress_Week_Avg_Porometer), digits = 1))
+
+Phase1_Data_Photos_add <- merge(Phase1_Data_Photos_Avg_add, Phase1_Data_All_Avg_add,
+                                by = c("Species", "Treatment_temp","Treatment_water", "Week"), all.x = T)
+
+Phase1_Data_Photos <- merge(Phase1_Data_Photos, Phase1_Data_Photos_add, 
+                            by = c("Species", "Treatment_temp","Treatment_water", "Week"), all.x = T)
+
+Phase1_Data_Photos <- Phase1_Data_Photos %>% 
+  mutate(Dead_Week = round(Dead_Week))
+
+#save csv
+write.csv(Phase1_Data_Photos, "data_analysis/Phase1_Data_Photos.csv", quote = FALSE, row.names = FALSE)
+
+
+################################################################################
 
 # #check out data
 # glimpse(Phase1_Data)

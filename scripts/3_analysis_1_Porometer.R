@@ -13,7 +13,7 @@ library(tidyverse)
 Phase1_Data_Porometer <- read_csv("data_QAQC/Phase1_Data_Porometer.csv")
 
 #rearrange columns
-Phase1_Data_Porometer <- Phase1_Data_Porometer[ ,c(5,6,14,1,2,3,4,7,8,9,10,11,12,13,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31)]
+#Phase1_Data_Porometer <- Phase1_Data_Porometer[ ,c(5,6,14,1,2,3,4,7,8,9,10,11,12,13,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31)]
 
 
 #check out data
@@ -128,7 +128,7 @@ Phase1_Data_Porometer_1 <- merge(Phase1_Data_Porometer, Phase1_Data_Porometer_ad
 
 
 #reorder and rearrange columns
-Phase1_Data_Porometer_1 <- Phase1_Data_Porometer_1[, c(3,4,5,6,7,1,8,9,10,11,12,13,14,2,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33)]
+#Phase1_Data_Porometer_1 <- Phase1_Data_Porometer_1[, c(3,4,5,6,7,1,8,9,10,11,12,13,14,2,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33)]
 Phase1_Data_Porometer <- Phase1_Data_Porometer_1 %>% 
   group_by(Species) %>% 
   arrange(SpeciesID, Week)

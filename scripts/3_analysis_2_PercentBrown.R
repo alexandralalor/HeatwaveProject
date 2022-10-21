@@ -32,7 +32,7 @@ summary_1 <- Phase1_Data_PercentBrown %>%
 Phase1_Data_PercentBrown <- merge(Phase1_Data_PercentBrown, summary_1, all.x = T)
 
 #reorder columns
-Phase1_Data_PercentBrown <- Phase1_Data_PercentBrown[, c(5,6,7,8,1,9,2,3,10,11,12,13,14,4,26,15,16,17,18,19,20,21,22,23,24,25)]
+#Phase1_Data_PercentBrown <- Phase1_Data_PercentBrown[, c(5,6,7,8,1,9,2,3,10,11,12,13,14,4,26,15,16,17,18,19,20,21,22,23,24,25)]
 
 #save as csv
 write.csv(Phase1_Data_PercentBrown, "data_analysis/Phase1_Data_PercentBrown.csv", quote = FALSE, row.names = FALSE)

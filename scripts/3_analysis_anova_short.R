@@ -5,6 +5,9 @@
 #First created: 2022-10-14
 #Last updated: 2022-10-14
 
+#load packages
+library(tidyverse)
+
 #read csvs
 #heatwave <- read.csv("data_analysis/Dead_Week.csv")
 #heatwave <- read.csv("data_analysis/Dead_Week_Weight.csv")

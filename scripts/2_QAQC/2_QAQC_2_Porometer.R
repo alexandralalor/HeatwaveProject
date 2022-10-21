@@ -45,7 +45,7 @@ Phase1_Data$Heatwave <- as.factor(Phase1_Data$Heatwave)
 
 #merge data
 Phase1_Data_Porometer <- merge(Phase1_Data, Phase1_Porometer, all = TRUE)
-Phase1_Data_Porometer <- Phase1_Data_Porometer[ ,c(4,5,6,7,1,2,8,9,10,11,12,13,14,3,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30)]
+#Phase1_Data_Porometer <- Phase1_Data_Porometer[ ,c(4,5,6,7,1,2,8,9,10,11,12,13,14,3,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30)]
 
 
 #clean up data, remove half weeks, filter for porometer data
@@ -185,7 +185,7 @@ Phase1_Data_Porometer <- Phase1_Data_Porometer %>%
 
 
 #rearrange columns
-Phase1_Data_Porometer <- Phase1_Data_Porometer[ ,c(4,5,6,7,1,2,8,9,10,11,12,13,14,3,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31)]
+#Phase1_Data_Porometer <- Phase1_Data_Porometer[ ,c(4,5,6,7,1,2,8,9,10,11,12,13,14,3,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31)]
 
 #save as csv
 write.csv(Phase1_Data_Porometer, "data_QAQC/Phase1_Data_Porometer.csv", quote = FALSE, row.names = FALSE)
