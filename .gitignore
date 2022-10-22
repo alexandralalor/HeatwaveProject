@@ -26,5 +26,8 @@ vignettes/*.pdf
 *.knit.md
 # R Environment Variables
 .Renviron
+<<<<<<< HEAD
 # photos
 /photos_background/
+=======
+>>>>>>> 6ad6200555263a8ed9113d684a31350d33918c34
