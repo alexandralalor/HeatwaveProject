@@ -53,22 +53,8 @@ Phase1_Data_Weight <- Phase1_Data_Weight %>%
 ```{r}
 #Avg Weight
 
-#average data 
-Phase1_Data_Weight_Avg <- Phase1_Data_Weight %>%
-  #filter(SpeciesID != "PIFL16") %>%
-  group_by(ScientificName, CommonName, Species, Week, Treatment_temp, Treatment_water) %>%
-  summarize(Dead_Count = sum(Dead_Count),
-            PercentDead = 100*(Dead_Count/20),
-            Weight_g = round(mean(Weight_g, na.rm = T), digits = 0),
-            Weight_Est = round(mean(Weight_Est, na.rm = T), digits = 0),
-            WeightMin = round(mean(WeightMin, na.rm = T), digits = 0),
-            WeightMax = round(mean(WeightMax, na.rm = T), digits = 0),
-            WaterWeight_Base = round(mean(WaterWeight_Base, na.rm = T), digits = 0),
-            WaterWeight_Calc = round(mean(WaterWeight_Calc, na.rm = T), digits = 0),
-            PercentWater = round(mean(PercentWater, na.rm = T), digits = 0),
-            SD_Total_Avg = mean(SD_Total, na.rm = T),
-            SD_Water_Avg = mean(SD_Water, na.rm = T),
-            Stress_Week_Avg = mean(Stress_Week, na.rm = T))
+#read CSVs
+Phase1_Data_Weight_Avg <- read_csv("data_analysis/Phase1_Data_Weight_Avg.csv")
 
 #filter for drought
 Phase1_Data_Weight_Avg <- Phase1_Data_Weight_Avg %>%
@@ -77,9 +63,14 @@ Phase1_Data_Weight_Avg <- Phase1_Data_Weight_Avg %>%
 
 #create stress week label
 Weight_Stress_Label <- Phase1_Data_Weight_Avg %>% 
-  group_by(CommonName, Treatment_temp) %>% 
-  summarize(CommonName = unique(CommonName),
-            Week = mean(Stress_Week_Avg, na.rm = T),
+  filter(Treatment_temp == "Ambient") %>% 
+  group_by(Species, Treatment_temp) %>% 
+  summarize(Species = unique(Species),
+            CommonName = ifelse(Species == "PIED", "Pinyon Pine",
+                                ifelse(Species == "PIPO", "Ponderosa Pine",
+                                       ifelse(Species == "PIFL", "Limber Pine",
+                                              ifelse(Species == "PSME", "Douglas fir", "Engelman Spruce")))),
+            Week = mean(Stress_Week_Avg_Weight, na.rm = T),
             xmin = min(Week),
             xmax = max(Week),
             Weight_Est = 0,
@@ -89,8 +80,9 @@ Weight_Stress_Label <- Phase1_Data_Weight_Avg %>%
             ymax1 = 500,
             ymax2 = 1000)
 Weight_Stress_Label <- Weight_Stress_Label %>% 
-  group_by(CommonName) %>% 
-  summarize(CommonName = unique(CommonName),
+  group_by(Species) %>% 
+  summarize(Species = unique(Species),
+            CommonName = unique(CommonName),
             Week = mean(Week),
             xmin = min(xmin),
             xmax = max(xmax),
@@ -125,7 +117,7 @@ Phase1_Data_Porometer$Heatwave <- as.factor(Phase1_Data_Porometer$Heatwave)
 #filter for NAs
 Phase1_Data_Porometer <- Phase1_Data_Porometer %>% 
   filter(!is.na(Porometer_Est)) %>% 
-  mutate(Stress_Week = ifelse(Treatment_water == "Watered", NA, Stress_Week))
+  mutate(Stress_Week_Porometer = ifelse(Treatment_water == "Watered", NA, Stress_Week_Porometer))
 ```
 
 ```{r}
@@ -139,8 +131,8 @@ Phase1_Data_Porometer_Avg <- Phase1_Data_Porometer %>%
             Temperature_C = mean(Temperature_C, na.rm = T),
             LeafSensor_PercentRH = mean(LeafSensor_PercentRH, na.rm = T),
             FilterSensor_PercentRH = mean(FilterSensor_PercentRH, na.rm = T),
-            SD_Avg = mean(SD, na.rm = T),
-            Stress_Week_Avg = round(mean(Stress_Week, na.rm = TRUE), digits = 1)) %>% 
+            SD_Avg = mean(SD_Porometer, na.rm = T),
+            Stress_Week_Avg = round(mean(Stress_Week_Porometer, na.rm = TRUE), digits = 1)) %>% 
   arrange(Species, Week)
 
 Phase1_Data_Porometer_Avg <- Phase1_Data_Porometer_Avg %>%
@@ -149,6 +141,7 @@ Phase1_Data_Porometer_Avg <- Phase1_Data_Porometer_Avg %>%
 
 #create stress week label
 Porometer_Stress_Label <- Phase1_Data_Porometer_Avg %>% 
+  filter(Treatment_temp == "Ambient") %>% 
   group_by(CommonName, Treatment_temp) %>% 
   summarize(CommonName = unique(CommonName),
             Week = mean(Stress_Week_Avg, na.rm = T),
@@ -195,14 +188,14 @@ Phase1_Data$Heatwave <- as.factor(Phase1_Data$Heatwave)
 
 #isolate weight stress week
 Phase1_Data_Weight_add <- Phase1_Data_Weight %>% 
-  mutate(Stress_Week_Weight = Stress_Week,
-         Stress_Week_Avg_Weight = Stress_Week_Avg) %>% 
+  mutate(Stress_Week_Weight = Stress_Week_Weight,
+         Stress_Week_Avg_Weight = Stress_Week_Avg_Weight) %>% 
   select(c("SpeciesID", "Week", "Heatwave_graph","Stress_Week_Weight", "Stress_Week_Avg_Weight"))
 
 #isolate porometer stress week
 Phase1_Data_Porometer_add <- Phase1_Data_Porometer %>% 
-  mutate(Stress_Week_Porometer = Stress_Week,
-         Stress_Week_Avg_Porometer = Stress_Week_Avg) %>% 
+  mutate(Stress_Week_Porometer = Stress_Week_Porometer,
+         Stress_Week_Avg_Porometer = Stress_Week_Avg_Porometer) %>% 
   select(c("SpeciesID", "Week", "Heatwave_graph","Stress_Week_Porometer", "Stress_Week_Avg_Porometer"))
 
 #add to main data
@@ -473,7 +466,7 @@ Phase1_Data_Weight_PIEN %>%
 # PIFL 16 is weird
 
 Phase1_Data_Weight %>% 
-  filter(Treatment_water == "Drought") %>% 
+  filter(Treatment_water == "Drought", Treatment_temp == "Ambient") %>% 
   #filter(Species == "PIFL") %>% 
   #filter(SpeciesID != "PIFL16") %>% 
   ggplot(aes(x = Week,
@@ -481,12 +474,14 @@ Phase1_Data_Weight %>%
              color = SpeciesID)) +
   geom_point() +
   geom_line() +
-  annotate("segment",
-           x = 7, xend = 7,
-           y = 0, yend = 500,
-           color = "red",
-           linetype = "dashed",
-           size = 0.6) +
+  # annotate("rect",
+  #          xmin = 7, xmax = 8,
+  #          ymin = 0, ymax = 500,
+  #          color = "red",
+  #          linetype = "dashed",
+  #          size = 0.6,
+  #          fill = "red",
+  #          alpha = 0.3) +
   geom_rect(data = subset(Weight_Stress_Label, CommonName == "Ponderosa Pine"),
            aes(xmin = Week, xmax = Week,
                ymin = ymin1, ymax = ymax1),
@@ -852,19 +847,21 @@ Phase1_Data_Porometer_PIEN %>%
 ### Spaghetti Plot (Drought)
 ```{r}
 Phase1_Data_Porometer %>% 
-  filter(Treatment_water == "Drought") %>% 
+  filter(Treatment_water == "Drought", Treatment_temp == "Ambient") %>% 
   #filter(Species == "PIFL") %>% 
   ggplot(aes(x = Week,
              y = Porometer_Est,
              color = SpeciesID)) +
   geom_point() +
   geom_line() +
-  annotate("segment",
-           x = 7, xend = 7,
-           y = 0, yend = 600,
-           color = "red",
-           linetype = "dashed",
-           size = 0.6) +
+  # annotate("rect",
+  #          xmin = 7, xmax = 8,
+  #          ymin = 0, ymax = 600,
+  #          color = "red",
+  #          linetype = "dashed",
+  #          size = 0.6,
+  #          fill = "red",
+  #          alpha = 0.3) +
   geom_rect(data = subset(Porometer_Stress_Label, CommonName == "Ponderosa Pine"),
            aes(xmin = Week, xmax = Week,
                ymin = ymin, ymax = ymax2),
