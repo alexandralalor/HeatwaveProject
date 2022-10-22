@@ -124,12 +124,12 @@ Phase1_Data_Photos_graph_p %>%
 
 
 #add info about stress  weeks
-Phase1_Data_Photos_graph_bar <- Phase1_Data_Photos %>% 
+Phase1_Data_Photos_graph_bar_1 <- Phase1_Data_Photos %>% 
   filter(Treatment_water == "Drought") %>% 
   filter(Week == 1 | Week == Dead_Week | Week == Stress_Week_Weight | Week == Stress_Week_Porometer) %>% 
   arrange(Species, Treatment_temp, Week, green_only, desc(red_only))
 
-Phase1_Data_Photos_graph_bar <- Phase1_Data_Photos_graph_bar %>% 
+Phase1_Data_Photos_graph_bar_1 <- Phase1_Data_Photos_graph_bar_1 %>% 
   mutate(Order = ifelse(Week == 1, "Start", 
                         ifelse(Week == Dead_Week, "Dead", 
                                ifelse(Week == Stress_Week_Weight, "Stress_Weight", "Stress_Porometer")))) %>% 
@@ -140,7 +140,7 @@ Phase1_Data_Photos_graph_bar <- Phase1_Data_Photos_graph_bar %>%
 #summarize for bar graphs
 
 #summary data
-Phase1_Data_Photos_graph_bar <- Phase1_Data_Photos_graph_bar %>% 
+Phase1_Data_Photos_graph_bar <- Phase1_Data_Photos_graph_bar_1 %>% 
   filter(Treatment_water == "Drought") %>% 
   group_by(Species, Treatment_temp, Order, red_class, green_class, blue_class) %>% 
   summarize(red = round(mean(red)),
@@ -199,7 +199,7 @@ sum <- Phase1_Data_Photos_graph_bar_test %>%
   summarize(PercentGreen = mean(PercentGreen, na.rm = T),
             PercentRed = mean(PercentRed, na.rm = T))
 
-sd <- Phase1_Data_Photos_graph %>% 
+sd <- Phase1_Data_Photos_graph_bar_1 %>% 
   group_by(Species, Treatment_temp, Order) %>%
   summarise(SD_PercentRed = mean(SD_PercentRed))
 
@@ -208,8 +208,17 @@ sum_sd <- merge(sum, sd, by = c("Species","Treatment_temp", "Order"), all = T)
 #merge
 Phase1_Data_Photos_graph_bar <- merge(Phase1_Data_Photos_graph_bar, sum_sd, by = c("Species","Treatment_temp", "Order"), all.x = T)
 
-
-
+#################################
+#some statistics
+sd_stats <- sd %>% 
+  filter(Treatment_temp == "Ambient") %>% 
+  group_by(Order) %>% 
+  summarize(SD_PercentRed = mean(SD_PercentRed))
+sum_stats <- sum %>% 
+  filter(Treatment_temp == "Ambient") %>% 
+  group_by(Order) %>% 
+  summarize(mean_PercentRed = mean(PercentRed))
+#########################################
 
 # graphing
 Phase1_Data_Photos_graph_b <- Phase1_Data_Photos_graph_bar %>% 

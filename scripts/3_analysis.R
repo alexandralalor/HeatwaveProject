@@ -11,6 +11,12 @@ library(tidyverse)
 #read csv
 Phase1_Data_All <- read_csv("data_analysis/Phase1_Data_All.csv")
 
+#factor levels
+Phase1_Data_All <- 
+  transform(Phase1_Data_All, Species = factor(Species, levels = c("PIPO", "PIED", "PSME", "PIEN", "PIFL")))
+Phase1_Data_All <- 
+  transform(Phase1_Data_All, Species = factor(Species, levels = c("PIFL", "PIEN", "PSME", "PIED", "PIPO")))
+
 #Dead Week data
 Dead_Week <- Phase1_Data_All %>% 
   filter(Treatment_water == "Drought") %>% 
@@ -34,32 +40,32 @@ Dead_Week_Porometer <- Phase1_Data_All %>%
 # write.csv(Dead_Week_Porometer, "data_analysis/Dead_Week_Porometer.csv", quote = FALSE, row.names = FALSE)
 
 
-#for some reason need to make a function to round
-rnd <- function(x) trunc(x+sign(x)*0.5)
-Dead_Week <- Dead_Week %>% 
-  mutate(Dead_Week_round = rnd(Dead_Week))
-
-
-PIPO_Amb <- Dead_Week %>% 
-  filter(Species == "PIPO", Treatment_temp == "Ambient")
-PIPO_HW <- Dead_Week %>% 
-  filter(Species == "PIPO", Treatment_temp == "Ambient_HW")
-PIED_Amb <- Dead_Week %>% 
-  filter(Species == "PIED", Treatment_temp == "Ambient")
-PIED_HW <- Dead_Week %>% 
-  filter(Species == "PIED", Treatment_temp == "Ambient_HW")
-PIFL_Amb <- Dead_Week %>% 
-  filter(Species == "PIFL", Treatment_temp == "Ambient")
-PIFL_HW <- Dead_Week %>% 
-  filter(Species == "PIFL", Treatment_temp == "Ambient_HW")
-PSME_Amb <- Dead_Week %>% 
-  filter(Species == "PSME", Treatment_temp == "Ambient")
-PSME_HW <- Dead_Week %>% 
-  filter(Species == "PSME", Treatment_temp == "Ambient_HW")
-PIEN_Amb <- Dead_Week %>% 
-  filter(Species == "PIEN", Treatment_temp == "Ambient")
-PIEN_HW <- Dead_Week %>% 
-  filter(Species == "PIEN", Treatment_temp == "Ambient_HW")
+# #for some reason need to make a function to round
+# rnd <- function(x) trunc(x+sign(x)*0.5)
+# Dead_Week <- Dead_Week %>% 
+#   mutate(Dead_Week_round = rnd(Dead_Week))
+# 
+# 
+# PIPO_Amb <- Dead_Week %>% 
+#   filter(Species == "PIPO", Treatment_temp == "Ambient")
+# PIPO_HW <- Dead_Week %>% 
+#   filter(Species == "PIPO", Treatment_temp == "Ambient_HW")
+# PIED_Amb <- Dead_Week %>% 
+#   filter(Species == "PIED", Treatment_temp == "Ambient")
+# PIED_HW <- Dead_Week %>% 
+#   filter(Species == "PIED", Treatment_temp == "Ambient_HW")
+# PIFL_Amb <- Dead_Week %>% 
+#   filter(Species == "PIFL", Treatment_temp == "Ambient")
+# PIFL_HW <- Dead_Week %>% 
+#   filter(Species == "PIFL", Treatment_temp == "Ambient_HW")
+# PSME_Amb <- Dead_Week %>% 
+#   filter(Species == "PSME", Treatment_temp == "Ambient")
+# PSME_HW <- Dead_Week %>% 
+#   filter(Species == "PSME", Treatment_temp == "Ambient_HW")
+# PIEN_Amb <- Dead_Week %>% 
+#   filter(Species == "PIEN", Treatment_temp == "Ambient")
+# PIEN_HW <- Dead_Week %>% 
+#   filter(Species == "PIEN", Treatment_temp == "Ambient_HW")
 
 
 
@@ -84,19 +90,25 @@ Dead_Week %>%
   arrange(Dead_Week) %>% 
   #filter(Species == "PIFL") %>% 
   ggplot(aes(x = Dead_Week,
-             y = reorder(Species, Dead_Week, mean),
+             y = Species,
              fill = Treatment_temp)) +
   geom_boxplot() +
   xlim(0, 40) +
   ylab("Species") +
-  annotate("segment",
-           x = 7, xend = 7,
-           y = 0, yend = 6,
+  xlab("Dead Week") +
+  annotate("rect",
+           xmin = 7, xmax = 8,
+           ymin = 0, ymax = 6,
            color = "red",
            linetype = "dashed",
-           size = 0.4) +
+           size = 0.4,
+           fill = "red",
+           alpha = 0.3) +
   theme_minimal() +
   scale_fill_discrete(direction = -1)
+
+#means and CIs
+
   
 
 

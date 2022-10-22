@@ -85,18 +85,56 @@ autoplot(km_treatment_fit_stress) +
 
 #################################################################################
 heatwave_summary <- read_csv("data_analysis/heatwave_summary.csv")
+heatwave_summary_d <- read_csv("data_analysis/anova_Dead_Week.csv")
+heatwave_summary_w <- read_csv("data_analysis/anova_Dead_Week_Weight.csv")
+heatwave_summary_p <- read_csv("data_analysis/anova_Dead_Week_Porometer.csv")
 
-heatwave_summary %>% 
+heatwave_summary_CI <- heatwave_summary %>% 
   filter(Treatment_temp == "Ambient") %>% 
-  ggplot(aes(x = median,
-             y = reorder(Species, median),
+  select(c("Species", "Treatment_temp", "half_width"))
+
+#merge and factor levels
+heatwave_summary_d <- merge(heatwave_summary_d, heatwave_summary_CI, by = "Species")
+heatwave_summary_d <- 
+  transform(heatwave_summary_d, Species = factor(Species, levels = c("PIFL", "PIEN", "PSME", "PIED", "PIPO")))
+heatwave_summary_d <- heatwave_summary_d %>% 
+  group_by(Species) %>% 
+  summarize(Mean = mean(Ambient, na.rm = T),
+            CI_lower_mean = Mean - half_width,
+            CI_upper_mean = Mean + half_width)
+
+heatwave_summary_w <- merge(heatwave_summary_w, heatwave_summary_CI, by = "Species")
+heatwave_summary_w <- 
+  transform(heatwave_summary_w, Species = factor(Species, levels = c("PIFL", "PIEN", "PSME", "PIED", "PIPO")))
+heatwave_summary_w <- heatwave_summary_w %>% 
+  group_by(Species) %>% 
+  summarize(Mean = mean(Ambient, na.rm = T),
+            CI_lower_mean = Mean - half_width,
+            CI_upper_mean = Mean + half_width)
+
+heatwave_summary_p <- merge(heatwave_summary_p, heatwave_summary_CI, by = "Species")
+heatwave_summary_p <- 
+  transform(heatwave_summary_p, Species = factor(Species, levels = c("PIFL", "PIEN", "PSME", "PIED", "PIPO")))
+heatwave_summary_p <- heatwave_summary_p %>% 
+  group_by(Species) %>% 
+  summarize(Mean = mean(Ambient, na.rm = T),
+            CI_lower_mean = Mean - half_width,
+            CI_upper_mean = Mean + half_width)
+
+
+
+heatwave_summary_d %>% 
+  ggplot(aes(x = Mean,
+             y = Species,
              color = Species)) +
   geom_point() +
   xlim(0,36) +
   #scale_x_continuous(breaks = seq(0 , 36, by = 4)) +
-  xlab("Median Death Date, 95% C.I.") +
+  xlab("Mean Death Date, 95% C.I.") +
   ylab("Species") +
-  geom_errorbar(aes(xmin = CI_lower_med, xmax = CI_upper_med)) +
+  labs(title = "Death Date") +
+  geom_errorbar(aes(xmin = CI_lower_mean, 
+                    xmax = CI_upper_mean)) +
   theme_minimal() +
   theme(legend.position = "none")
 
@@ -136,15 +174,31 @@ Phase1_Data_Avg %>%
   scale_color_discrete(direction = -1)
 
 ###################################################################################
+#read csv
+Phase1_Data_All <- read_csv("data_analysis/Phase1_Data_All.csv")
+
+#factor levels
+# Phase1_Data_All <- 
+#   transform(Phase1_Data_All, Species = factor(Species, levels = c("PIPO", "PIED", "PSME", "PIEN", "PIFL")))
+Phase1_Data_All <- 
+  transform(Phase1_Data_All, Species = factor(Species, levels = c("PIFL", "PIEN", "PSME", "PIED", "PIPO")))
+
 #Dead Week data
-Dead_Week <- Phase1_Data %>% 
+Dead_Week <- Phase1_Data_All %>% 
   filter(Treatment_water == "Drought") %>% 
   group_by(Species, Treatment_temp, Dead_Week) %>% 
   summarize(SpeciesID = unique(SpeciesID))
-
-Dead_Week <- Dead_Week %>% 
-  mutate(Dead_Week_round = rnd(Dead_Week))
-
+#Dead Week data
+Dead_Week_Weight <- Phase1_Data_All %>% 
+  filter(Treatment_water == "Drought", !is.na(Stress_to_Dead_Weight)) %>% 
+  mutate(Stress_to_Dead_Weight = round(Stress_to_Dead_Weight, digits = 1)) %>% 
+  group_by(Species, Treatment_temp, Stress_to_Dead_Weight) %>% 
+  summarize(SpeciesID = unique(SpeciesID))
+#Dead Week data
+Dead_Week_Porometer <- Phase1_Data_All %>% 
+  filter(Treatment_water == "Drought", !is.na(Stress_to_Dead_Porometer)) %>% 
+  group_by(Species, Treatment_temp, Stress_to_Dead_Porometer) %>% 
+  summarize(SpeciesID = unique(SpeciesID))
 
 #histogram
 Dead_Week %>% 
@@ -165,20 +219,22 @@ Dead_Week %>%
   arrange(Dead_Week) %>% 
   #filter(Species == "PIFL") %>% 
   ggplot(aes(x = Dead_Week,
-             y = reorder(Species, Dead_Week, mean),
+             y = Species,
              fill = Treatment_temp)) +
   geom_boxplot() +
   xlim(0, 40) +
   ylab("Species") +
-  annotate("segment",
-           x = 7, xend = 7,
-           y = 0, yend = 6,
+  xlab("Dead Week") +
+  annotate("rect",
+           xmin = 7, xmax = 8,
+           ymin = 0, ymax = 6,
            color = "red",
            linetype = "dashed",
-           size = 0.4) +
+           size = 0.4,
+           fill = "red",
+           alpha = 0.3) +
   theme_minimal() +
   scale_fill_discrete(direction = -1)
-
 
 
 
