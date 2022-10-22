@@ -33,3 +33,5 @@ vignettes/*.pdf
 /markdown/
 # graphs
 /graphs/
+# photo data
+/data_raw/photos/
