@@ -27,3 +27,5 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 <<<<<<< HEAD
+# photos
+/photos_background/
