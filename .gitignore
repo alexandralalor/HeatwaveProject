@@ -35,8 +35,8 @@ vignettes/*.pdf
 /graphs/
 # photo data
 /data_raw/photos/
-/data_clean/Phase1_Photos
-/data_QAQC/Phase1_Photos
-/data_QAQC/Phase1_Data_Photos
-/data_analysis/Phase1_Data_Photos
-/data_analysis/Phase1_Data_Photos_Avg
+/data_clean/Phase1_Photos.csv
+/data_QAQC/Phase1_Photos.csv
+/data_QAQC/Phase1_Data_Photos.csv
+/data_analysis/Phase1_Data_Photos.csv
+/data_analysis/Phase1_Data_Photos_Avg.csv
