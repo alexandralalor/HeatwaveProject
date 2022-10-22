@@ -31,3 +31,5 @@ vignettes/*.pdf
 /photos_background/
 # markdown
 /markdown/
+# graphs
+/graphs/
