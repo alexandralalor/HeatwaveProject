@@ -28,6 +28,14 @@ Phase1_Data_Photos_graph <- transform(Phase1_Data_Photos_graph,
 
 levels(Phase1_Data_Photos_graph$Species)
 
+# #PSME
+# Phase1_Data_Photos_graph <- Phase1_Data_Photos_Avg %>% 
+#   filter(Treatment_water == "Drought", Treatment_temp == "Ambient", Species == "PSME") %>% 
+#   mutate(PercentRed = round(PercentRed, digits = 1)) %>% 
+#   mutate(label = paste0(PercentRed, " %")) %>% 
+#   arrange(Species, Treatment_temp, Week, green_only, desc(red_only))
+
+
 ################################################################################
 # week 1 to dead, all colors
 ################################################################################
@@ -54,6 +62,10 @@ Phase1_Data_Photos_graph %>%
   xlab("Weeks") +
   labs(title = "Colors over Time") +
   theme_minimal()
+  # theme(panel.grid.major = element_blank(),
+  #       panel.grid.minor = element_blank(),
+  #       plot.background = element_rect(fill = "black"),
+  #       panel.background = element_rect(fill = 'black'))
 
   
 ################################################################################

@@ -57,7 +57,7 @@ Phase1_Data <- merge(Phase1_Data, summary_4, all.x = T)
 
 
 #reorder and rearrange columns
-Phase1_Data <- Phase1_Data[, c(7,8,9,10,1,4,2,3,6,22,23,24,11,12,13,14,5,15,16,17,18,25,19,20,21)]
+#Phase1_Data <- Phase1_Data[, c(7,8,9,10,1,4,2,3,6,22,23,24,11,12,13,14,5,15,16,17,18,25,19,20,21)]
 Phase1_Data <- Phase1_Data %>% 
   group_by(Species) %>% 
   arrange(SpeciesID, Week)

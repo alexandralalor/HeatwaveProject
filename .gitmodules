@@ -1,0 +1,3 @@
+[submodule "scripts/0_colors/Allie_plant_segmenting"]
+	path = scripts/0_colors/Allie_plant_segmenting
+	url = https://github.com/DevinBayly/Allie_plant_segmenting

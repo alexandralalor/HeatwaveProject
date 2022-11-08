@@ -1,45 +1,12 @@
-#Heatwave Project Phase 1
-#combine color data and porometer data
+#Data analysis - photos
 #Alexandra Lalor
 #allielalor@arizona.edu
 #allielalor@gmail.com
-#First created: 2022-09-11
-#Last updated: 2022-09-18
+#First created: 2022-10-25
+#Last updated: 2022-10-25
 
 #load packages
 library(tidyverse)
-library(ggtern) #for rbg2hex
-library(colorfindr) #for 3d color plots
-
-#read csv
-Phase1_Data_Photos <- read_csv("data_analysis/Phase1_Data_Photos.csv")
-
-
-################################################################################
-# SD
-################################################################################
-
-Phase1_Data_Photos <- Phase1_Data_Photos %>% 
-  group_by(Species, Week, Treatment_temp, Treatment_water) %>%
-  mutate(SD_PercentRed = sd(PercentRed, na.rm = T))
-
-
-################################################################################
-# Samples sizes per week
-################################################################################
-
-summary_1 <- Phase1_Data_Photos %>% 
-  group_by(Species, Treatment_temp, Treatment_water, Week) %>% 
-  summarize(SampleSize_Weekly_Photos = length(unique(SpeciesID)))
-
-Phase1_Data_Photos <- merge(Phase1_Data_Photos, summary_1, all.x = T)
-
-#rearrange columns
-#Phase1_Data_Photos <- Phase1_Data_Photos[ ,c(1,2,5,3,4,6,29,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28)]
-
-
-#save csv
-write.csv(Phase1_Data_Photos, "data_analysis/Phase1_Data_Photos.csv", quote = FALSE, row.names = FALSE)
 
 
 ################################################################################
@@ -117,4 +84,35 @@ Phase1_Data_Photos_Avg <- Phase1_Data_Photos_Avg %>%
 write.csv(Phase1_Data_Photos_Avg, "data_analysis/Phase1_Data_Photos_Avg.csv", quote=FALSE, row.names = FALSE)
 
 
+################################################################################
+# Photos data add
+################################################################################
 
+#read_csv
+Phase1_Data_Photos <- read_csv("data_analysis/Phase1_Data_Photos.csv")
+Phase1_Data_Photos_Avg <- read_csv("data_analysis/Phase1_Data_Photos_Avg.csv")
+Phase1_Data_All_Avg <- read_csv("data_analysis/Phase1_Data_All_Avg.csv")
+
+#add info to Phase1_Data_Photos
+Phase1_Data_Photos_Avg_add <- Phase1_Data_Photos_Avg %>% 
+  group_by(Species, Treatment_temp, Treatment_water, Week) %>% 
+  summarize(PercentGreen_Avg = mean(PercentGreen, na.rm = T),
+            PercentRed_Avg = mean(PercentRed, na.rm = T))
+
+Phase1_Data_All_Avg_add <- Phase1_Data_All_Avg %>% 
+  group_by(Species, Treatment_temp, Treatment_water, Week) %>% 
+  summarize(Dead_Week_Avg = round(mean(Dead_Week_Avg), digits = 1),
+            Stress_Week_Avg_Weight = round(mean(Stress_Week_Avg_Weight), digits = 1),
+            Stress_Week_Avg_Porometer = round(mean(Stress_Week_Avg_Porometer), digits = 1))
+
+Phase1_Data_Photos_add <- merge(Phase1_Data_Photos_Avg_add, Phase1_Data_All_Avg_add,
+                                by = c("Species", "Treatment_temp","Treatment_water", "Week"), all.x = T)
+
+Phase1_Data_Photos <- merge(Phase1_Data_Photos, Phase1_Data_Photos_add, 
+                            by = c("Species", "Treatment_temp","Treatment_water", "Week"), all.x = T)
+
+Phase1_Data_Photos <- Phase1_Data_Photos %>% 
+  mutate(Dead_Week = round(Dead_Week))
+
+#save csv
+write.csv(Phase1_Data_Photos, "data_analysis/Phase1_Data_Photos.csv", quote = FALSE, row.names = FALSE)

@@ -3,7 +3,9 @@
 #allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-09-15
-#Last updated: 2022-10-10
+#Last updated: 2022-10-25
+
+#ultimately none of these transformations worked well, and I stuck with original data
 
 #load packages
 library(tidyverse)

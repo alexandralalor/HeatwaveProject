@@ -158,6 +158,13 @@ Phase1_Data %>%
             range_max = max(Biomass_g))
 
 Phase1_Data %>% 
+  filter(Treatment_water == "Drought") %>% 
+  group_by(Species) %>% 
+  summarize(mean = mean(Whorls),
+            range_min = min(Whorls),
+            range_max = max(Whorls))
+
+Phase1_Data %>% 
   #filter(Treatment_water == "Drought") %>% 
   group_by(Species, Treatment_temp, Treatment_water) %>% 
   summarize(N = length(unique(SpeciesID)))

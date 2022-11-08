@@ -13,38 +13,87 @@ library(ggplot2)
 library(ggfortify)
 
 #read CSVs
-Phase1_Data <- read_csv("data_analysis/Phase1_Data.csv")
+Phase1_Data_All <- read_csv("data_analysis/Phase1_Data_All.csv")
 
-#check out data
-glimpse(Phase1_Data)
+# Phase1_Data_All <- 
+#   transform(Phase1_Data_All, Species = factor(Species, levels = c("PIFL", "PIEN", "PSME", "PIED", "PIPO")))
+Phase1_Data_All <- 
+  transform(Phase1_Data_All, CommonName = factor(CommonName, levels = c("Ponderosa Pine", "Pinyon Pine", "Douglas fir", "Engelman Spruce", "Limber Pine")))
 
-#convert variables
-Phase1_Data$Phase <- as.factor(Phase1_Data$Phase)
-Phase1_Data$Chamber <- as.factor(Phase1_Data$Chamber)
-Phase1_Data$ScientificName <- as.factor(Phase1_Data$ScientificName)
-Phase1_Data$CommonName <- as.factor(Phase1_Data$CommonName)
-Phase1_Data$Species <- as.factor(Phase1_Data$Species)
-Phase1_Data$Treatment_temp <- as.factor(Phase1_Data$Treatment_temp)
-Phase1_Data$Treatment_water <- as.factor(Phase1_Data$Treatment_water)
-Phase1_Data$PorometerSubset <- as.factor(Phase1_Data$PorometerSubset)
-Phase1_Data$Dead <- as.factor(Phase1_Data$Dead)
-Phase1_Data$Heatwave_graph <- as.factor(Phase1_Data$Heatwave_graph)
-Phase1_Data$Heatwave <- as.factor(Phase1_Data$Heatwave)
+# #check out data
+# glimpse(Phase1_Data)
+# 
+# #convert variables
+# Phase1_Data$Phase <- as.factor(Phase1_Data$Phase)
+# Phase1_Data$Chamber <- as.factor(Phase1_Data$Chamber)
+# Phase1_Data$ScientificName <- as.factor(Phase1_Data$ScientificName)
+# Phase1_Data$CommonName <- as.factor(Phase1_Data$CommonName)
+# Phase1_Data$Species <- as.factor(Phase1_Data$Species)
+# Phase1_Data$Treatment_temp <- as.factor(Phase1_Data$Treatment_temp)
+# Phase1_Data$Treatment_water <- as.factor(Phase1_Data$Treatment_water)
+# Phase1_Data$PorometerSubset <- as.factor(Phase1_Data$PorometerSubset)
+# Phase1_Data$Dead <- as.factor(Phase1_Data$Dead)
+# Phase1_Data$Heatwave_graph <- as.factor(Phase1_Data$Heatwave_graph)
+# Phase1_Data$Heatwave <- as.factor(Phase1_Data$Heatwave)
 
-
-#Kaplan Meier Survival Curve - combined
-km <- with(Phase1_Data, Surv(Week, Dead_Count))
-km_species_fit <- survfit(Surv(Week, Dead_Count)~Species, data=Phase1_Data)
-autoplot(km_species_fit)  
-
-#summary stats
-range(Phase1_Data$Week)
-
-Phase1_Data <- Phase1_Data %>% 
+#filter data
+Phase1_Data_All <- Phase1_Data_All %>% 
   filter(Treatment_temp == "Ambient")
 
+#Kaplan Meier Survival Curve - combined
+km <- with(Phase1_Data_All, Surv(Week, Dead_Count))
+km_species_fit <- survfit(Surv(Week, Dead_Count)~CommonName, data = Phase1_Data_All)
+
+autoplot(km_species_fit) +
+  # scale_fill_brewer(palette = "Paired") +
+  # scale_color_brewer(palette = "Paired") +
+  scale_x_continuous(breaks = seq(0 , 36, by = 4)) +
+  # annotate("segment",
+  #          x = 7, xend = 7,
+  #          y = 0, yend = 1,
+  #          color = "red",
+  #          linetype = "dashed",
+  #          size = 0.8) +
+  xlab("Weeks") +
+  #ylab("Survivorship") +
+  geom_text(label = "Ponderosa Pine",
+            x = 13, y = 0.05, color = "black", size = 4) +
+  geom_text(label = "Limber Pine",
+            x = 33, y = 0.05, color = "black", size = 4) +
+  labs(title = "Seedling Survival Probability under Drought\nKaplan Meier Survival Curve",
+       color = "Species:", fill = "Species:") +
+  theme_pubclean()
+
+
+#Kaplan Meier Survival Curve- STRESS WEEK
+
+km_stress_w <- with(Phase1_Data_All, Surv(Stress_to_Dead_Weight, Dead_Count))
+km_species_fit_stress_w <- survfit(Surv(Stress_to_Dead_Weight, Dead_Count)~CommonName, data = Phase1_Data_All)
+
+km_stress_w <- with(Phase1_Data_All, Surv(Stress_Week_Avg_Weight, Dead_Count))
+km_species_fit_stress_w <- survfit(Surv(Stress_Week_Avg_Weight, Dead_Count)~CommonName, data = Phase1_Data_All)
+
+km_stress_p <- with(Phase1_Data_All, Surv(Stress_to_Dead_Porometer, Dead_Count))
+km_species_fit_stress_p <- survfit(Surv(Stress_to_Dead_Porometer, Dead_Count)~CommonName, data = Phase1_Data_All)
+
+
+autoplot(km_species_fit_stress_w) +
+  scale_x_continuous(breaks = seq(0 , 36, by = 4)) +
+  xlab("Weeks") +
+  #ylab("Survivorship") +
+  geom_text(label = "Ponderosa Pine",
+            x = 13, y = 0.05, color = "black", size = 4) +
+  geom_text(label = "Limber Pine",
+            x = 33, y = 0.05, color = "black", size = 4) +
+  labs(title = "Seedling Survival Probability under Drought\nKaplan Meier Survival Curve",
+       color = "Species:", fill = "Species:") +
+  theme_pubclean()
+
+
+################################################################################
+
 #Kaplan Meier Survival Curve - separated by treatment
-km_treatment_fit <- survfit(Surv(Week, Dead_Count)~Species, data=Phase1_Data)
+km_treatment_fit <- survfit(Surv(Week, Dead_Count)~Species, data=Phase1_Data_All)
 summary(km_treatment_fit)
 
 autoplot(km_treatment_fit) +
@@ -66,14 +115,17 @@ autoplot(km_treatment_fit) +
   theme_bw()
 
 
+
 #Kaplan Meier Survival Curve - separated by treatment - STRESS WEEK
 
 Phase1_Data_Weight <- read.csv("data_analysis/Phase1_Data_Weight.csv")
 
 km_treatment_fit_stress <- survfit(Surv(Stress_Week_Start, Dead_Count)~Heatwave_graph, data=Phase1_Data_Weight)
-summary(km_treatment_fit_stress)
 
-autoplot(km_treatment_fit_stress) +
+km_treatment_fit_stress <- survfit(Surv(Stress_to_Dead_Weight, Dead_Count)~CommonName, data=Phase1_Data_Weight)
+
+
+autoplot(km_species_fit_stress_w) +
   scale_fill_brewer(palette = "Paired") +
   scale_color_brewer(palette = "Paired") +
   scale_x_continuous(breaks = seq(0 , 36, by = 4)) +
@@ -81,7 +133,9 @@ autoplot(km_treatment_fit_stress) +
   #ylab("Survivorship") +
   labs(title = "Kaplan Meier Survival Curve: Heatwave Effects by Species",
        color = "Species_Treatment", fill = "Species_Treatment") +
-  theme_bw()
+  theme_pubclean()
+
+
 
 #################################################################################
 heatwave_summary <- read_csv("data_analysis/heatwave_summary.csv")
@@ -183,22 +237,10 @@ Phase1_Data_All <- read_csv("data_analysis/Phase1_Data_All.csv")
 Phase1_Data_All <- 
   transform(Phase1_Data_All, Species = factor(Species, levels = c("PIFL", "PIEN", "PSME", "PIED", "PIPO")))
 
-#Dead Week data
-Dead_Week <- Phase1_Data_All %>% 
-  filter(Treatment_water == "Drought") %>% 
-  group_by(Species, Treatment_temp, Dead_Week) %>% 
-  summarize(SpeciesID = unique(SpeciesID))
-#Dead Week data
-Dead_Week_Weight <- Phase1_Data_All %>% 
-  filter(Treatment_water == "Drought", !is.na(Stress_to_Dead_Weight)) %>% 
-  mutate(Stress_to_Dead_Weight = round(Stress_to_Dead_Weight, digits = 1)) %>% 
-  group_by(Species, Treatment_temp, Stress_to_Dead_Weight) %>% 
-  summarize(SpeciesID = unique(SpeciesID))
-#Dead Week data
-Dead_Week_Porometer <- Phase1_Data_All %>% 
-  filter(Treatment_water == "Drought", !is.na(Stress_to_Dead_Porometer)) %>% 
-  group_by(Species, Treatment_temp, Stress_to_Dead_Porometer) %>% 
-  summarize(SpeciesID = unique(SpeciesID))
+Dead_Week <- read_csv("data_analysis/Dead_Week.csv")
+Dead_Week_Weight <- read_csv("data_analysis/Dead_Week_Weight.csv")
+Dead_Week_Porometer <- read_csv("data_analysis/anova_Dead_Week_Porometer.csv")
+
 
 #histogram
 Dead_Week %>% 
