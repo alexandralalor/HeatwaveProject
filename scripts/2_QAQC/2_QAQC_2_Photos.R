@@ -12,7 +12,7 @@ library(tidyverse)
 #library(colorfindr) #for get_colors
 
 #read csv
-tree_rgb_sum_filter <- read_csv("data_clean/Phase1_Photos.csv")
+tree_rgb_sum_filter <- read_csv("data_clean/tree_rgb_sum_filter.csv")
 
 #here we have some room to play around with different thresholds to best
 #display the data. I'm choosing to remove colors with less than 100 pixels
@@ -105,7 +105,7 @@ Phase1_Data_Photos <- Phase1_Data_Photos %>%
   mutate(Treatment_water = ifelse(SpeciesID == "PIED35", "Drought", Treatment_water))
 
 #fix PIEN Week 10 - add in watered
-fix <- Phase1_Data_Photos_test %>% 
+fix <- Phase1_Data_Photos %>% 
   filter(Species == "PIEN", Week == 10, Treatment_temp == "Ambient") %>% 
   group_by(SpeciesID) %>% 
   summarize(water = unique(Treatment_water))

@@ -76,5 +76,5 @@ tree_rgb_sum_filter <- tree_rgb_sum_filter %>%
 #   plot_colors_3d(sample_size = 5000, marker_size = 2.5, color_space = "RGB")
 
 #save csv
-write.csv(tree_rgb_sum_filter, "data_clean/Phase1_Photos.csv", quote=FALSE, row.names = FALSE)
+write.csv(tree_rgb_sum_filter, "data_clean/tree_rgb_sum_filter.csv", quote=FALSE, row.names = FALSE)
 

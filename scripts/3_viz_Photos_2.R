@@ -9,6 +9,7 @@
 #load packages
 library(tidyverse)
 library(ggtern) #for ternary diagram and rgb2hex
+library(ggplot2)
 
 #read_csv
 Phase1_Data_Photos <- read_csv("data_analysis/Phase1_Data_Photos.csv")
@@ -43,6 +44,7 @@ levels(Phase1_Data_Photos_graph$Species)
 #save hex colors for visualization
 #try to find a way to arrange the y-axis by most frequent colors to least frequent
 colors <- Phase1_Data_Photos_graph$col_hex
+dev.off()
 
 #graph!
 Phase1_Data_Photos_graph %>% 
@@ -93,13 +95,12 @@ Phase1_Data_Photos_graph %>%
   ggplot(aes(x = red,
              y = green,
              color = colors)) +
-  geom_point(color = colors)
-             #size = size*2) +
+  geom_point(color = colors) +
   geom_abline(intercept = 0,
               slope = 1,
               linetype = "dashed",
               size = 0.3) +
-  facet_grid(Species ~ Order) +
+  #facet_grid(Species ~ Order) +
   theme_minimal()
 
 #viz with stress_weight
