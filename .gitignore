@@ -36,6 +36,7 @@ vignettes/*.pdf
 # photo data
 /data_raw/photos/
 /data_clean/Phase1_Photos.csv
+/data_clean/tree_rgb_sum_filter.csv
 /data_QAQC/Phase1_Photos.csv
 /data_QAQC/Phase1_Data_Photos.csv
 /data_analysis/Phase1_Data_Photos.csv
