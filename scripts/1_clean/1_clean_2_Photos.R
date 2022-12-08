@@ -21,7 +21,7 @@ background_rgb <- data.frame(matrix(ncol = 6, nrow = 0))
 colnames(background_rgb) <- c("red", "green", "blue", "col_hex", "col_freq", "col_share")
 
 #define paths
-my_path_background <- "photos_background/"
+my_path_background <- "Phase1_Photos_Background/"
 file_names_list <- list.files(my_path_background)
 file_names <- paste0(my_path_background, file_names_list)
 
