@@ -70,7 +70,7 @@ file_add <- file_add[, c(6, 2, 1, 3, 4, 5)]
 
 #example
 #3D plot of colors in my image
-get_colors("Phase1_Photos/2021-08-26/Segmented/PIPO11 Ambient Drought DSC01486_segmented.jpg") %>% 
+get_colors("Phase1_Photos/2021-08-26/Final/PIPO11 Ambient Drought DSC01486_segmented.jpg") %>% 
   plot_colors_3d(sample_size = 5000, marker_size = 2.5, color_space = "RGB")
 
 #define black color
@@ -299,7 +299,7 @@ tree_rgb_sum_filter <- tree_rgb_sum_filter %>%
   arrange(desc(col_share))
 
 #check out a histogram to see pixel distribution before and after
-hist(Phase1_Photos$col_freq, breaks = 200) #after
+hist(tree_rgb_sum_filter$col_freq, breaks = 200) #after
 
 #see colors of background
 tree_rgb_sum_filter %>% plot_colors_3d(sample_size = 5000, marker_size = 2.5, color_space = "RGB")
@@ -309,7 +309,7 @@ tree_rgb_sum_filter %>% plot_colors_3d(sample_size = 5000, marker_size = 2.5, co
 
 
 ###############################################################################################
-# 5. Vizualization examples
+# 5. Visualization examples
 ###############################################################################################
 
 #read_csv
@@ -341,7 +341,7 @@ Phase1_Data_Photos_graph %>%
   geom_abline(intercept = 0,
               slope = 1,
               linetype = "dashed",
-              size = 1.5) +
+              linewidth = 1.5) +
   theme_minimal()
 
 #graph of color change over time
