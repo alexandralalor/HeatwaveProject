@@ -9,7 +9,7 @@
 library(tidyverse)
 
 #read csvs
-#heatwave <- read.csv("data_analysis/Dead_Week.csv")
+heatwave <- read.csv("data_analysis/Dead_Week.csv")
 #heatwave <- read.csv("data_analysis/Dead_Week_Weight.csv")
 heatwave <- read.csv("data_analysis/Dead_Week_Porometer.csv")
 
@@ -99,6 +99,7 @@ write.csv(anova_Dead_Week_Porometer, "data_analysis/anova_Dead_Week_Porometer.cs
 ################################################################################
 # ANOVA
 ################################################################################
+options(digits = 5, show.signif.stars = FALSE)
 
 #read csvs 
 anova_Dead_Week <- read_csv("data_analysis/anova_Dead_Week.csv")
@@ -110,24 +111,83 @@ stripchart(Ambient ~ Species, data = anova_Dead_Week, ylab = 'Dead_Week', pch = 
 aggregate(anova_Dead_Week$Ambient ~ anova_Dead_Week$Species, 
           FUN = function(x) c(n = length(x), mean = mean(x), sd = sd(x))) # group n, mean, and SD
 
-Dead_Week.aov <- aov(Ambient ~ Species, data = anova_Dead_Week)
+
+#ANOVA for ambient species
+Dead_Week.aov <- aov(anova_Dead_Week$Ambient ~ anova_Dead_Week$Species, data = anova_Dead_Week)
 summary(Dead_Week.aov)    # summary() produces full ANOVA table
 
+#post-hoc multiple comparisons of ALL means ### 
+# TukeyHSD() wants an object that holds a fitted model
+Dead_Week_HSD <- TukeyHSD(Dead_Week.aov) # Tukey's Honest Significant Differences (HSD)
+Dead_Week_HSD_results <- as.data.frame(Dead_Week_HSD$`anova_Dead_Week$Species`)
 
+#library(agricolae)
+#Dead_Week_HSD <- HSD.test(Dead_Week.aov, trt = "anova_Dead_Week$Species")
+
+#ANOVA for heatwave species
+Dead_Week_HW.aov <- aov(anova_Dead_Week$Heatwave ~ anova_Dead_Week$Species, data = anova_Dead_Week)
+summary(Dead_Week_HW.aov)
+#post-hoc multiple comparisons of ALL means ### 
+Dead_Week_HW_HSD <- TukeyHSD(Dead_Week_HW.aov) # Tukey's Honest Significant Differences (HSD)
+Dead_Week_HW_HSD_results <- as.data.frame(Dead_Week_HW_HSD$`anova_Dead_Week$Species`)
+
+#save csv
+write.csv(Dead_Week_HSD_results, "data_analysis/Dead_Week_HSD_results.csv", quote=FALSE, row.names = TRUE)
+write.csv(Dead_Week_HW_HSD_results, "data_analysis/Dead_Week_HW_HSD_results.csv", quote = FALSE, row.names = TRUE)
+
+
+#################################################################################################
 #weeks from start of water stress (anova_Dead_Week_Weight)
 stripchart(Ambient ~ Species, data = anova_Dead_Week_Weight, ylab = 'Dead_Week', pch = 1, col='blue')
 aggregate(anova_Dead_Week_Weight$Ambient ~ anova_Dead_Week_Weight$Species, 
           FUN = function(x) c(n = length(x), mean = mean(x), sd = sd(x))) # group n, mean, and SD
 
-Dead_Week_Weight.aov <- aov(Ambient ~ Species, data = anova_Dead_Week_Weight)
+Dead_Week_Weight.aov <- aov(anova_Dead_Week_Weight$Ambient ~ anova_Dead_Week_Weight$Species, data = anova_Dead_Week_Weight)
 summary(Dead_Week_Weight.aov)    # summary() produces full ANOVA table
 
+#post-hoc multiple comparisons of ALL means ### 
+# TukeyHSD() wants an object that holds a fitted model
+Dead_Week_Weight_HSD <- TukeyHSD(Dead_Week_Weight.aov) # Tukey's Honest Significant Differences (HSD)
+Dead_Week_Weight_HSD
+Dead_Week_Weight_HSD_results <- as.data.frame(Dead_Week_Weight_HSD$`anova_Dead_Week_Weight$Species`)
 
+#ANOVA for heatwave species
+Dead_Week_Weight_HW.aov <- aov(anova_Dead_Week_Weight$Heatwave ~ anova_Dead_Week_Weight$Species, data = anova_Dead_Week_Weight)
+summary(Dead_Week_Weight_HW.aov)
+#post-hoc multiple comparisons of ALL means ### 
+Dead_Week_Weight_HW_HSD <- TukeyHSD(Dead_Week_Weight_HW.aov) # Tukey's Honest Significant Differences (HSD)
+Dead_Week_Weight_HW_HSD
+Dead_Week_Weight_HW_HSD_results <- as.data.frame(Dead_Week_Weight_HW_HSD$`anova_Dead_Week_Weight$Species`)
+
+#save csv
+write.csv(Dead_Week_Weight_HSD_results, "data_analysis/Dead_Week_Weight_HSD_results.csv", quote=FALSE, row.names = TRUE)
+write.csv(Dead_Week_Weight_HW_HSD_results, "data_analysis/Dead_Week_Weight_HW_HSD_results.csv", quote = FALSE, row.names = TRUE)
+
+
+################################################################################################
 #weeks from start of conductance stress (anova_Dead_Week_Porometer)
 stripchart(Ambient ~ Species, data = anova_Dead_Week_Porometer, ylab = 'Dead_Week', pch = 1, col='blue')
 aggregate(anova_Dead_Week_Porometer$Ambient ~ anova_Dead_Week_Porometer$Species, 
           FUN = function(x) c(n = length(x), mean = mean(x), sd = sd(x))) # group n, mean, and SD
 
-Dead_Week_Porometer.aov <- aov(Ambient ~ Species, data = anova_Dead_Week_Porometer)
+Dead_Week_Porometer.aov <- aov(anova_Dead_Week_Porometer$Ambient ~ anova_Dead_Week_Porometer$Species, data = anova_Dead_Week_Porometer)
 summary(Dead_Week_Porometer.aov)    # summary() produces full ANOVA table
+
+#post-hoc multiple comparisons of ALL means ### 
+# TukeyHSD() wants an object that holds a fitted model
+Dead_Week_Porometer_HSD <- TukeyHSD(Dead_Week_Porometer.aov) # Tukey's Honest Significant Differences (HSD)
+Dead_Week_Porometer_HSD
+Dead_Week_Porometer_HSD_results <- as.data.frame(Dead_Week_Porometer_HSD$`anova_Dead_Week_Porometer$Species`)
+
+#ANOVA for heatwave species
+Dead_Week_Porometer_HW.aov <- aov(anova_Dead_Week_Porometer$Heatwave ~ anova_Dead_Week_Porometer$Species, data = anova_Dead_Week_Porometer)
+summary(Dead_Week_Porometer_HW.aov)
+#post-hoc multiple comparisons of ALL means ### 
+Dead_Week_Porometer_HW_HSD <- TukeyHSD(Dead_Week_Porometer_HW.aov) # Tukey's Honest Significant Differences (HSD)
+Dead_Week_Porometer_HW_HSD
+Dead_Week_Porometer_HW_HSD_results <- as.data.frame(Dead_Week_Porometer_HW_HSD$`anova_Dead_Week_Porometer$Species`)
+
+#save csv
+write.csv(Dead_Week_Porometer_HSD_results, "data_analysis/Dead_Week_Porometer_HSD_results.csv", quote=FALSE, row.names = TRUE)
+write.csv(Dead_Week_Porometer_HW_HSD_results, "data_analysis/Dead_Week_Porometer_HW_HSD_results.csv", quote = FALSE, row.names = TRUE)
 
