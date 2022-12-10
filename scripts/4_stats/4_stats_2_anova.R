@@ -121,8 +121,9 @@ summary(Dead_Week.aov)    # summary() produces full ANOVA table
 Dead_Week_HSD <- TukeyHSD(Dead_Week.aov) # Tukey's Honest Significant Differences (HSD)
 Dead_Week_HSD_results <- as.data.frame(Dead_Week_HSD$`anova_Dead_Week$Species`)
 
-#library(agricolae)
-#Dead_Week_HSD <- HSD.test(Dead_Week.aov, trt = "anova_Dead_Week$Species")
+library(agricolae)
+Dead_Week_HSD <- HSD.test(Dead_Week.aov, trt = "anova_Dead_Week$Species")
+Dead_Week_HSD
 
 #ANOVA for heatwave species
 Dead_Week_HW.aov <- aov(anova_Dead_Week$Heatwave ~ anova_Dead_Week$Species, data = anova_Dead_Week)
@@ -130,6 +131,10 @@ summary(Dead_Week_HW.aov)
 #post-hoc multiple comparisons of ALL means ### 
 Dead_Week_HW_HSD <- TukeyHSD(Dead_Week_HW.aov) # Tukey's Honest Significant Differences (HSD)
 Dead_Week_HW_HSD_results <- as.data.frame(Dead_Week_HW_HSD$`anova_Dead_Week$Species`)
+
+library(agricolae)
+Dead_Week_HW_HSD <- HSD.test(Dead_Week_HW.aov, trt = "anova_Dead_Week$Species")
+Dead_Week_HW_HSD
 
 #save csv
 write.csv(Dead_Week_HSD_results, "data_analysis/Dead_Week_HSD_results.csv", quote=FALSE, row.names = TRUE)
@@ -151,6 +156,10 @@ Dead_Week_Weight_HSD <- TukeyHSD(Dead_Week_Weight.aov) # Tukey's Honest Signific
 Dead_Week_Weight_HSD
 Dead_Week_Weight_HSD_results <- as.data.frame(Dead_Week_Weight_HSD$`anova_Dead_Week_Weight$Species`)
 
+library(agricolae)
+Dead_Week_Weight_HSD <- HSD.test(Dead_Week_Weight.aov, trt = "anova_Dead_Week_Weight$Species")
+Dead_Week_Weight_HSD
+
 #ANOVA for heatwave species
 Dead_Week_Weight_HW.aov <- aov(anova_Dead_Week_Weight$Heatwave ~ anova_Dead_Week_Weight$Species, data = anova_Dead_Week_Weight)
 summary(Dead_Week_Weight_HW.aov)
@@ -158,6 +167,10 @@ summary(Dead_Week_Weight_HW.aov)
 Dead_Week_Weight_HW_HSD <- TukeyHSD(Dead_Week_Weight_HW.aov) # Tukey's Honest Significant Differences (HSD)
 Dead_Week_Weight_HW_HSD
 Dead_Week_Weight_HW_HSD_results <- as.data.frame(Dead_Week_Weight_HW_HSD$`anova_Dead_Week_Weight$Species`)
+
+library(agricolae)
+Dead_Week_Weight_HW_HSD <- HSD.test(Dead_Week_Weight_HW.aov, trt = "anova_Dead_Week_Weight$Species")
+Dead_Week_Weight_HW_HSD
 
 #save csv
 write.csv(Dead_Week_Weight_HSD_results, "data_analysis/Dead_Week_Weight_HSD_results.csv", quote=FALSE, row.names = TRUE)
@@ -179,6 +192,10 @@ Dead_Week_Porometer_HSD <- TukeyHSD(Dead_Week_Porometer.aov) # Tukey's Honest Si
 Dead_Week_Porometer_HSD
 Dead_Week_Porometer_HSD_results <- as.data.frame(Dead_Week_Porometer_HSD$`anova_Dead_Week_Porometer$Species`)
 
+library(agricolae)
+Dead_Week_Porometer_HSD <- HSD.test(Dead_Week_Porometer.aov, trt = "anova_Dead_Week_Porometer$Species")
+Dead_Week_Porometer_HSD
+
 #ANOVA for heatwave species
 Dead_Week_Porometer_HW.aov <- aov(anova_Dead_Week_Porometer$Heatwave ~ anova_Dead_Week_Porometer$Species, data = anova_Dead_Week_Porometer)
 summary(Dead_Week_Porometer_HW.aov)
@@ -186,6 +203,10 @@ summary(Dead_Week_Porometer_HW.aov)
 Dead_Week_Porometer_HW_HSD <- TukeyHSD(Dead_Week_Porometer_HW.aov) # Tukey's Honest Significant Differences (HSD)
 Dead_Week_Porometer_HW_HSD
 Dead_Week_Porometer_HW_HSD_results <- as.data.frame(Dead_Week_Porometer_HW_HSD$`anova_Dead_Week_Porometer$Species`)
+
+library(agricolae)
+Dead_Week_Porometer_HW_HSD <- HSD.test(Dead_Week_Porometer_HW.aov, trt = "anova_Dead_Week_Porometer$Species")
+Dead_Week_Porometer_HW_HSD
 
 #save csv
 write.csv(Dead_Week_Porometer_HSD_results, "data_analysis/Dead_Week_Porometer_HSD_results.csv", quote=FALSE, row.names = TRUE)

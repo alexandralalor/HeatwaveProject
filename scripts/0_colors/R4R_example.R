@@ -5,6 +5,8 @@
 #First created: 2022-12-08
 #Last updated: 2022-12-08
 
+# code available at https://github.com/alexandralalor/HeatwaveProject
+
 #load libraries
 library(tidyverse)
 library(colorfindr) #for get_colors
