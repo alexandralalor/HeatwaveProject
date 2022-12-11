@@ -32,7 +32,7 @@ vignettes/*.pdf
 # markdown
 /markdown/
 # graphs
-/graphs/
+#/graphs/
 # photo data
 /data_raw/photos/
 /data_clean/Phase1_Photos.csv

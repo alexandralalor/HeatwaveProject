@@ -35,19 +35,11 @@ Phase1_Data_All_amb <-
   transform(Phase1_Data_All_amb, Legend = factor(Legend, levels = c("Pinus ponderosa (a)", "Pinus edulis (b)", "Picea engelmannii (c)", "Pseudotsuga menziesii (c)", "Pinus flexilis (d)")))
 levels(Phase1_Data_All_amb$Legend)
 
-# Phase1_Data_All <- 
-#   transform(Phase1_Data_All, Species = factor(Species, levels = c("PIFL", "PIEN", "PSME", "PIED", "PIPO")))
-# Phase1_Data_All <- 
-#   transform(Phase1_Data_All, CommonName = factor(CommonName, levels = c("Ponderosa Pine", "Pinyon Pine", "Douglas fir", "Engelman Spruce", "Limber Pine")))
-# Phase1_Data_All <- 
-#   transform(Phase1_Data_All, ScientificName = factor(ScientificName, levels = c("Pinus ponderosa", "Pinus edulis", "Picea engelmannii", "Pseudotsuga menziesii", "Pinus flexilis")))
-
 #filter data
 Phase1_Data_All_amb <- Phase1_Data_All_amb %>% 
   filter(Treatment_temp == "Ambient")
 
 #Kaplan Meier Survival Curve - combined
-#km <- with(Phase1_Data_All, Surv(Week, Dead_Count))
 km_species_fit <- survfit(Surv(Week, Dead_Count)~Legend, data = Phase1_Data_All_amb)
 
 autoplot(km_species_fit) +
@@ -67,7 +59,7 @@ autoplot(km_species_fit) +
   geom_text(label = "limber pine",
             x = 33, y = 0.05, color = "black", size = 4, family = "serif") +
   labs(color = "", fill = "",
-       caption = "FIGURE 1 | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought. \n Curve shows the survival probability of each species under droughted and ambient temperature treatments (n = 20 per species). \n Weeks show time since the start of the experiment, adjusted to account for staggered start times. Survival probability is estimated \n from observed data. Letters in the legend (a, b, c, d) show species which are significantly different (p < 0.05).") +
+       caption = "FIGURE 1 | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought. \n Curves shows the survival probability of each species under droughted and ambient temperature treatments (n = 20 per species). \n Weeks show time since the start of the experiment, adjusted to account for staggered start times. Survival probability is estimated \n from observed data. Letters in the legend (a, b, c, d) show species which are significantly different (p < 0.05).") +
   theme_pubclean() +
   theme(text = element_text(family = "serif"),
         plot.caption = element_text(hjust = 0,
@@ -111,7 +103,7 @@ autoplot(km_species_fit_stress_w) +
   geom_text(label = "limber pine",
             x = 23, y = 0.05, color = "black", size = 3) +
   labs(color = "", fill = "",
-       caption = "FIGURE S2a | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought, Adjusted by Water Stress \n Curve shows the survival probability of each species under droughted and ambient temperature treatments (n = 20 per species). \n Weeks show time since water stress for each individual. Survival probability is estimated from observed data. \n Letters in the legend (a, b, c) show species which are significantly different (p < 0.05).") +
+       caption = "FIGURE S2a | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought, Adjusted by Water Stress \n Curves shows the survival probability of each species under droughted and ambient temperature treatments (n = 20 per species). \n Weeks show time since water stress for each individual. Survival probability is estimated from observed data. \n Letters in the legend (a, b, c) show species which are significantly different (p < 0.05).") +
   theme_pubclean() +
   theme(text = element_text(family = "serif"),
         plot.caption = element_text(hjust = 0,
@@ -154,7 +146,7 @@ autoplot(km_species_fit_stress_p) +
   geom_text(label = "limber pine",
             x = 18, y = 0.75, color = "black", size = 3) +
   labs(color = "", fill = "",
-       caption = "FIGURE S3a | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought, Adjusted by Permanent Stomatal Closure Stress \n Curve shows the survival probability of each species under droughted and ambient temperature treatments (n = 10 per species). \n Weeks show time since permanent stomatal closure stress for each measured individual. Survival probability is estimated from observed data. \n Letters in the legend (a, b, c) show species which are significantly different (p < 0.05).") +
+       caption = "FIGURE S3a | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought, Adjusted by Permanent Stomatal Closure Stress \n Curves shows the survival probability of each species under droughted and ambient temperature treatments (n = 10 per species). \n Weeks show time since permanent stomatal closure stress for each measured individual. Survival probability is estimated from observed data. \n Letters in the legend (a, b, c) show species which are significantly different (p < 0.05).") +
   theme_pubclean() +
   theme(text = element_text(family = "serif"),
         plot.caption = element_text(hjust = 0,
@@ -206,7 +198,7 @@ autoplot(km_species_fit) +
   geom_text(label = "limber pine",
             x = 33, y = 0.05, color = "black", size = 4, family = "serif") +
   labs(color = "", fill = "",
-       caption = "FIGURE S1 | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought and Heatwave. \n Curve shows the survival probability of each species under droughted and heatwave temperature treatments (n = 20 per species). \n Weeks show time since the start of the experiment, adjusted to account for staggered start times. Survival probability is estimated \n from observed data. Letters in the legend (a, b, c, d) show species which are significantly different (p < 0.05).") +
+       caption = "FIGURE S1 | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought and Heatwave. \n Curves shows the survival probability of each species under droughted and heatwave temperature treatments (n = 20 per species). \n Weeks show time since the start of the experiment, adjusted to account for staggered start times. Survival probability is estimated \n from observed data. Letters in the legend (a, b, c, d) show species which are significantly different (p < 0.05).") +
   theme_pubclean() +
   theme(text = element_text(family = "serif"),
         plot.caption = element_text(hjust = 0,
@@ -249,7 +241,7 @@ autoplot(km_species_fit_stress_w) +
   geom_text(label = "limber pine",
             x = 24, y = 0.05, color = "black", size = 3) +
   labs(color = "", fill = "",
-       caption = "FIGURE S2b | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought and Heatwave, Adjusted by Water Stress \n Curve shows the survival probability of each species under droughted and heatwave temperature treatments (n = 20 per species). \n Weeks show time since water stress for each individual. Survival probability is estimated from observed data. \n Letters in the legend (a, b, c) show species which are significantly different (p < 0.05).") +
+       caption = "FIGURE S2b | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought and Heatwave, Adjusted by Water Stress \n Curves shows the survival probability of each species under droughted and heatwave temperature treatments (n = 20 per species). \n Weeks show time since water stress for each individual. Survival probability is estimated from observed data. \n Letters in the legend (a, b, c) show species which are significantly different (p < 0.05).") +
   theme_pubclean() +
   theme(text = element_text(family = "serif"),
         plot.caption = element_text(hjust = 0,
@@ -291,7 +283,7 @@ autoplot(km_species_fit_stress_p) +
   geom_text(label = "limber pine",
             x = 17, y = 0.75, color = "black", size = 3) +
   labs(color = "", fill = "",
-       caption = "FIGURE S3b | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought and Heatwave, Adjusted by Permanent Stomatal Closure Stress \n Curve shows the survival probability of each species under droughted and heatwave temperature treatments (n = 10 per species). \n Weeks show time since permanent stomatal closure stress for each measured individual. Survival probability is estimated from observed data. \n Letters in the legend (a, b, c) show species which are significantly different (p < 0.05).") +
+       caption = "FIGURE S3b | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought and Heatwave, Adjusted by Permanent Stomatal Closure Stress \n Curves shows the survival probability of each species under droughted and heatwave temperature treatments (n = 10 per species). \n Weeks show time since permanent stomatal closure stress for each measured individual. Survival probability is estimated from observed data. \n Letters in the legend (a, b, c) show species which are significantly different (p < 0.05).") +
   theme_pubclean() +
   theme(text = element_text(family = "serif"),
         plot.caption = element_text(hjust = 0,
@@ -299,50 +291,57 @@ autoplot(km_species_fit_stress_p) +
                                     size = 10))
 
 ################################################################################
+# KM curve - Ambient and Heatwave
+
+Phase1_Data_All_amb_hw <- Phase1_Data_All %>%
+  mutate(Legend = Heatwave_graph) %>% 
+  mutate(Legend = ifelse(Legend == "Ponderosa Pine", "Pinus ponderosa (a)",
+                         ifelse(Legend == "Ponderosa Pine_heatwave", "Pinus ponderosa_heatwave (a)",
+                         ifelse(Legend == "Pinyon Pine", "Pinus edulis (b)",
+                                ifelse(Legend == "Pinyon Pine_heatwave", "Pinus edulis_heatwave (b)",
+                                ifelse(Legend == "Engelman Spruce", "Picea engelmannii (c)",
+                                       ifelse(Legend == "Engelman Spruce_heatwave", "Picea engelmannii_heatwave (c)",
+                                       ifelse(Legend == "Douglas fir", "Pseudotsuga menziesii (c)",
+                                              ifelse(Legend == "Douglas fir_heatwave", "Pseudotsuga menziesii_heatwave (c)",
+                                                     ifelse(Legend == "Limber Pine", "Pinus flexilis (d)", "Pinus flexilis_heatwave (d)"))))))))))
+Phase1_Data_All_amb_hw$Legend <- as.factor(Phase1_Data_All_amb_hw$Legend)
+Phase1_Data_All_amb_hw <-
+  transform(Phase1_Data_All_amb_hw, Legend = factor(Legend, levels = c("Pinus ponderosa (a)", "Pinus ponderosa_heatwave (a)",
+                                                                       "Pinus edulis (b)", "Pinus edulis_heatwave (b)",
+                                                                       "Picea engelmannii (c)", "Picea engelmannii_heatwave (c)", 
+                                                                       "Pseudotsuga menziesii (c)", "Pseudotsuga menziesii_heatwave (c)",
+                                                                       "Pinus flexilis (d)", "Pinus flexilis_heatwave (d)")))
+levels(Phase1_Data_All_amb_hw$Legend)
 
 #Kaplan Meier Survival Curve - separated by treatment
-km_treatment_fit <- survfit(Surv(Week, Dead_Count)~Species, data=Phase1_Data_All)
+km_treatment_fit <- survfit(Surv(Week, Dead_Count)~Legend, data=Phase1_Data_All_amb_hw)
 summary(km_treatment_fit)
 
+
 autoplot(km_treatment_fit) +
-  # scale_fill_brewer(palette = "Paired") +
-  # scale_color_brewer(palette = "Paired") +
-  scale_x_continuous(breaks = seq(0 , 36, by = 4)) +
+  scale_fill_brewer(palette = "Paired") +
+  scale_color_brewer(palette = "Paired") +
+  scale_x_continuous(breaks = seq(0 , 36, by = 2)) +
   # annotate("segment",
   #          x = 7, xend = 7,
   #          y = 0, yend = 1,
   #          color = "red",
   #          linetype = "dashed",
   #          size = 0.8) +
-  # geom_text(label = "Heatwave",
-  #           x = 5, y = 0.78, color = "red", size = 3) +
   xlab("Weeks") +
-  #ylab("Survivorship") +
-  labs(title = "Kaplan Meier Survival Curve: Heatwave Effects by Species",
-       color = "Species_Treatment", fill = "Species_Treatment") +
-  theme_bw()
-
-
-
-#Kaplan Meier Survival Curve - separated by treatment - STRESS WEEK
-
-Phase1_Data_Weight <- read.csv("data_analysis/Phase1_Data_Weight.csv")
-
-km_treatment_fit_stress <- survfit(Surv(Stress_Week_Start, Dead_Count)~Heatwave_graph, data=Phase1_Data_Weight)
-
-km_treatment_fit_stress <- survfit(Surv(Stress_to_Dead_Weight, Dead_Count)~CommonName, data=Phase1_Data_Weight)
-
-
-autoplot(km_treatment_fit_stress) +
-  scale_fill_brewer(palette = "Paired") +
-  scale_color_brewer(palette = "Paired") +
-  scale_x_continuous(breaks = seq(0 , 36, by = 4)) +
-  xlab("Weeks after Stress Point") +
-  #ylab("Survivorship") +
-  labs(title = "Kaplan Meier Survival Curve: Heatwave Effects by Species",
-       color = "Species_Treatment", fill = "Species_Treatment") +
-  theme_pubclean()
-
+  ylab("Survival Probability") +
+  geom_text(label = "ponderosa pine",
+            x = 13, y = 0.05, color = "black", size = 4, family = "serif") +
+  geom_text(label = "limber pine",
+            x = 33, y = 0.05, color = "black", size = 4, family = "serif") +
+  labs(color = "", fill = "",
+       caption = "FIGURE 1 | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought. \n Curves shows the survival probability of each species under ambient and heatwave temperature treatments (n = 20 per species and treatment). \n Weeks show time since the start of the experiment, adjusted to account for staggered start times. Survival probability is estimated \n from observed data. Letters in the legend (a, b, c, d) show species which are significantly different (p < 0.05).") +
+  theme_pubclean() +
+  theme(text = element_text(family = "serif"),
+        plot.caption = element_text(hjust = 0,
+                                    family = "serif",
+                                    #face = "bold",
+                                    size = 10))
 
 
 #################################################################################
