@@ -198,7 +198,7 @@ autoplot(km_species_fit) +
   geom_text(label = "limber pine",
             x = 33, y = 0.05, color = "black", size = 4, family = "serif") +
   labs(color = "", fill = "",
-       caption = "FIGURE S1 | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought and Heatwave. \n Curves shows the survival probability of each species under droughted and heatwave temperature treatments (n = 20 per species). \n Weeks show time since the start of the experiment, adjusted to account for staggered start times. Survival probability is estimated \n from observed data. Letters in the legend (a, b, c, d) show species which are significantly different (p < 0.05).") +
+       caption = "FIGURE S1a | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought and Heatwave. \n Curves shows the survival probability of each species under droughted and heatwave temperature treatments (n = 20 per species). \n Weeks show time since the start of the experiment, adjusted to account for staggered start times. Survival probability is estimated \n from observed data. Letters in the legend (a, b, c, d) show species which are significantly different (p < 0.05).") +
   theme_pubclean() +
   theme(text = element_text(family = "serif"),
         plot.caption = element_text(hjust = 0,
@@ -335,7 +335,7 @@ autoplot(km_treatment_fit) +
   geom_text(label = "limber pine",
             x = 33, y = 0.05, color = "black", size = 4, family = "serif") +
   labs(color = "", fill = "",
-       caption = "FIGURE 1 | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought. \n Curves shows the survival probability of each species under ambient and heatwave temperature treatments (n = 20 per species and treatment). \n Weeks show time since the start of the experiment, adjusted to account for staggered start times. Survival probability is estimated \n from observed data. Letters in the legend (a, b, c, d) show species which are significantly different (p < 0.05).") +
+       caption = "FIGURE S1b | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought. \n Curves shows the survival probability of each species under ambient and heatwave temperature treatments (n = 20 per species and treatment). \n Weeks show time since the start of the experiment, adjusted to account for staggered start times. Survival probability is estimated \n from observed data. Letters in the legend (a, b, c, d) show species which are significantly different (p < 0.05).") +
   theme_pubclean() +
   theme(text = element_text(family = "serif"),
         plot.caption = element_text(hjust = 0,
