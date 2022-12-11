@@ -49,15 +49,26 @@ levels(Phase1_Data_Photos_graph$Legend)
 #   mutate(label = paste0(PercentRed, " %")) %>% 
 #   arrange(Species, Treatment_temp, Week, green_only, desc(red_only))
 
-
 ################################################################################
 # week 1 to dead, all colors
 ################################################################################
+#dev.off()
 
 #save hex colors for visualization
 #try to find a way to arrange the y-axis by most frequent colors to least frequent
 colors <- Phase1_Data_Photos_graph$col_hex
-#dev.off()
+
+#define custom color scale
+myColorsPaired <- c("#6A3D9A", "#CAB2D6", "#FF7F00", "#FDBF6F",  "#33A02C", "#B2DF8A", "#E31A1C", "#FB9A99", "#1F78B4", "#A6CEE3")
+myColorsDark <- c("#6A3D9A", "#FF7F00", "#33A02C", "#E31A1C", "#1F78B4")
+myColorsLight <- c("#CAB2D6", "#FDBF6F", "#B2DF8A", "#FB9A99", "#A6CEE3")
+names(myColorsPaired) <- levels(Phase1_Data_Photos_graph$Legend)
+names(myColorsDark) <- levels(Phase1_Data_Photos_graph$Legend)
+names(myColorsLight) <- levels(Phase1_Data_Photos_graph$Legend)
+
+custom_colors <- scale_colour_manual(values = myColorsDark)
+custom_colors_fill <- scale_fill_manual(values = myColorsDark)
+
 
 #graph!
 Phase1_Data_Photos_graph %>% 
@@ -65,37 +76,36 @@ Phase1_Data_Photos_graph %>%
              y = col_share,
              fill = colors)) +
   geom_col(fill = colors) +
-  geom_point(data = Phase1_Data_Photos_graph, 
-             aes(x = Phase1_Data_Photos_graph$Week, 
-                 y = Phase1_Data_Photos_graph$PercentGreen_Est,
-                 color = Legend)) +
-  scale_y_continuous("Percent Green (Photos)", 
-                     sec.axis = sec_axis(~ . , name = "Percent Green (Estimates)")) +
-  facet_grid(Legend ~ .) +
+  geom_point(aes(x = Week, 
+                 y = PercentGreen_Est)) +
+  # geom_line(aes(x = Week,
+  #               y = PercentGreen_Est,
+  #               color = Legend)) +
+  facet_wrap(~Legend, ncol=1, strip.position = "right") +
   geom_errorbar(aes(x = Week,
                     ymin = (PercentGreen - SD_PercentRed),
                     ymax = (PercentGreen + SD_PercentRed))) +
-  # geom_text(label = Phase1_Data_Photos_graph$label,
-  #           y = 80,
-  #           size = 2) +
-  # scale_x_continuous(breaks = 1:36) +
+  geom_errorbar(aes(x = Week,
+                    ymin = (PercentGreen_Est - SD_PercentBrown),
+                    ymax = (PercentGreen_Est + SD_PercentBrown),
+                    color = Legend)) +
+  scale_x_continuous(breaks = seq(0 , 36, by = 2)) +
   ylab("Percent Green") +
   xlab("Weeks") +
-  labs(title = "Colors over Time") +
+  labs(caption = "FIGURE 6 | Color Change over Time, averaged by each species per week \n Ocular estimates of percent brown are shown with rainbow colors. Photo data are shown with a green-brown color continuum.") +
   theme_minimal() +
+  custom_colors +
+  # scale_color_manual(name='Percent Brown Estimates',
+  #                    breaks=c('Ocular', 'Photo'),
+  #                    values=c('Ocular'= custom_colors, 'Photo'='black')) +
   theme(legend.position="none",
         text = element_text(family = "serif"),
+        #strip.text = element_text(hjust = 0),
         strip.text.y = element_text(angle = 0),
         plot.caption = element_text(hjust = 0,
                                     family = "serif",
                                     #face = "bold",
                                     size = 10))
-
-
-  # theme(panel.grid.major = element_blank(),
-  #       panel.grid.minor = element_blank(),
-  #       plot.background = element_rect(fill = "black"),
-  #       panel.background = element_rect(fill = 'black'))
 
   
 ################################################################################
