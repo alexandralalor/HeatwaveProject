@@ -1,4 +1,4 @@
-#Data viz - weights
+#Data viz - porometer
 #Alexandra Lalor
 #allielalor@arizona.edu
 #allielalor@gmail.com
@@ -32,8 +32,8 @@ Phase1_Data_All_w %>%
   summarize(Stress_Week_Avg = mean(Stress_Week_Avg_Weight))
 
 label <- data.frame(x = c(4.39, 4.32, 7.67, 7.82, 11.48),
-                   Legend = factor(c("Pinus ponderosa","Pinus edulis", "Picea engelmannii", "Pseudotsuga menziesii", "Pinus flexilis"), 
-                                   levels = c("Pinus ponderosa", "Pinus edulis", "Picea engelmannii", "Pseudotsuga menziesii", "Pinus flexilis")))
+                    Legend = factor(c("Pinus ponderosa","Pinus edulis", "Picea engelmannii", "Pseudotsuga menziesii", "Pinus flexilis"), 
+                                    levels = c("Pinus ponderosa", "Pinus edulis", "Picea engelmannii", "Pseudotsuga menziesii", "Pinus flexilis")))
 
 #define custom color scale
 myColorsPaired <- c("#6A3D9A", "#CAB2D6", "#FF7F00", "#FDBF6F",  "#33A02C", "#B2DF8A", "#E31A1C", "#FB9A99", "#1F78B4", "#A6CEE3")

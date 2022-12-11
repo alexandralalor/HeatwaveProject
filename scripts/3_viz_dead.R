@@ -20,6 +20,16 @@ Phase1_Data_All <- Phase1_Data_All %>%
   mutate(WeightAdj = Week - Stress_Week_Avg_Weight,
          PorometerAdj = Week - Stress_Week_Avg_Porometer)
 
+#define custom color scale
+myColorsPaired <- c("#6A3D9A", "#CAB2D6", "#FF7F00", "#FDBF6F",  "#33A02C", "#B2DF8A", "#E31A1C", "#FB9A99", "#1F78B4", "#A6CEE3")
+myColorsDark <- c("#6A3D9A", "#FF7F00", "#33A02C", "#E31A1C", "#1F78B4")
+myColorsLight <- c("#CAB2D6", "#FDBF6F", "#B2DF8A", "#FB9A99", "#A6CEE3")
+
+# names(myColorsPaired) <- levels(Phase1_Data_All_w$Legend)
+# names(myColorsDark) <- levels(Phase1_Data_All_w$Legend)
+# names(myColorsLight) <- levels(Phase1_Data_All_w$Legend)
+# custom_colors <- scale_colour_manual(values = myColorsLight)
+# custom_colors_fill <- scale_fill_manual(values = myColorsDark)
 
 ################################################################################
 # KM curve - Ambient
@@ -39,19 +49,18 @@ levels(Phase1_Data_All_amb$Legend)
 Phase1_Data_All_amb <- Phase1_Data_All_amb %>% 
   filter(Treatment_temp == "Ambient")
 
+#define colors
+#names(myColorsPaired) <- levels(Phase1_Data_All_amb$Legend)
+names(myColorsDark) <- levels(Phase1_Data_All_amb$Legend)
+names(myColorsLight) <- levels(Phase1_Data_All_amb$Legend)
+custom_colors <- scale_colour_manual(values = myColorsLight)
+custom_colors_fill <- scale_fill_manual(values = myColorsDark)
+
 #Kaplan Meier Survival Curve - combined
 km_species_fit <- survfit(Surv(Week, Dead_Count)~Legend, data = Phase1_Data_All_amb)
 
 autoplot(km_species_fit) +
-  # scale_fill_brewer(palette = "Paired") +
-  # scale_color_brewer(palette = "Paired") +
   scale_x_continuous(breaks = seq(0 , 36, by = 2)) +
-  # annotate("segment",
-  #          x = 7, xend = 7,
-  #          y = 0, yend = 1,
-  #          color = "red",
-  #          linetype = "dashed",
-  #          size = 0.8) +
   xlab("Weeks") +
   ylab("Survival Probability") +
   geom_text(label = "ponderosa pine",
@@ -61,6 +70,8 @@ autoplot(km_species_fit) +
   labs(color = "", fill = "",
        caption = "FIGURE 1 | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought. \n Curves shows the survival probability of each species under droughted and ambient temperature treatments (n = 20 per species). \n Weeks show time since the start of the experiment, adjusted to account for staggered start times. Survival probability is estimated \n from observed data. Letters in the legend (a, b, c, d) show species which are significantly different (p < 0.05).") +
   theme_pubclean() +
+  custom_colors + 
+  custom_colors_fill +
   theme(text = element_text(family = "serif"),
         plot.caption = element_text(hjust = 0,
                                     family = "serif",
@@ -89,8 +100,14 @@ Phase1_Data_All_amb_w <- Phase1_Data_All_amb_w %>%
 Phase1_Data_All_amb_w <- Phase1_Data_All_amb_w %>% 
   filter(Treatment_temp == "Ambient")
 
+#define colors
+#names(myColorsPaired) <- levels(Phase1_Data_All_amb_w$Legend)
+names(myColorsDark) <- levels(Phase1_Data_All_amb_w$Legend)
+names(myColorsLight) <- levels(Phase1_Data_All_amb_w$Legend)
+custom_colors <- scale_colour_manual(values = myColorsLight)
+custom_colors_fill <- scale_fill_manual(values = myColorsDark)
+
 #KM curve
-#km_stress_w <- with(Phase1_Data_All, Surv(Stress_Week_Avg_Weight, Dead_Count))
 km_species_fit_stress_w <- survfit(Surv(WeightAdj, Dead_Count)~Legend, data = Phase1_Data_All_amb_w)
 
 
@@ -105,6 +122,8 @@ autoplot(km_species_fit_stress_w) +
   labs(color = "", fill = "",
        caption = "FIGURE S2a | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought, Adjusted by Water Stress \n Curves shows the survival probability of each species under droughted and ambient temperature treatments (n = 20 per species). \n Weeks show time since water stress for each individual. Survival probability is estimated from observed data. \n Letters in the legend (a, b, c) show species which are significantly different (p < 0.05).") +
   theme_pubclean() +
+  custom_colors +
+  custom_colors_fill +
   theme(text = element_text(family = "serif"),
         plot.caption = element_text(hjust = 0,
                                     family = "serif",
@@ -132,8 +151,14 @@ Phase1_Data_All_amb_p <- Phase1_Data_All_amb_p %>%
 Phase1_Data_All_amb_p <- Phase1_Data_All_amb_p %>% 
   filter(Treatment_temp == "Ambient")
 
+#define colors
+#names(myColorsPaired) <- levels(Phase1_Data_All_amb_p$Legend)
+names(myColorsDark) <- levels(Phase1_Data_All_amb_p$Legend)
+names(myColorsLight) <- levels(Phase1_Data_All_amb_p$Legend)
+custom_colors <- scale_colour_manual(values = myColorsLight)
+custom_colors_fill <- scale_fill_manual(values = myColorsDark)
+
 #KM curve
-#km_stress_p <- with(Phase1_Data_All, Surv(Stress_to_Dead_Porometer, Dead_Count))
 km_species_fit_stress_p <- survfit(Surv(PorometerAdj, Dead_Count)~Legend, data = Phase1_Data_All_amb_p)
 
 
@@ -148,6 +173,8 @@ autoplot(km_species_fit_stress_p) +
   labs(color = "", fill = "",
        caption = "FIGURE S3a | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought, Adjusted by Permanent Stomatal Closure Stress \n Curves shows the survival probability of each species under droughted and ambient temperature treatments (n = 10 per species). \n Weeks show time since permanent stomatal closure stress for each measured individual. Survival probability is estimated from observed data. \n Letters in the legend (a, b, c) show species which are significantly different (p < 0.05).") +
   theme_pubclean() +
+  custom_colors +
+  custom_colors_fill +
   theme(text = element_text(family = "serif"),
         plot.caption = element_text(hjust = 0,
                                     family = "serif",
@@ -173,8 +200,14 @@ levels(Phase1_Data_All_hw$Legend)
 Phase1_Data_All_hw <- Phase1_Data_All_hw %>% 
   filter(Treatment_temp == "Ambient_HW")
 
+#define colors
+#names(myColorsPaired) <- levels(Phase1_Data_All_hw$Legend)
+names(myColorsDark) <- levels(Phase1_Data_All_hw$Legend)
+names(myColorsLight) <- levels(Phase1_Data_All_hw$Legend)
+custom_colors <- scale_colour_manual(values = myColorsLight)
+custom_colors_fill <- scale_fill_manual(values = myColorsDark)
+
 #Kaplan Meier Survival Curve - combined
-#km <- with(Phase1_Data_All, Surv(Week, Dead_Count))
 km_species_fit <- survfit(Surv(Week, Dead_Count)~Legend, data = Phase1_Data_All_hw)
 
 autoplot(km_species_fit) +
@@ -200,6 +233,8 @@ autoplot(km_species_fit) +
   labs(color = "", fill = "",
        caption = "FIGURE S1a | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought and Heatwave. \n Curves shows the survival probability of each species under droughted and heatwave temperature treatments (n = 20 per species). \n Weeks show time since the start of the experiment, adjusted to account for staggered start times. Survival probability is estimated \n from observed data. Letters in the legend (a, b, c, d) show species which are significantly different (p < 0.05).") +
   theme_pubclean() +
+  custom_colors +
+  custom_colors_fill +
   theme(text = element_text(family = "serif"),
         plot.caption = element_text(hjust = 0,
                                     family = "serif",
@@ -227,8 +262,14 @@ Phase1_Data_All_hw_w <- Phase1_Data_All_hw_w %>%
 Phase1_Data_All_hw_w <- Phase1_Data_All_hw_w %>% 
   filter(Treatment_temp == "Ambient_HW")
 
+#define colors
+#names(myColorsPaired) <- levels(Phase1_Data_All_hw_w$Legend)
+names(myColorsDark) <- levels(Phase1_Data_All_hw_w$Legend)
+names(myColorsLight) <- levels(Phase1_Data_All_hw_w$Legend)
+custom_colors <- scale_colour_manual(values = myColorsLight)
+custom_colors_fill <- scale_fill_manual(values = myColorsDark)
+
 #KM curve
-#km_stress_w <- with(Phase1_Data_All, Surv(Stress_Week_Avg_Weight, Dead_Count))
 km_species_fit_stress_w <- survfit(Surv(WeightAdj, Dead_Count)~Legend, data = Phase1_Data_All_hw_w)
 
 
@@ -243,6 +284,8 @@ autoplot(km_species_fit_stress_w) +
   labs(color = "", fill = "",
        caption = "FIGURE S2b | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought and Heatwave, Adjusted by Water Stress \n Curves shows the survival probability of each species under droughted and heatwave temperature treatments (n = 20 per species). \n Weeks show time since water stress for each individual. Survival probability is estimated from observed data. \n Letters in the legend (a, b, c) show species which are significantly different (p < 0.05).") +
   theme_pubclean() +
+  custom_colors +
+  custom_colors_fill +
   theme(text = element_text(family = "serif"),
         plot.caption = element_text(hjust = 0,
                                     family = "serif",
@@ -270,6 +313,13 @@ Phase1_Data_All_hw_p <- Phase1_Data_All_hw_p %>%
 Phase1_Data_All_hw_p <- Phase1_Data_All_hw_p %>% 
   filter(Treatment_temp == "Ambient_HW")
 
+#define colors
+#names(myColorsPaired) <- levels(Phase1_Data_All_hw_p$Legend)
+names(myColorsDark) <- levels(Phase1_Data_All_hw_p$Legend)
+names(myColorsLight) <- levels(Phase1_Data_All_hw_p$Legend)
+custom_colors <- scale_colour_manual(values = myColorsLight)
+custom_colors_fill <- scale_fill_manual(values = myColorsDark)
+
 #KM curve
 km_species_fit_stress_p <- survfit(Surv(PorometerAdj, Dead_Count)~Legend, data = Phase1_Data_All_hw_p)
 
@@ -285,6 +335,8 @@ autoplot(km_species_fit_stress_p) +
   labs(color = "", fill = "",
        caption = "FIGURE S3b | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought and Heatwave, Adjusted by Permanent Stomatal Closure Stress \n Curves shows the survival probability of each species under droughted and heatwave temperature treatments (n = 10 per species). \n Weeks show time since permanent stomatal closure stress for each measured individual. Survival probability is estimated from observed data. \n Letters in the legend (a, b, c) show species which are significantly different (p < 0.05).") +
   theme_pubclean() +
+  custom_colors +
+  custom_colors_fill +
   theme(text = element_text(family = "serif"),
         plot.caption = element_text(hjust = 0,
                                     family = "serif",
@@ -313,21 +365,32 @@ Phase1_Data_All_amb_hw <-
                                                                        "Pinus flexilis (d)", "Pinus flexilis_heatwave (d)")))
 levels(Phase1_Data_All_amb_hw$Legend)
 
+#define colors
+names(myColorsPaired) <- levels(Phase1_Data_All_amb_hw$Legend)
+#names(myColorsDark) <- levels(Phase1_Data_All_amb_hw$Legend)
+#names(myColorsLight) <- levels(Phase1_Data_All_amb_hw$Legend)
+custom_colors <- scale_colour_manual(values = myColorsPaired)
+custom_colors_fill <- scale_fill_manual(values = myColorsPaired)
+
 #Kaplan Meier Survival Curve - separated by treatment
 km_treatment_fit <- survfit(Surv(Week, Dead_Count)~Legend, data=Phase1_Data_All_amb_hw)
-summary(km_treatment_fit)
+#summary(km_treatment_fit)
 
 
 autoplot(km_treatment_fit) +
-  scale_fill_brewer(palette = "Paired") +
-  scale_color_brewer(palette = "Paired") +
+  # scale_fill_brewer(palette = "Paired") +
+  # scale_color_brewer(palette = "Paired") +
   scale_x_continuous(breaks = seq(0 , 36, by = 2)) +
-  # annotate("segment",
-  #          x = 7, xend = 7,
-  #          y = 0, yend = 1,
-  #          color = "red",
-  #          linetype = "dashed",
-  #          size = 0.8) +
+  annotate("rect",
+           xmin = 7, xmax = 8,
+           ymin = 0, ymax = 1,
+           color = "red",
+           fill = "red",
+           linetype = "dashed",
+           size = 0.8,
+           alpha = 0.1) +
+  geom_text(label = "heatwave",
+            x = 5, y = 0.5, color = "red", size = 4, family = "serif") +
   xlab("Weeks") +
   ylab("Survival Probability") +
   geom_text(label = "ponderosa pine",
@@ -337,6 +400,8 @@ autoplot(km_treatment_fit) +
   labs(color = "", fill = "",
        caption = "FIGURE S1b | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought. \n Curves shows the survival probability of each species under ambient and heatwave temperature treatments (n = 20 per species and treatment). \n Weeks show time since the start of the experiment, adjusted to account for staggered start times. Survival probability is estimated \n from observed data. Letters in the legend (a, b, c, d) show species which are significantly different (p < 0.05).") +
   theme_pubclean() +
+  custom_colors +
+  custom_colors_fill +
   theme(text = element_text(family = "serif"),
         plot.caption = element_text(hjust = 0,
                                     family = "serif",
