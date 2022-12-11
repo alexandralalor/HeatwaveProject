@@ -44,7 +44,7 @@ names(myColorsDark) <- levels(Phase1_Data_All_w$Legend)
 names(myColorsLight) <- levels(Phase1_Data_All_w$Legend)
 
 custom_colors <- scale_colour_manual(values = myColorsLight)
-
+custom_colors_fill <- scale_fill_manual(values = myColorsDark)
 
 #Graph
 Phase1_Data_All_w %>% 

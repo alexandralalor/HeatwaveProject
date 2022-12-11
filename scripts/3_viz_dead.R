@@ -11,6 +11,7 @@ library(survival) # core survival analysis function
 library(survminer) # recommended for visualizing survival curves
 library(ggplot2)
 library(ggfortify)
+library(RColorBrewer)
 
 #read CSVs
 Phase1_Data_All <- read_csv("data_analysis/Phase1_Data_All.csv")
