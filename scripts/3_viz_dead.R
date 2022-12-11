@@ -7,11 +7,12 @@
 
 #load packages
 library(tidyverse)
+library(ggplot2)
+library(RColorBrewer)
 library(survival) # core survival analysis function
 library(survminer) # recommended for visualizing survival curves
-library(ggplot2)
 library(ggfortify)
-library(RColorBrewer)
+
 
 #read CSVs
 Phase1_Data_All <- read_csv("data_analysis/Phase1_Data_All.csv")
@@ -69,16 +70,18 @@ autoplot(km_species_fit) +
   geom_text(label = "limber pine",
             x = 33, y = 0.05, color = "black", size = 4, family = "serif") +
   labs(color = "", fill = "",
-       caption = "FIGURE 1 | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought. \n Curves shows the survival probability of each species under droughted and ambient temperature treatments (n = 20 per species). \n Weeks show time since the start of the experiment, adjusted to account for staggered start times. Survival probability is estimated \n from observed data. Letters in the legend (a, b, c, d) show species which are significantly different (p < 0.05).") +
+       caption = "FIGURE 1 | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought. \n Curves shows the survival probability of each species under droughted and ambient temperature treatments (n = 20 per species). \n Weeks show time since the start of the experiment, adjusted to account for staggered start times. Survival probability is estimated from \n observed data using a Kaplan Meier survival function. Letters in the legend (a, b, c, d) show species which are significantly different (p < 0.05).") +
   theme_pubclean() +
   custom_colors + 
   custom_colors_fill +
-  theme(text = element_text(family = "serif"),
+  theme(text = element_text(family = "serif",
+                            size = 12),
+        axis.text = element_text(size = 12),
+        legend.text = element_text (size = 12),
         plot.caption = element_text(hjust = 0,
                                     family = "serif",
                                     #face = "bold",
-                                    size = 10))
-
+                                    size = 12)) 
 ################################################################################
 # KM curve - Ambient Weight
 
@@ -507,13 +510,91 @@ Phase1_Data_All <- read_csv("data_analysis/Phase1_Data_All.csv")
 #factor levels
 # Phase1_Data_All <- 
 #   transform(Phase1_Data_All, Species = factor(Species, levels = c("PIPO", "PIED", "PSME", "PIEN", "PIFL")))
-Phase1_Data_All <- 
-  transform(Phase1_Data_All, Species = factor(Species, levels = c("PIFL", "PIEN", "PSME", "PIED", "PIPO")))
+# Phase1_Data_All <- 
+#   transform(Phase1_Data_All, Species = factor(Species, levels = c("PIFL", "PIEN", "PSME", "PIED", "PIPO")))
 
+# Phase1_Data_All <- Phase1_Data_All %>%
+#   mutate(Legend = Heatwave_graph) %>% 
+#   mutate(Legend = ifelse(Legend == "Ponderosa Pine", "Pinus ponderosa",
+#                          ifelse(Legend == "Ponderosa Pine_heatwave", "Pinus ponderosa_heatwave",
+#                                 ifelse(Legend == "Pinyon Pine", "Pinus edulis",
+#                                        ifelse(Legend == "Pinyon Pine_heatwave", "Pinus edulis_heatwave",
+#                                               ifelse(Legend == "Engelman Spruce", "Picea engelmannii",
+#                                                      ifelse(Legend == "Engelman Spruce_heatwave", "Picea engelmannii_heatwave",
+#                                                             ifelse(Legend == "Douglas fir", "Pseudotsuga menziesii",
+#                                                                    ifelse(Legend == "Douglas fir_heatwave", "Pseudotsuga menziesii_heatwave",
+#                                                                           ifelse(Legend == "Limber Pine", "Pinus flexilis", "Pinus flexilis_heatwave"))))))))))
+# Phase1_Data_All$Legend <- as.factor(Phase1_Data_All$Legend)
+# Phase1_Data_All <-
+#   transform(Phase1_Data_All, Legend = factor(Legend, levels = c("Pinus ponderosa", "Pinus ponderosa_heatwave",
+#                                                                        "Pinus edulis", "Pinus edulis_heatwave",
+#                                                                        "Picea engelmannii", "Picea engelmannii_heatwave", 
+#                                                                        "Pseudotsuga menziesii", "Pseudotsuga menziesii_heatwave",
+#                                                                        "Pinus flexilis", "Pinus flexilis_heatwave")))
+# levels(Phase1_Data_All$Legend)
+# 
+# #define colors
+# names(myColorsPaired) <- levels(Phase1_Data_All$Legend)
+# #names(myColorsDark) <- levels(Phase1_Data_All$Legend)
+# #names(myColorsLight) <- levels(Phase1_Data_All$Legend)
+# custom_colors <- scale_colour_manual(values = myColorsPaired)
+# custom_colors_fill <- scale_fill_manual(values = myColorsPaired)
+
+
+Phase1_Data_All <- Phase1_Data_All %>%
+  mutate(Legend = ScientificName)
+Phase1_Data_All$Legend <- as.factor(Phase1_Data_All$Legend)
+Phase1_Data_All <-
+  transform(Phase1_Data_All, Legend = factor(Legend, levels = c("Pinus flexilis",
+                                                                "Pseudotsuga menziesii",
+                                                                "Picea engelmannii",
+                                                                "Pinus edulis",
+                                                                "Pinus ponderosa")))
+levels(Phase1_Data_All$Legend)
+
+#boxplot
+Phase1_Data_All %>% 
+  group_by(Species, Treatment_temp) %>% 
+  arrange(Dead_Week) %>% 
+  ggplot(aes(x = Dead_Week,
+             y = Legend,
+             fill = Treatment_temp)) +
+  geom_boxplot() +
+  scale_x_continuous(breaks = seq(0 , 36, by = 2)) +
+  xlab("Weeks to Mortality") +
+  annotate("rect",
+           xmin = 7, xmax = 8,
+           ymin = 0, ymax = 6,
+           color = "red",
+           linetype = "dashed",
+           size = 0.4,
+           fill = "red",
+           alpha = 0.3) +
+  geom_text(label = "heatwave",
+            x = 5, y = 1, color = "red", size = 4, family = "serif") +
+  labs(fill = "",
+       caption = "FIGURE 2 | Heatwave Differences of Droughted Juveniles, Grouped by Species \n Half the droughted individuals (n = 20 per species) were exposed to a week long heatwave (indicated by the vertical red box). \n Pseudotsuga menziesii and Pinus flexilis had treatment groups which are significantly different (p < 0.05).") +
+  scale_fill_discrete(direction = -1,
+                      labels = c("Drought Treatment", "Drought + Heatwave Treatment")) +
+  theme_pubclean() +
+  theme(text = element_text(family = "serif",
+                            size = 12),
+        axis.title.y = element_blank(),
+        axis.text = element_text(size = 12),
+        legend.text = element_text (size = 12),
+        plot.caption = element_text(hjust = 0,
+                                    family = "serif",
+                                    #face = "bold",
+                                    size = 12))
+
+  
+
+
+################################################################################3
+#read csv
 Dead_Week <- read_csv("data_analysis/Dead_Week.csv")
 Dead_Week_Weight <- read_csv("data_analysis/Dead_Week_Weight.csv")
 Dead_Week_Porometer <- read_csv("data_analysis/anova_Dead_Week_Porometer.csv")
-
 
 #histogram
 Dead_Week %>% 
@@ -550,6 +631,7 @@ Dead_Week %>%
            alpha = 0.3) +
   theme_minimal() +
   scale_fill_discrete(direction = -1)
+
 
 
 
