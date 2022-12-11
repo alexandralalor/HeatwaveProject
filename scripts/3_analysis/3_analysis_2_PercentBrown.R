@@ -49,16 +49,17 @@ Phase1_Data_PercentBrown <- read_csv("data_analysis/Phase1_Data_PercentBrown.csv
 
 #filter NAs
 Phase1_Data_PercentBrown <- Phase1_Data_PercentBrown %>% 
-  filter(!is.na(PercentBrown_Est))
-
+  filter(!is.na(PercentBrown_Est)) %>% 
+  mutate(PercentGreen_Est = 100 - PercentBrown_Est)
 
 #average data 
 Phase1_Data_PercentBrown_Avg <- Phase1_Data_PercentBrown %>%
-  group_by(Species, Treatment_temp, Treatment_water, Week) %>%
+  group_by(ScientificName, Species, Treatment_temp, Treatment_water, Week) %>%
   summarize(SampleSize_Weekly_PercentBrown = mean(SampleSize_Weekly_PercentBrown),
             Dead_Count = sum(Dead_Count),
             PercentBrown = round(mean(PercentBrown, na.rm = T), digits = 0),
             PercentBrown_Est = round(mean(PercentBrown_Est, na.rm = T), digits = 0),
+            PercentGreen_Est = round(mean(PercentGreen_Est, na.rm = T), digits = 0),
             SD_PercentBrown = mean(SD_PercentBrown, na.rm = T))
 
 #save as csv

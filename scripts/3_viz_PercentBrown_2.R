@@ -16,7 +16,8 @@ Phase1_Data_All <- read_csv("data_analysis/Phase1_Data_All.csv")
 
 #filter NAs
 Phase1_Data_All_pb <- Phase1_Data_All %>% 
-  filter(!is.na(PercentBrown_Est))
+  filter(!is.na(PercentBrown_Est)) %>% 
+  mutate(PercentGreen_Est = 100 - PercentBrown_Est)
 
 #average data 
 Phase1_Data_All_pb <- Phase1_Data_All_pb %>%
@@ -25,8 +26,10 @@ Phase1_Data_All_pb <- Phase1_Data_All_pb %>%
             Dead_Count = sum(Dead_Count),
             PercentBrown = round(mean(PercentBrown, na.rm = T), digits = 0),
             PercentBrown_Est = round(mean(PercentBrown_Est, na.rm = T), digits = 0),
+            PercentGreen_Est = round(mean(PercentGreen_Est, na.rm = T), digits = 0),
             SD_PercentBrown = mean(SD_PercentBrown, na.rm = T))
 
+#legend
 Phase1_Data_All_pb <- Phase1_Data_All_pb %>%
   mutate(Legend = ScientificName)
 Phase1_Data_All_pb$Legend <- as.factor(Phase1_Data_All_pb$Legend)
@@ -36,8 +39,7 @@ levels(Phase1_Data_All_pb$Legend)
 
 #filter data
 Phase1_Data_All_pb <- Phase1_Data_All_pb %>% 
-  filter(Treatment_temp == "Ambient", Treatment_water == "Drought",
-         !is.na(PercentBrown_Est))
+  filter(Treatment_temp == "Ambient", Treatment_water == "Drought")
 
 #define custom color scale
 myColorsPaired <- c("#6A3D9A", "#CAB2D6", "#FF7F00", "#FDBF6F",  "#33A02C", "#B2DF8A", "#E31A1C", "#FB9A99", "#1F78B4", "#A6CEE3")
@@ -54,14 +56,14 @@ custom_colors_fill <- scale_fill_manual(values = myColorsDark)
 #Graph
 Phase1_Data_All_pb %>% 
   ggplot(aes(x = Week,
-             y = PercentBrown_Est,
+             y = PercentGreen_Est,
              color = Legend)) +
   geom_point() +
-  scale_y_reverse() +
+  #scale_y_reverse() +
   geom_line() +
   geom_errorbar(aes(x = Week,
-                    ymin = (PercentBrown_Est - SD_PercentBrown),
-                    ymax = (PercentBrown_Est + SD_PercentBrown))) +
+                    ymin = (PercentGreen_Est - SD_PercentBrown),
+                    ymax = (PercentGreen_Est + SD_PercentBrown))) +
   # geom_segment(aes(x = 0, xend = 36,
   #                  y = 90, yend = 90),
   #              color = "grey",
@@ -70,7 +72,7 @@ Phase1_Data_All_pb %>%
   xlim(0, 36) +
   facet_grid(Legend~.) +
   xlab("Weeks") +
-  ylab("Percent Brown") +
+  ylab("Percent Green") +
   labs(caption = "FIGURE 5 | Ocular estimates of percent brown, averaged by each species per week") +
   custom_colors +
   theme_minimal() +

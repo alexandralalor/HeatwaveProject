@@ -12,22 +12,35 @@ library(ggtern) #for ternary diagram and rgb2hex
 library(ggplot2)
 
 #read_csv
-Phase1_Data_Photos <- read_csv("data_analysis/Phase1_Data_Photos.csv")
+#Phase1_Data_Photos <- read_csv("data_analysis/Phase1_Data_Photos.csv")
 Phase1_Data_Photos_Avg <- read_csv("data_analysis/Phase1_Data_Photos_Avg.csv")
+Phase1_Data_PercentBrown_Avg  <- read_csv("data_analysis/Phase1_Data_PercentBrown_Avg.csv")
 
-# must arrange according to order of graph display
-# First, all ambient displayed (week 1 - end). Then all hw (week 1-end)
-# So, arrange by treatment_temp, then week. 
-Phase1_Data_Photos_graph <- Phase1_Data_Photos_Avg %>% 
+#condense data to graph
+Phase1_Data_Photos_Avg <- Phase1_Data_Photos_Avg %>% 
   filter(Treatment_water == "Drought", Treatment_temp == "Ambient") %>% 
   mutate(PercentRed = round(PercentRed, digits = 1)) %>% 
   mutate(label = paste0(PercentRed, " %"))
 
-Phase1_Data_Photos_graph <- transform(Phase1_Data_Photos_graph,
-          Species = factor(Species, levels = c("PIPO", "PIED", "PSME", "PIEN", "PIFL"))) %>% 
-  arrange(Species, Treatment_temp, Week, green_only, desc(red_only))
+#combine Photos_Avg and PercentBrown_Avg
+Phase1_Data_Photos_PercentBrown <- merge(Phase1_Data_Photos_Avg, Phase1_Data_PercentBrown_Avg, all.x = T)
 
-levels(Phase1_Data_Photos_graph$Species)
+# must arrange according to order of graph display
+# First, all ambient displayed (week 1 - end). Then all hw (week 1-end)
+# So, arrange by treatment_temp, then week. 
+#legend
+Phase1_Data_Photos_graph <- Phase1_Data_Photos_PercentBrown %>%
+  mutate(ScientificName = ifelse(Species == "PIPO", "Pinus ponderosa",
+                                 ifelse(Species == "PIED", "Pinus edulis",
+                                        ifelse(Species == "PIEN", "Picea engelmannii",
+                                               ifelse(Species == "PSME", "Pseudotsuga menziesii", "Pinus flexilis")))))
+Phase1_Data_Photos_graph <- Phase1_Data_Photos_graph %>%
+  mutate(Legend = ScientificName)
+Phase1_Data_Photos_graph$Legend <- as.factor(Phase1_Data_Photos_graph$Legend)
+Phase1_Data_Photos_graph <-
+  transform(Phase1_Data_Photos_graph, Legend = factor(Legend, levels = c("Pinus ponderosa", "Pinus edulis", "Picea engelmannii", "Pseudotsuga menziesii", "Pinus flexilis"))) %>% 
+  arrange(Legend, Treatment_temp, Week, green_only, desc(red_only))
+levels(Phase1_Data_Photos_graph$Legend)
 
 # #PSME
 # Phase1_Data_Photos_graph <- Phase1_Data_Photos_Avg %>% 
@@ -44,7 +57,7 @@ levels(Phase1_Data_Photos_graph$Species)
 #save hex colors for visualization
 #try to find a way to arrange the y-axis by most frequent colors to least frequent
 colors <- Phase1_Data_Photos_graph$col_hex
-dev.off()
+#dev.off()
 
 #graph!
 Phase1_Data_Photos_graph %>% 
@@ -52,18 +65,33 @@ Phase1_Data_Photos_graph %>%
              y = col_share,
              fill = colors)) +
   geom_col(fill = colors) +
-  facet_grid(Species ~ .) +
+  geom_point(data = Phase1_Data_Photos_graph, 
+             aes(x = Phase1_Data_Photos_graph$Week, 
+                 y = Phase1_Data_Photos_graph$PercentGreen_Est,
+                 color = Legend)) +
+  scale_y_continuous("Percent Green (Photos)", 
+                     sec.axis = sec_axis(~ . , name = "Percent Green (Estimates)")) +
+  facet_grid(Legend ~ .) +
   geom_errorbar(aes(x = Week,
                     ymin = (PercentGreen - SD_PercentRed),
                     ymax = (PercentGreen + SD_PercentRed))) +
   # geom_text(label = Phase1_Data_Photos_graph$label,
   #           y = 80,
   #           size = 2) +
-  scale_x_continuous(breaks = 1:36) +
+  # scale_x_continuous(breaks = 1:36) +
   ylab("Percent Green") +
   xlab("Weeks") +
   labs(title = "Colors over Time") +
-  theme_minimal()
+  theme_minimal() +
+  theme(legend.position="none",
+        text = element_text(family = "serif"),
+        strip.text.y = element_text(angle = 0),
+        plot.caption = element_text(hjust = 0,
+                                    family = "serif",
+                                    #face = "bold",
+                                    size = 10))
+
+
   # theme(panel.grid.major = element_blank(),
   #       panel.grid.minor = element_blank(),
   #       plot.background = element_rect(fill = "black"),
