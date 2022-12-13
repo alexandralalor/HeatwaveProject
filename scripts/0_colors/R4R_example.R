@@ -2,7 +2,7 @@
 #Alexandra Lalor
 #allielalor@arizona.edu
 #allielalor@gmail.com
-#First created: 2022-12-08
+#First created: 2022-12-01
 #Last updated: 2022-12-08
 
 # code available at https://github.com/alexandralalor/HeatwaveProject

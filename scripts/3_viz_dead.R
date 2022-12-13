@@ -66,22 +66,24 @@ autoplot(km_species_fit) +
   xlab("Weeks") +
   ylab("Survival Probability") +
   geom_text(label = "ponderosa pine",
-            x = 13, y = 0.05, color = "black", size = 4, family = "serif") +
+            x = 12, y = 0.05, color = "black", size = 3, family = "serif") +
   geom_text(label = "limber pine",
-            x = 33, y = 0.05, color = "black", size = 4, family = "serif") +
+            x = 33, y = 0.05, color = "black", size = 3, family = "serif") +
   labs(color = "", fill = "",
-       caption = "FIGURE 1 | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought. \n Curves shows the survival probability of each species under droughted and ambient temperature treatments (n = 20 per species). \n Weeks show time since the start of the experiment, adjusted to account for staggered start times. Survival probability is estimated from \n observed data using a Kaplan Meier survival function. Letters in the legend (a, b, c, d) show species which are significantly different (p < 0.05).") +
+       caption = "\nFIGURE 1 | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought.\nCurves shows the survival probability of each species under droughted and ambient temperature\ntreatments (n = 20 per species). Weeks show time since the start of the experiment, adjusted to\naccount for staggered start times. Survival probability is estimated from observed data\nusing a Kaplan Meier survival function.Letters in the legend (a, b, c, d) show species\nwhich are significantly different (post-hoc Tukey HSD test, p < 0.05).") +
   theme_pubclean() +
   custom_colors + 
   custom_colors_fill +
-  theme(text = element_text(family = "serif",
-                            size = 12),
-        axis.text = element_text(size = 12),
-        legend.text = element_text (size = 12),
+  theme(text = element_text(family = "serif", size = 10),
+        axis.text = element_text(size = 10),
+        legend.text = element_text(size = 8),
+        strip.text.x = element_text(size = 10),
         plot.caption = element_text(hjust = 0,
                                     family = "serif",
                                     #face = "bold",
-                                    size = 12)) 
+                                    size = 10))
+
+
 ################################################################################
 # KM curve - Ambient Weight
 

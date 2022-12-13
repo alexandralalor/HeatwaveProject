@@ -60,16 +60,21 @@ Phase1_Data_All_w %>%
                linetype = "dashed",
                size = 0.8) +
   ylim(0, 500) +
-  xlim(0, 36) +
+  scale_x_continuous(breaks = seq(0 , 36, by = 4)) +
   facet_wrap(~Legend) +
   xlab("Weeks") +
   ylab("Water Weight (g)") +
-  labs(caption = "FIGURE 3 | Water loss curves of juveniles under droughted and ambient treatments, grouped by species. \n Curves were calculated using individual weight data (n = 20 per species). Black dotted lines show the average inflection point \n among all curves to show where concavity changes from concave up to concave down, reflecting the time when water availability \n transitioned from a non-limiting to a limiting resource.") +
+  labs(caption = "\nFIGURE 3 | Water Weight of juveniles under Droughted and Ambient Treatments.\nCurves were calculated using individual weight data (n = 20 per species). Black dotted lines show the\naverage inflection point among all curves to show where concavity changes from concave up to concave down,\nreflecting the time when water availability transitioned from a non-limiting to a limiting resource.") +
   #custom_colors +
   theme_minimal() +
   theme(legend.position="none",
-        text = element_text(family = "serif"),
+        text = element_text(family = "serif", size = 10),
+        axis.text = element_text(size = 10),
+        legend.text = element_text(size = 10),
+        strip.text.x = element_text(size = 10),
         plot.caption = element_text(hjust = 0,
                                     family = "serif",
                                     #face = "bold",
                                     size = 10))
+
+

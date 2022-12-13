@@ -65,15 +65,18 @@ Phase1_Data_All_p %>%
                linetype = "solid",
                size = 0.8) +
   ylim(0, 500) +
-  xlim(0, 36) +
+  scale_x_continuous(breaks = seq(0 , 36, by = 4)) +
   facet_wrap(~Legend) +
   xlab("Weeks") +
   ylab("Stomatal Conductance (mmol m-2s-1)") +
-  labs(caption = "FIGURE 4 | Stomatal conductance measurements of juveniles under droughted and ambient treatments (n = 10 per species). \n The black dotted line shows the average time of permanent stomatal closure, defined as the time when stomatal conductance \n measurements were consistently at or below a minimum value of 90 mmol m-2s-1 (solid gray horizonal line).") +
+  labs(caption = "\nFIGURE 4 | Stomatal Conductance of Juveniles under Droughted and Ambient Treatments.\nThe black dotted line shows the average time of permanent stomatal closure (n = 10 per species),\nwhen measurements were consistently at or below a minimum value of 90 mmol m-2s-1 (solid gray horizonal line).") +
   #custom_colors +
   theme_minimal() +
   theme(legend.position="none",
-        text = element_text(family = "serif"),
+        text = element_text(family = "serif", size = 10),
+        axis.text = element_text(size = 10),
+        legend.text = element_text(size = 10),
+        strip.text.x = element_text(size = 10),
         plot.caption = element_text(hjust = 0,
                                     family = "serif",
                                     #face = "bold",
