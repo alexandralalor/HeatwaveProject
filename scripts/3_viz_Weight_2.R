@@ -71,7 +71,7 @@ Phase1_Data_All_w %>%
         text = element_text(family = "serif", size = 10),
         axis.text = element_text(size = 10),
         legend.text = element_text(size = 10),
-        strip.text.x = element_text(size = 10),
+        strip.text.x = element_text(size = 10, face = "italic"),
         plot.caption = element_text(hjust = 0,
                                     family = "serif",
                                     #face = "bold",

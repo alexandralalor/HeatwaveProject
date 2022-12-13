@@ -8,6 +8,7 @@
 #load packages
 library(tidyverse)
 library(ggplot2)
+#library(ggtext) #for italics
 library(RColorBrewer)
 library(survival) # core survival analysis function
 library(survminer) # recommended for visualizing survival curves
@@ -65,10 +66,14 @@ autoplot(km_species_fit) +
   scale_x_continuous(limits = c(0, 36), breaks = seq(0 , 36, by = 2)) +
   xlab("Weeks") +
   ylab("Survival Probability") +
-  geom_text(label = "ponderosa pine",
-            x = 12, y = 0.05, color = "black", size = 3, family = "serif") +
-  geom_text(label = "limber pine",
-            x = 33, y = 0.05, color = "black", size = 3, family = "serif") +
+  # geom_text(label = "ponderosa pine",
+  #           x = 12, y = 0.05, color = "black", size = 3, family = "serif") +
+  # geom_text(label = "limber pine",
+  #           x = 33, y = 0.05, color = "black", size = 3, family = "serif") +
+  # geom_text(label = "Pinus ponderosa",
+  #           x = 12, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
+  # geom_text(label = "Pinus flexilis",
+  #           x = 33, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
   labs(color = "", fill = "",
        caption = "\nFIGURE 1 | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought.\nCurves shows the survival probability of each species under droughted and ambient temperature\ntreatments (n = 20 per species). Weeks show time since the start of the experiment, adjusted to\naccount for staggered start times. Survival probability is estimated from observed data\nusing a Kaplan Meier survival function. Letters in the legend (a, b, c, d) show species\nwhich are significantly different (post-hoc Tukey HSD test, p < 0.05).") +
   theme_pubclean() +
@@ -76,7 +81,7 @@ autoplot(km_species_fit) +
   custom_colors_fill +
   theme(text = element_text(family = "serif", size = 10),
         axis.text = element_text(size = 10),
-        legend.text = element_text(size = 8),
+        legend.text = element_text(size = 7, face = "italic"),
         strip.text.x = element_text(size = 10),
         plot.caption = element_text(hjust = 0,
                                     family = "serif",
@@ -121,10 +126,14 @@ autoplot(km_species_fit_stress_w) +
   scale_x_continuous(limits = c(0, 36), breaks = seq(0 , 36, by = 2)) +
   xlab("Weeks") +
   ylab("Survival Probability") +
-  geom_text(label = "ponderosa pine",
-            x = 8.5, y = 0.05, color = "black", size = 3) +
-  geom_text(label = "limber pine",
-            x = 22, y = 0.05, color = "black", size = 3) +
+  # geom_text(label = "ponderosa pine",
+  #           x = 8.5, y = 0.05, color = "black", size = 3) +
+  # geom_text(label = "limber pine",
+  #           x = 22, y = 0.05, color = "black", size = 3) +
+  # geom_text(label = "Pinus ponderosa",
+  #           x = 8.5, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
+  # geom_text(label = "Pinus flexilis",
+  #           x = 22, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
   labs(color = "", fill = "",
        caption = "\nFIGURE S3a | Kaplan Meier Survival Curve. \nSeedling Survival Probability under Drought, Adjusted by Water Stress. \nCurves shows the survival probability of each species under droughted and ambient temperature\ntreatments (n = 20 per species). Weeks show time since water stress for each individual. \nSurvival probability is estimated from observed data. Letters in the legend (a, b, c) show \nspecies which are significantly different (post-hoc Tukey HSD test, p < 0.05).") +
   theme_pubclean() +
@@ -132,7 +141,7 @@ autoplot(km_species_fit_stress_w) +
   custom_colors_fill +
   theme(text = element_text(family = "serif", size = 10),
         axis.text = element_text(size = 10),
-        legend.text = element_text(size = 8),
+        legend.text = element_text(size = 7, face = "italic"),
         strip.text.x = element_text(size = 10),
         plot.caption = element_text(hjust = 0,
                                     family = "serif",
@@ -177,10 +186,14 @@ autoplot(km_species_fit_stress_p) +
   scale_x_continuous(limits = c(0, 36), breaks = seq(0 , 36, by = 2)) +
   xlab("Weeks") +
   ylab("Survival Probability") +
-  geom_text(label = "ponderosa pine",
-            x = 6.5, y = 0.05, color = "black", size = 3) +
-  geom_text(label = "limber pine",
-            x = 17.5, y = 0.05, color = "black", size = 3) +
+  # geom_text(label = "ponderosa pine",
+  #           x = 6.5, y = 0.05, color = "black", size = 3) +
+  # geom_text(label = "limber pine",
+  #           x = 17.5, y = 0.05, color = "black", size = 3) +
+  # geom_text(label = "Pinus ponderosa",
+  #           x = 6.5, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
+  # geom_text(label = "Pinus flexilis",
+  #           x = 17.3, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
   labs(color = "", fill = "",
        caption = "\nFIGURE S4a | Kaplan Meier Survival Curve. \nSeedling Survival Probability under Drought, Adjusted by Permanent Stomatal Closure Stress. \nCurves shows the survival probability of each species under droughted and ambient temperature \ntreatments (n = 10 per species). Weeks show time since permanent stomatal closure stress for each \nmeasured individual. Survival probability is estimated from observed data. Letters in the legend \n(a, b, c) show species which are significantly different (post-hoc Tukey HSD test, p < 0.05).") +
   theme_pubclean() +
@@ -188,7 +201,7 @@ autoplot(km_species_fit_stress_p) +
   custom_colors_fill +
   theme(text = element_text(family = "serif", size = 10),
         axis.text = element_text(size = 10),
-        legend.text = element_text(size = 8),
+        legend.text = element_text(size = 7, face = "italic"),
         strip.text.x = element_text(size = 10),
         plot.caption = element_text(hjust = 0,
                                     family = "serif",
@@ -202,13 +215,13 @@ autoplot(km_species_fit_stress_p) +
 
 Phase1_Data_All_hw <- Phase1_Data_All %>%
   mutate(Legend = ScientificName) %>% 
-  mutate(Legend = ifelse(Legend == "Pinus ponderosa", "Pinus ponderosa (a)",
-                         ifelse(Legend == "Pinus edulis", "Pinus edulis (b)",
-                                ifelse(Legend == "Picea engelmannii", "Picea engelmannii (c)",
-                                       ifelse(Legend == "Pseudotsuga menziesii", "Pseudotsuga menziesii (c)", "Pinus flexilis (d)")))))
+  mutate(Legend = ifelse(Legend == "Pinus ponderosa", "Pinus ponderosa_HW (a)",
+                         ifelse(Legend == "Pinus edulis", "Pinus edulis_HW (b)",
+                                ifelse(Legend == "Picea engelmannii", "Picea engelmannii_HW (c)",
+                                       ifelse(Legend == "Pseudotsuga menziesii", "Pseudotsuga menziesii_HW (c)", "Pinus flexilis_HW (d)")))))
 Phase1_Data_All_hw$Legend <- as.factor(Phase1_Data_All_hw$Legend)
 Phase1_Data_All_hw <-
-  transform(Phase1_Data_All_hw, Legend = factor(Legend, levels = c("Pinus ponderosa (a)", "Pinus edulis (b)", "Picea engelmannii (c)", "Pseudotsuga menziesii (c)", "Pinus flexilis (d)")))
+  transform(Phase1_Data_All_hw, Legend = factor(Legend, levels = c("Pinus ponderosa_HW (a)", "Pinus edulis_HW (b)", "Picea engelmannii_HW (c)", "Pseudotsuga menziesii_HW (c)", "Pinus flexilis_HW (d)")))
 levels(Phase1_Data_All_hw$Legend)
 
 #filter data
@@ -239,13 +252,17 @@ autoplot(km_species_fit) +
            size = 0.8,
            alpha = 0.1) +
   geom_text(label = "heatwave",
-            x = 5, y = 0.05, color = "red", size = 4, family = "serif") +
+            x = 5, y = 0.05, color = "red", size = 3.5, family = "serif") +
   xlab("Weeks") +
   ylab("Survival Probability") +
-  geom_text(label = "ponderosa pine",
-            x = 13, y = 0.05, color = "black", size = 3, family = "serif") +
-  geom_text(label = "limber pine",
-            x = 33, y = 0.05, color = "black", size = 3, family = "serif") +
+  # geom_text(label = "ponderosa pine",
+  #           x = 13, y = 0.05, color = "black", size = 3, family = "serif") +
+  # geom_text(label = "limber pine",
+  #           x = 33, y = 0.05, color = "black", size = 3, family = "serif") +
+  # geom_text(label = "Pinus ponderosa",
+  #           x = 13, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
+  # geom_text(label = "Pinus flexilis",
+  #           x = 33, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
   labs(color = "", fill = "",
        caption = "\nFIGURE S2a | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought and Heatwave. \nCurves shows the survival probability of each species under droughted and heatwave temperature \ntreatments (n = 20 per species). Weeks show time since the start of the experiment, adjusted to \naccount for staggered start times. Survival probability is estimated from observed data \nusing a Kaplan Meier survival function. Letters in the legend (a, b, c, d) show species \nwhich are significantly different (post-hoc Tukey HSD test, p < 0.05).") +
   theme_pubclean() +
@@ -253,7 +270,7 @@ autoplot(km_species_fit) +
   custom_colors_fill +
   theme(text = element_text(family = "serif", size = 10),
         axis.text = element_text(size = 10),
-        legend.text = element_text(size = 8),
+        legend.text = element_text(size = 6, face = "italic"),
         strip.text.x = element_text(size = 10),
         plot.caption = element_text(hjust = 0,
                                     family = "serif",
@@ -265,13 +282,13 @@ autoplot(km_species_fit) +
 
 Phase1_Data_All_hw_w <- Phase1_Data_All %>%
   mutate(Legend = ScientificName) %>% 
-  mutate(Legend = ifelse(Legend == "Pinus ponderosa", "Pinus ponderosa (a)",
-                         ifelse(Legend == "Pinus edulis", "Pinus edulis (b)",
-                                ifelse(Legend == "Picea engelmannii", "Picea engelmannii (b)",
-                                       ifelse(Legend == "Pseudotsuga menziesii", "Pseudotsuga menziesii (b)", "Pinus flexilis (c)")))))
+  mutate(Legend = ifelse(Legend == "Pinus ponderosa", "Pinus ponderosa_HW (a)",
+                         ifelse(Legend == "Pinus edulis", "Pinus edulis_HW (b)",
+                                ifelse(Legend == "Picea engelmannii", "Picea engelmannii_HW (b)",
+                                       ifelse(Legend == "Pseudotsuga menziesii", "Pseudotsuga menziesii_HW (b)", "Pinus flexilis_HW (c)")))))
 Phase1_Data_All_hw_w$Legend <- as.factor(Phase1_Data_All_hw_w$Legend)
 Phase1_Data_All_hw_w <-
-  transform(Phase1_Data_All_hw_w, Legend = factor(Legend, levels = c("Pinus ponderosa (a)", "Pinus edulis (b)", "Picea engelmannii (b)", "Pseudotsuga menziesii (b)", "Pinus flexilis (c)")))
+  transform(Phase1_Data_All_hw_w, Legend = factor(Legend, levels = c("Pinus ponderosa_HW (a)", "Pinus edulis_HW (b)", "Picea engelmannii_HW (b)", "Pseudotsuga menziesii_HW (b)", "Pinus flexilis_HW (c)")))
 levels(Phase1_Data_All_hw_w$Legend)
 
 #adjustments
@@ -297,10 +314,14 @@ autoplot(km_species_fit_stress_w) +
   scale_x_continuous(limits = c(0, 36), breaks = seq(0 , 36, by = 2)) +
   xlab("Weeks") +
   ylab("Survival Probability") +
-  geom_text(label = "ponderosa pine",
-            x = 8.5, y = 0.05, color = "black", size = 3) +
-  geom_text(label = "limber pine",
-            x = 24, y = 0.05, color = "black", size = 3) +
+  # geom_text(label = "ponderosa pine",
+  #           x = 8.5, y = 0.05, color = "black", size = 3) +
+  # geom_text(label = "limber pine",
+  #           x = 24, y = 0.05, color = "black", size = 3) +
+  # geom_text(label = "Pinus ponderosa",
+  #           x = 8.5, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
+  # geom_text(label = "Pinus flexilis",
+  #           x = 24, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
   labs(color = "", fill = "",
        caption = "\nFIGURE S3b | Kaplan Meier Survival Curve. \nSeedling Survival Probability under Drought and Heatwave, Adjusted by Water Stress. \nCurves shows the survival probability of each species under droughted and heatwave temperature \ntreatments (n = 20 per species). Weeks show time since water stress for each individual. \nSurvival probability is estimated from observed data. Letters in the legend (a, b, c) show \nspecies which are significantly different (post-hoc Tukey HSD test, p < 0.05).") +
   theme_pubclean() +
@@ -308,7 +329,7 @@ autoplot(km_species_fit_stress_w) +
   custom_colors_fill +
   theme(text = element_text(family = "serif", size = 10),
         axis.text = element_text(size = 10),
-        legend.text = element_text(size = 8),
+        legend.text = element_text(size = 6, face = "italic"),
         strip.text.x = element_text(size = 10),
         plot.caption = element_text(hjust = 0,
                                     family = "serif",
@@ -320,13 +341,13 @@ autoplot(km_species_fit_stress_w) +
 
 Phase1_Data_All_hw_p <- Phase1_Data_All %>%
   mutate(Legend = ScientificName) %>% 
-  mutate(Legend = ifelse(Legend == "Pinus ponderosa", "Pinus ponderosa (a)",
-                         ifelse(Legend == "Pinus edulis", "Pinus edulis (b)",
-                                ifelse(Legend == "Picea engelmannii", "Picea engelmannii (ab)",
-                                       ifelse(Legend == "Pseudotsuga menziesii", "Pseudotsuga menziesii (b)", "Pinus flexilis (c)")))))
+  mutate(Legend = ifelse(Legend == "Pinus ponderosa", "Pinus ponderosa_HW (a)",
+                         ifelse(Legend == "Pinus edulis", "Pinus edulis_HW (b)",
+                                ifelse(Legend == "Picea engelmannii", "Picea engelmannii_HW (ab)",
+                                       ifelse(Legend == "Pseudotsuga menziesii", "Pseudotsuga menziesii_HW (b)", "Pinus flexilis_HW (c)")))))
 Phase1_Data_All_hw_p$Legend <- as.factor(Phase1_Data_All_hw_p$Legend)
 Phase1_Data_All_hw_p <-
-  transform(Phase1_Data_All_hw_p, Legend = factor(Legend, levels = c("Pinus ponderosa (a)", "Pinus edulis (b)", "Picea engelmannii (ab)", "Pseudotsuga menziesii (b)", "Pinus flexilis (c)")))
+  transform(Phase1_Data_All_hw_p, Legend = factor(Legend, levels = c("Pinus ponderosa_HW (a)", "Pinus edulis_HW (b)", "Picea engelmannii_HW (ab)", "Pseudotsuga menziesii_HW (b)", "Pinus flexilis_HW (c)")))
 levels(Phase1_Data_All_hw_p$Legend)
 
 #adjustments
@@ -352,10 +373,14 @@ autoplot(km_species_fit_stress_p) +
   scale_x_continuous(limits = c(0, 36), breaks = seq(0 , 36, by = 2)) +
   xlab("Weeks") +
   ylab("Survival Probability") +
-  geom_text(label = "ponderosa pine",
-            x = 6.5, y = 0.05, color = "black", size = 3) +
-  geom_text(label = "limber pine",
-            x = 17.75, y = 0.05, color = "black", size = 3) +
+  # geom_text(label = "ponderosa pine",
+  #           x = 6.5, y = 0.05, color = "black", size = 3) +
+  # geom_text(label = "limber pine",
+  #           x = 17.75, y = 0.05, color = "black", size = 3) +
+  # geom_text(label = "Pinus ponderosa",
+  #           x = 6.5, y = 0.04, color = "black", size = 3, family = "serif", fontface = "italic") +
+  # geom_text(label = "Pinus flexilis",
+  #           x = 17.6, y = 0.04, color = "black", size = 3, family = "serif", fontface = "italic") +
   labs(color = "", fill = "",
        caption = "\nFIGURE S4b | Kaplan Meier Survival Curve. \nSeedling Survival Probability under Drought and Heatwave, Adjusted by Permanent Stomatal Closure Stress \nCurves shows the survival probability of each species under droughted and heatwave temperature \ntreatments (n = 10 per species). Weeks show time since permanent stomatal closure stress for each \nmeasured individual. Survival probability is estimated from observed data. Letters in the legend \n(a, b, c) show species which are significantly different (post-hoc Tukey HSD test, p < 0.05).") +
   theme_pubclean() +
@@ -363,7 +388,7 @@ autoplot(km_species_fit_stress_p) +
   custom_colors_fill +
   theme(text = element_text(family = "serif", size = 10),
         axis.text = element_text(size = 10),
-        legend.text = element_text(size = 8),
+        legend.text = element_text(size = 6, face = "italic"),
         strip.text.x = element_text(size = 10),
         plot.caption = element_text(hjust = 0,
                                     family = "serif",
@@ -376,21 +401,21 @@ autoplot(km_species_fit_stress_p) +
 Phase1_Data_All_amb_hw <- Phase1_Data_All %>%
   mutate(Legend = Heatwave_graph) %>% 
   mutate(Legend = ifelse(Legend == "Ponderosa Pine", "Pinus ponderosa (a)",
-                         ifelse(Legend == "Ponderosa Pine_heatwave", "Pinus ponderosa_heatwave (a)",
+                         ifelse(Legend == "Ponderosa Pine_heatwave", "Pinus ponderosa_HW (a)",
                          ifelse(Legend == "Pinyon Pine", "Pinus edulis (b)",
-                                ifelse(Legend == "Pinyon Pine_heatwave", "Pinus edulis_heatwave (b)",
+                                ifelse(Legend == "Pinyon Pine_heatwave", "Pinus edulis_HW (b)",
                                 ifelse(Legend == "Engelman Spruce", "Picea engelmannii (c)",
-                                       ifelse(Legend == "Engelman Spruce_heatwave", "Picea engelmannii_heatwave (c)",
+                                       ifelse(Legend == "Engelman Spruce_heatwave", "Picea engelmannii_HW (c)",
                                        ifelse(Legend == "Douglas fir", "Pseudotsuga menziesii (c)",
-                                              ifelse(Legend == "Douglas fir_heatwave", "Pseudotsuga menziesii_heatwave (c)",
-                                                     ifelse(Legend == "Limber Pine", "Pinus flexilis (d)", "Pinus flexilis_heatwave (d)"))))))))))
+                                              ifelse(Legend == "Douglas fir_heatwave", "Pseudotsuga menziesii_HW (c)",
+                                                     ifelse(Legend == "Limber Pine", "Pinus flexilis (d)", "Pinus flexilis_HW (d)"))))))))))
 Phase1_Data_All_amb_hw$Legend <- as.factor(Phase1_Data_All_amb_hw$Legend)
 Phase1_Data_All_amb_hw <-
-  transform(Phase1_Data_All_amb_hw, Legend = factor(Legend, levels = c("Pinus ponderosa (a)", "Pinus ponderosa_heatwave (a)",
-                                                                       "Pinus edulis (b)", "Pinus edulis_heatwave (b)",
-                                                                       "Picea engelmannii (c)", "Picea engelmannii_heatwave (c)", 
-                                                                       "Pseudotsuga menziesii (c)", "Pseudotsuga menziesii_heatwave (c)",
-                                                                       "Pinus flexilis (d)", "Pinus flexilis_heatwave (d)")))
+  transform(Phase1_Data_All_amb_hw, Legend = factor(Legend, levels = c("Pinus ponderosa (a)", "Pinus ponderosa_HW (a)",
+                                                                       "Pinus edulis (b)", "Pinus edulis_HW (b)",
+                                                                       "Picea engelmannii (c)", "Picea engelmannii_HW (c)", 
+                                                                       "Pseudotsuga menziesii (c)", "Pseudotsuga menziesii_HW (c)",
+                                                                       "Pinus flexilis (d)", "Pinus flexilis_HW (d)")))
 levels(Phase1_Data_All_amb_hw$Legend)
 
 #define colors
@@ -421,10 +446,14 @@ autoplot(km_treatment_fit) +
             x = 5, y = 0.05, color = "red", size = 3.5, family = "serif") +
   xlab("Weeks") +
   ylab("Survival Probability") +
-  geom_text(label = "ponderosa pine",
-            x = 13, y = 0.05, color = "black", size = 3, family = "serif") +
-  geom_text(label = "limber pine",
-            x = 33, y = 0.05, color = "black", size = 3, family = "serif") +
+  # geom_text(label = "ponderosa pine",
+  #           x = 13, y = 0.05, color = "black", size = 3, family = "serif") +
+  # geom_text(label = "limber pine",
+  #           x = 33, y = 0.05, color = "black", size = 3, family = "serif") +
+  # geom_text(label = "Pinus ponderosa",
+  #           x = 12.8, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
+  # geom_text(label = "Pinus flexilis",
+  #           x = 33, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
   labs(color = "", fill = "",
        caption = "\nFIGURE S2b | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought. \nCurves shows the survival probability of each species under both ambient and heatwave temperature \ntreatments (n = 20 per species and treatment). Weeks show time since the start of the experiment, \nadjusted to account for staggered start times. Survival probability is estimated from observed data \nusing a Kaplan Meier survival function. Letters in the legend (a, b, c, d) show species \nwhich are significantly different (post-hoc Tukey HSD test, p < 0.05).") +
   theme_pubclean() +
@@ -432,7 +461,7 @@ autoplot(km_treatment_fit) +
   custom_colors_fill +
   theme(text = element_text(family = "serif", size = 10),
         axis.text = element_text(size = 10),
-        legend.text = element_text(size = 6),
+        legend.text = element_text(size = 6, face = "italic"),
         strip.text.x = element_text(size = 10),
         plot.caption = element_text(hjust = 0,
                                     family = "serif",
@@ -599,19 +628,19 @@ Phase1_Data_All %>%
            fill = "red",
            alpha = 0.3) +
   geom_text(label = "heatwave",
-            x = 7.5, y = 5.5, color = "red", size = 4, family = "serif") +
+            x = 7.5, y = 5.5, color = "red", size = 3.5, family = "serif") +
   annotate("segment",
            x = 36, xend = 36,
            y = 0.5, yend = 1.3,
            color = "gray50", linetype = "solid", size = 0.6) +
   geom_text(label = "0.018*",
-            x = 38, y = 1, color = "gray50", size = 4, family = "serif") +
+            x = 38, y = 1, color = "gray50", size = 3.5, family = "serif") +
   annotate("segment",
            x = 36, xend = 36,
            y = 1.6, yend = 2.5,
            color = "gray50", linetype = "solid", size = 0.6) +
   geom_text(label = "0.005**",
-            x = 38.3, y = 2, color = "gray50", size = 4, family = "serif") +
+            x = 38.3, y = 2, color = "gray50", size = 3.5, family = "serif") +
   labs(fill = "",
        caption = "\nFIGURE 2 | Heatwave Differences of Droughted Juveniles.\nHalf the droughted individuals (n = 20 per species) were exposed to a week long heatwave\n(indicated by the vertical red box). Grey bars on the right hand side show p-values of species \nwhich are significantly different (two-sample t-test, p < 0.05).") +
   scale_fill_discrete(direction = -1,
@@ -619,6 +648,7 @@ Phase1_Data_All %>%
   theme_pubclean() +
   theme(text = element_text(family = "serif", size = 10),
         axis.text = element_text(size = 10),
+        axis.text.y = element_text(face = "italic"),
         axis.title.y = element_blank(),
         legend.text = element_text(size = 10),
         strip.text.x = element_text(size = 10),
