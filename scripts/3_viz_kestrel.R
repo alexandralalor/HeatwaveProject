@@ -209,8 +209,17 @@ Phase1_Kestrel_AvgTemp_Sum_graph %>%
   scale_x_datetime(date_labels = "%H%M") +
   xlab("Time") +
   ylab("Temperature (Celcius)") +
-  labs(title = "Average Daily Temperature Fluctuations") +
-  theme_minimal()
+  labs(fill = "",
+       caption = "\nFIGURE S1a | Average Daily Temperatures Fluctuations of Growth Chambers") +
+  theme_minimal() +
+  theme(text = element_text(family = "serif", size = 10),
+        axis.text = element_text(size = 10),
+        legend.text = element_text(size = 10),
+        strip.text.x = element_text(size = 10),
+        plot.caption = element_text(hjust = 0,
+                                    family = "serif",
+                                    #face = "bold",
+                                    size = 10))
 
 
 ################################################################################
@@ -236,11 +245,22 @@ Phase1_Kestrel_AvgTemp_Sum_Total_graph %>%
   geom_col(position= "dodge") +
   ylim(0, 40) +
   ylab("Temperature (Celcius)") +
-  labs(title = "Average Temperatures") +
+  labs(fill = "",
+       caption = "\nFIGURE S1b | Average Temperatures of Growth Chambers") +
   geom_text(label = Phase1_Kestrel_AvgTemp_Sum_Total_graph$Temperature_avg,
             vjust = 1.5, position = position_dodge(0.9), color = "white") +
-  scale_fill_brewer(palette = "Set2") +
-  theme_minimal()
+  #scale_fill_brewer(palette = "Set2") +
+  scale_fill_discrete(direction = -1,
+                      labels = c("Ambient", "Heatwave")) +
+  theme_minimal() +
+  theme(text = element_text(family = "serif", size = 10),
+        axis.text = element_text(size = 10),
+        legend.text = element_text(size = 10),
+        strip.text.x = element_text(size = 10),
+        plot.caption = element_text(hjust = 0,
+                                    family = "serif",
+                                    #face = "bold",
+                                    size = 10))
 
 ################################################################################
 # mean and range of temp differences in chambers
