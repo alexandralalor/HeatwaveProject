@@ -642,7 +642,7 @@ Phase1_Data_All %>%
   geom_text(label = "0.005**",
             x = 38.3, y = 2, color = "gray50", size = 3.5, family = "serif") +
   labs(fill = "",
-       caption = "\nFIGURE 2 | Heatwave Differences of Droughted Juveniles.\nHalf the droughted individuals (n = 20 per species) were exposed to a week long heatwave\n(indicated by the vertical red box). Grey bars on the right hand side show p-values of species \nwhich are significantly different (two-sample t-test, p < 0.05).") +
+       caption = "\nFIGURE 2 | Heatwave Differences of Droughted Juveniles.\nHalf the droughted individuals (n = 20 per species) were exposed to a week long heatwave\n(indicated by the vertical red box). Boxplots show median time to mortality (rather than the mean). \nGrey bars on the right hand side show p-values of species which are significantly different in their \nmean time to mortality (two-sample t-test, p < 0.05).") +
   scale_fill_discrete(direction = -1,
                       labels = c("Drought Treatment", "Drought + Heatwave Treatment")) +
   theme_pubclean() +
