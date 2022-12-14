@@ -209,8 +209,8 @@ Phase1_Kestrel_AvgTemp_Sum_graph %>%
   scale_x_datetime(date_labels = "%H%M") +
   xlab("Time") +
   ylab("Temperature (Celcius)") +
-  labs(fill = "",
-       caption = "\nFIGURE S1a | Average Daily Temperatures Fluctuations of Growth Chambers") +
+  labs(fill = "", tag = "(a)") +
+  #labs(caption = "\nFIGURE S1a | Average Daily Temperatures Fluctuations of Growth Chambers") +
   theme_minimal() +
   theme(text = element_text(family = "serif", size = 10),
         axis.text = element_text(size = 10),
@@ -245,8 +245,8 @@ Phase1_Kestrel_AvgTemp_Sum_Total_graph %>%
   geom_col(position= "dodge") +
   ylim(0, 40) +
   ylab("Temperature (Celcius)") +
-  labs(fill = "",
-       caption = "\nFIGURE S1b | Average Temperatures of Growth Chambers") +
+  labs(fill = "", tag = "(b)") +
+  #labs(caption = "\nFIGURE S1b | Average Temperatures of Growth Chambers") +
   geom_text(label = Phase1_Kestrel_AvgTemp_Sum_Total_graph$Temperature_avg,
             vjust = 1.5, position = position_dodge(0.9), color = "white") +
   #scale_fill_brewer(palette = "Set2") +

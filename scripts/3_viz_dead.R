@@ -74,8 +74,8 @@ autoplot(km_species_fit) +
   #           x = 12, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
   # geom_text(label = "Pinus flexilis",
   #           x = 33, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
-  labs(color = "", fill = "",
-       caption = "\nFIGURE 1 | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought.\nCurves shows the survival probability of each species under droughted and ambient temperature\ntreatments (n = 20 per species). Weeks show time since the start of the experiment, adjusted to\naccount for staggered start times. Survival probability is estimated from observed data\nusing a Kaplan Meier survival function. Letters in the legend (a, b, c, d) show species\nwhich are significantly different (post-hoc Tukey HSD test, p < 0.05).") +
+  labs(color = "", fill = "", tag = "(a)") +
+  #labs(caption = "\nFIGURE 1 | Kaplan Meier Survival Curve of Juvenile Survival Probability under Drought.\nCurves shows the survival probability of each species under droughted and ambient temperature\ntreatments (n = 20 per species). Weeks show time since the start of the experiment, adjusted to\naccount for staggered start times. Survival probability is estimated from observed data\nusing a Kaplan Meier survival function. Letters in the legend (a, b, c, d) show species\nwhich are significantly different (post-hoc Tukey HSD test, p < 0.05).") +
   theme_pubclean() +
   custom_colors + 
   custom_colors_fill +
@@ -83,6 +83,7 @@ autoplot(km_species_fit) +
         axis.text = element_text(size = 10),
         legend.text = element_text(size = 7, face = "italic"),
         strip.text.x = element_text(size = 10),
+        plot.tag = element_text(family = "serif"),
         plot.caption = element_text(hjust = 0,
                                     family = "serif",
                                     #face = "bold",
@@ -134,8 +135,8 @@ autoplot(km_species_fit_stress_w) +
   #           x = 8.5, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
   # geom_text(label = "Pinus flexilis",
   #           x = 22, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
-  labs(color = "", fill = "",
-       caption = "\nFIGURE S3a | Kaplan Meier Survival Curve. \nSeedling Survival Probability under Drought, Adjusted by Water Stress. \nCurves shows the survival probability of each species under droughted and ambient temperature\ntreatments (n = 20 per species). Weeks show time since water stress for each individual. \nSurvival probability is estimated from observed data. Letters in the legend (a, b, c) show \nspecies which are significantly different (post-hoc Tukey HSD test, p < 0.05).") +
+  labs(color = "", fill = "", tag = "(a)") +
+  #labs(caption = "\nFIGURE S3a | Kaplan Meier Survival Curve. \nJuvenile Survival Probability under Drought, Adjusted by Water Stress. \nCurves shows the survival probability of each species under droughted and ambient temperature\ntreatments (n = 20 per species). Weeks show time since water stress for each individual. \nSurvival probability is estimated from observed data. Letters in the legend (a, b, c) show \nspecies which are significantly different (post-hoc Tukey HSD test, p < 0.05).") +
   theme_pubclean() +
   custom_colors +
   custom_colors_fill +
@@ -143,6 +144,7 @@ autoplot(km_species_fit_stress_w) +
         axis.text = element_text(size = 10),
         legend.text = element_text(size = 7, face = "italic"),
         strip.text.x = element_text(size = 10),
+        plot.tag = element_text(family = "serif"),
         plot.caption = element_text(hjust = 0,
                                     family = "serif",
                                     #face = "bold",
@@ -194,8 +196,8 @@ autoplot(km_species_fit_stress_p) +
   #           x = 6.5, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
   # geom_text(label = "Pinus flexilis",
   #           x = 17.3, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
-  labs(color = "", fill = "",
-       caption = "\nFIGURE S4a | Kaplan Meier Survival Curve. \nSeedling Survival Probability under Drought, Adjusted by Permanent Stomatal Closure Stress. \nCurves shows the survival probability of each species under droughted and ambient temperature \ntreatments (n = 10 per species). Weeks show time since permanent stomatal closure stress for each \nmeasured individual. Survival probability is estimated from observed data. Letters in the legend \n(a, b, c) show species which are significantly different (post-hoc Tukey HSD test, p < 0.05).") +
+  labs(color = "", fill = "", tag = "(a)") +
+  #labs(caption = "\nFIGURE S4a | Kaplan Meier Survival Curve. \nJuvenile Survival Probability under Drought, Adjusted by Permanent Stomatal Closure Stress. \nCurves shows the survival probability of each species under droughted and ambient temperature \ntreatments (n = 10 per species). Weeks show time since permanent stomatal closure stress for each \nmeasured individual. Survival probability is estimated from observed data. Letters in the legend \n(a, b, c) show species which are significantly different (post-hoc Tukey HSD test, p < 0.05).") +
   theme_pubclean() +
   custom_colors +
   custom_colors_fill +
@@ -203,6 +205,7 @@ autoplot(km_species_fit_stress_p) +
         axis.text = element_text(size = 10),
         legend.text = element_text(size = 7, face = "italic"),
         strip.text.x = element_text(size = 10),
+        plot.tag = element_text(family = "serif"),
         plot.caption = element_text(hjust = 0,
                                     family = "serif",
                                     #face = "bold",
@@ -263,8 +266,8 @@ autoplot(km_species_fit) +
   #           x = 13, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
   # geom_text(label = "Pinus flexilis",
   #           x = 33, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
-  labs(color = "", fill = "",
-       caption = "\nFIGURE S2a | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought and Heatwave. \nCurves shows the survival probability of each species under droughted and heatwave temperature \ntreatments (n = 20 per species). Weeks show time since the start of the experiment, adjusted to \naccount for staggered start times. Survival probability is estimated from observed data \nusing a Kaplan Meier survival function. Letters in the legend (a, b, c, d) show species \nwhich are significantly different (post-hoc Tukey HSD test, p < 0.05).") +
+  labs(color = "", fill = "", tag = "(b)") +
+  #labs(caption = "\nFIGURE S2a | Kaplan Meier Survival Curve of Juvenile Survival Probability under Drought and Heatwave. \nCurves shows the survival probability of each species under droughted and heatwave temperature \ntreatments (n = 20 per species). Weeks show time since the start of the experiment, adjusted to \naccount for staggered start times. Survival probability is estimated from observed data \nusing a Kaplan Meier survival function. Letters in the legend (a, b, c, d) show species \nwhich are significantly different (post-hoc Tukey HSD test, p < 0.05).") +
   theme_pubclean() +
   custom_colors +
   custom_colors_fill +
@@ -272,6 +275,7 @@ autoplot(km_species_fit) +
         axis.text = element_text(size = 10),
         legend.text = element_text(size = 6, face = "italic"),
         strip.text.x = element_text(size = 10),
+        plot.tag = element_text(family = "serif"),
         plot.caption = element_text(hjust = 0,
                                     family = "serif",
                                     #face = "bold",
@@ -322,8 +326,8 @@ autoplot(km_species_fit_stress_w) +
   #           x = 8.5, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
   # geom_text(label = "Pinus flexilis",
   #           x = 24, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
-  labs(color = "", fill = "",
-       caption = "\nFIGURE S3b | Kaplan Meier Survival Curve. \nSeedling Survival Probability under Drought and Heatwave, Adjusted by Water Stress. \nCurves shows the survival probability of each species under droughted and heatwave temperature \ntreatments (n = 20 per species). Weeks show time since water stress for each individual. \nSurvival probability is estimated from observed data. Letters in the legend (a, b, c) show \nspecies which are significantly different (post-hoc Tukey HSD test, p < 0.05).") +
+  labs(color = "", fill = "", tag = "(b)") +
+  #labs(caption = "\nFIGURE S3b | Kaplan Meier Survival Curve. \nJuvenile Survival Probability under Drought and Heatwave, Adjusted by Water Stress. \nCurves shows the survival probability of each species under droughted and heatwave temperature \ntreatments (n = 20 per species). Weeks show time since water stress for each individual. \nSurvival probability is estimated from observed data. Letters in the legend (a, b, c) show \nspecies which are significantly different (post-hoc Tukey HSD test, p < 0.05).") +
   theme_pubclean() +
   custom_colors +
   custom_colors_fill +
@@ -331,6 +335,7 @@ autoplot(km_species_fit_stress_w) +
         axis.text = element_text(size = 10),
         legend.text = element_text(size = 6, face = "italic"),
         strip.text.x = element_text(size = 10),
+        plot.tag = element_text(family = "serif"),
         plot.caption = element_text(hjust = 0,
                                     family = "serif",
                                     #face = "bold",
@@ -381,8 +386,8 @@ autoplot(km_species_fit_stress_p) +
   #           x = 6.5, y = 0.04, color = "black", size = 3, family = "serif", fontface = "italic") +
   # geom_text(label = "Pinus flexilis",
   #           x = 17.6, y = 0.04, color = "black", size = 3, family = "serif", fontface = "italic") +
-  labs(color = "", fill = "",
-       caption = "\nFIGURE S4b | Kaplan Meier Survival Curve. \nSeedling Survival Probability under Drought and Heatwave, Adjusted by Permanent Stomatal Closure Stress \nCurves shows the survival probability of each species under droughted and heatwave temperature \ntreatments (n = 10 per species). Weeks show time since permanent stomatal closure stress for each \nmeasured individual. Survival probability is estimated from observed data. Letters in the legend \n(a, b, c) show species which are significantly different (post-hoc Tukey HSD test, p < 0.05).") +
+  labs(color = "", fill = "", tag = "(b)") +
+  #labs(caption = "\nFIGURE S4b | Kaplan Meier Survival Curve. \nJuvenile Survival Probability under Drought and Heatwave, Adjusted by Permanent Stomatal Closure Stress \nCurves shows the survival probability of each species under droughted and heatwave temperature \ntreatments (n = 10 per species). Weeks show time since permanent stomatal closure stress for each \nmeasured individual. Survival probability is estimated from observed data. Letters in the legend \n(a, b, c) show species which are significantly different (post-hoc Tukey HSD test, p < 0.05).") +
   theme_pubclean() +
   custom_colors +
   custom_colors_fill +
@@ -390,6 +395,7 @@ autoplot(km_species_fit_stress_p) +
         axis.text = element_text(size = 10),
         legend.text = element_text(size = 6, face = "italic"),
         strip.text.x = element_text(size = 10),
+        plot.tag = element_text(family = "serif"),
         plot.caption = element_text(hjust = 0,
                                     family = "serif",
                                     #face = "bold",
@@ -454,8 +460,8 @@ autoplot(km_treatment_fit) +
   #           x = 12.8, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
   # geom_text(label = "Pinus flexilis",
   #           x = 33, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
-  labs(color = "", fill = "",
-       caption = "\nFIGURE S2b | Kaplan Meier Survival Curve of Seedling Survival Probability under Drought. \nCurves shows the survival probability of each species under both ambient and heatwave temperature \ntreatments (n = 20 per species and treatment). Weeks show time since the start of the experiment, \nadjusted to account for staggered start times. Survival probability is estimated from observed data \nusing a Kaplan Meier survival function. Letters in the legend (a, b, c, d) show species \nwhich are significantly different (post-hoc Tukey HSD test, p < 0.05).") +
+  labs(color = "", fill = "", tag = "(c)") +
+  #labs(caption = "\nFIGURE S2b | Kaplan Meier Survival Curve of Juvenile Survival Probability under Drought. \nCurves shows the survival probability of each species under both ambient and heatwave temperature \ntreatments (n = 20 per species and treatment). Weeks show time since the start of the experiment, \nadjusted to account for staggered start times. Survival probability is estimated from observed data \nusing a Kaplan Meier survival function. Letters in the legend (a, b, c, d) show species \nwhich are significantly different (post-hoc Tukey HSD test, p < 0.05).") +
   theme_pubclean() +
   custom_colors +
   custom_colors_fill +
@@ -463,6 +469,7 @@ autoplot(km_treatment_fit) +
         axis.text = element_text(size = 10),
         legend.text = element_text(size = 6, face = "italic"),
         strip.text.x = element_text(size = 10),
+        plot.tag = element_text(family = "serif"),
         plot.caption = element_text(hjust = 0,
                                     family = "serif",
                                     #face = "bold",
@@ -641,8 +648,8 @@ Phase1_Data_All %>%
            color = "gray50", linetype = "solid", size = 0.6) +
   geom_text(label = "0.005**",
             x = 38.3, y = 2, color = "gray50", size = 3.5, family = "serif") +
-  labs(fill = "",
-       caption = "\nFIGURE 2 | Heatwave Differences of Droughted Juveniles.\nHalf the droughted individuals (n = 20 per species) were exposed to a week long heatwave\n(indicated by the vertical red box). Boxplots show median time to mortality (rather than the mean). \nGrey bars on the right hand side show p-values of species which are significantly different in their \nmean time to mortality (two-sample t-test, p < 0.05).") +
+  labs(fill = "") +
+  #labs(caption = "\nFIGURE 2 | Heatwave Differences of Droughted Juveniles.\nHalf the droughted individuals (n = 20 per species) were exposed to a week long heatwave\n(indicated by the vertical red box). Boxplots show median time to mortality (rather than the mean). \nGrey bars on the right hand side show p-values of species which are significantly different in their \nmean time to mortality (two-sample t-test, p < 0.05).") +
   scale_fill_discrete(direction = -1,
                       labels = c("Drought Treatment", "Drought + Heatwave Treatment")) +
   theme_pubclean() +
