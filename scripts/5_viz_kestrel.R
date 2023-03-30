@@ -44,7 +44,7 @@ Phase1_Kestrel_AvgTemp %>%
   ylim(0, 40) +
   scale_x_datetime(date_labels = "%H%M") +
   xlab("Time") +
-  ylab("Temperature (Celcius)") +
+  ylab("Temperature (Celsius)") +
   labs(title = "Chamber 1 (PIPO PIED)\nAverage Daily Temperature Fluctuations",
        color = "Kestrel",
        fill = "Heatwave") +
@@ -61,7 +61,7 @@ Phase1_Kestrel_AvgTemp %>%
   ylim(0, 40) +
   scale_x_datetime(date_labels = "%H%M") +
   xlab("Time") +
-  ylab("Temperature (Celcius)") +
+  ylab("Temperature (Celsius)") +
   labs(title = "Chamber 2 (PIFL PSME)\nAverage Daily Temperature Fluctuations",
        color = "Kestrel",
        fill = "Heatwave") +
@@ -78,7 +78,7 @@ Phase1_Kestrel_AvgTemp %>%
   ylim(0, 40) +
   scale_x_datetime(date_labels = "%H%M") +
   xlab("Time") +
-  ylab("Temperature (Celcius)") +
+  ylab("Temperature (Celsius)") +
   labs(title = "Chamber 3 (PIEN)\nAverage Daily Temperature Fluctuations",
        color = "Kestrel",
        fill = "Heatwave") +
@@ -127,7 +127,7 @@ Phase1_Kestrel_AvgTemp_Sum %>%
   ylim(0, 40) +
   scale_x_datetime(date_labels = "%H%M") +
   xlab("Time") +
-  ylab("Temperature (Celcius)") +
+  ylab("Temperature (Celsius)") +
   labs(title = "Chamber 1 (PIPO PIED)\nAverage Daily Temperature Fluctuations",
        color = "Kestrel") +
   geom_text(data = Phase1_Kestrel_AvgTemp_Sum[94, ], 
@@ -156,7 +156,7 @@ Phase1_Kestrel_AvgTemp_Sum %>%
   ylim(0, 40) +
   scale_x_datetime(date_labels = "%H%M") +
   xlab("Time") +
-  ylab("Temperature (Celcius)") +
+  ylab("Temperature (Celsius)") +
   labs(title = "Chamber 2 (PIFL PSME)\nAverage Daily Temperature Fluctuations",
        color = "Kestrel") +
   geom_text(data = Phase1_Kestrel_AvgTemp_Sum[94, ], 
@@ -185,7 +185,7 @@ Phase1_Kestrel_AvgTemp_Sum %>%
   ylim(0, 40) +
   scale_x_datetime(date_labels = "%H%M") +
   xlab("Time") +
-  ylab("Temperature (Celcius)") +
+  ylab("Temperature (Celsius)") +
   labs(title = "Chamber 3 (PIEN)\nAverage Daily Temperature Fluctuations",
        color = "Kestrel") +
   geom_text(data = Phase1_Kestrel_AvgTemp_Sum[94, ], 
@@ -208,7 +208,7 @@ Phase1_Kestrel_AvgTemp_Sum_graph %>%
   ylim(0, 40) +
   scale_x_datetime(date_labels = "%H%M") +
   xlab("Time") +
-  ylab("Temperature (Celcius)") +
+  ylab("Temperature (Celsius)") +
   labs(fill = "", tag = "(a)") +
   #labs(caption = "\nFIGURE S1a | Average Daily Temperatures Fluctuations of Growth Chambers") +
   theme_minimal() +
@@ -244,7 +244,7 @@ Phase1_Kestrel_AvgTemp_Sum_Total_graph %>%
              fill = Heatwave)) +
   geom_col(position= "dodge") +
   ylim(0, 40) +
-  ylab("Temperature (Celcius)") +
+  ylab("Temperature (Celsius)") +
   labs(fill = "", tag = "(b)") +
   #labs(caption = "\nFIGURE S1b | Average Temperatures of Growth Chambers") +
   geom_text(label = Phase1_Kestrel_AvgTemp_Sum_Total_graph$Temperature_avg,
