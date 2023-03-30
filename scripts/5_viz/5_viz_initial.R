@@ -168,3 +168,4 @@ Phase1_Data %>%
   #filter(Treatment_water == "Drought") %>% 
   group_by(Species, Treatment_temp, Treatment_water) %>% 
   summarize(N = length(unique(SpeciesID)))
+
