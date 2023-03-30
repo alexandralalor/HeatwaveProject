@@ -64,7 +64,7 @@ Phase1_Data_All_w %>%
   facet_wrap(~Legend) +
   xlab("Weeks") +
   ylab("Water Weight (g)") +
-  labs(caption = "\nFIGURE 3 | Water Weight of Juveniles under Droughted and Ambient Treatments.\nCurves were calculated using individual weight data (n = 20 per species). Black dotted lines show the\naverage inflection point among all curves to show where concavity changes from concave up to concave down,\nreflecting the time when water availability transitioned from a non-limiting to a limiting resource.") +
+  #labs(caption = "\nFIGURE 3 | Water Weight of Juveniles under Droughted and Ambient Treatments.\nCurves were calculated using individual weight data (n = 20 per species). Black dotted lines show the\naverage inflection point among all curves to show where concavity changes from concave up to concave down,\nreflecting the time when water availability transitioned from a non-limiting to a limiting resource.") +
   #custom_colors +
   theme_minimal() +
   theme(legend.position="none",

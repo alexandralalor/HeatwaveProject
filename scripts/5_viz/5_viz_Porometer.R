@@ -48,7 +48,8 @@ custom_colors_fill <- scale_fill_manual(values = myColorsDark)
 
 #Graph
 Phase1_Data_All_p %>% 
-  ggplot(aes(x = Week,
+  ggplot(aes(x
+             = Week,
              y = Porometer_Est,
              color = SpeciesID)) +
   geom_point() +
@@ -68,15 +69,19 @@ Phase1_Data_All_p %>%
   scale_x_continuous(breaks = seq(0 , 36, by = 4)) +
   facet_wrap(~Legend) +
   xlab("Weeks") +
-  ylab("Stomatal Conductance (mmol m-2s-1)") +
-  labs(caption = "\nFIGURE 4 | Stomatal Conductance of Juveniles under Droughted and Ambient Treatments.\nThe black dotted line shows the average time of permanent stomatal closure (n = 10 per species), when \nmeasurements were consistently at or below a minimum value of 90 mmol m-2s-1 (solid gray horizonal line).") +
+  ylab(bquote("Stomatal Conductance  "~(mmol/m^2*s))) +
+  #labs(caption = "\nFIGURE 4 | Stomatal Conductance of Juveniles under Droughted and Ambient Treatments.\nThe black dotted line shows the average time of permanent stomatal closure (n = 10 per species), when \nmeasurements were consistently at or below a minimum value of 90 mmol m-2s-1 (solid gray horizonal line).") +
   #custom_colors +
   theme_minimal() +
   theme(legend.position="none",
         text = element_text(family = "serif", size = 10),
+        #axis.title.y = element_markdown(),
         axis.text = element_text(size = 10),
         legend.text = element_text(size = 10),
         strip.text.x = element_text(size = 10, face = "italic"),
         plot.caption = element_text(hjust = 0,
                                     family = "serif",
                                     size = 10))
+
+
+

@@ -9,7 +9,7 @@
 library(tidyverse)
 
 #read in csvs
-Phase1_Data_Porometer <- read_csv("data_QAQC/Phase1_Data_Porometer.csv")
+Phase1_Data_Porometer <- read_csv("data_analysis/Phase1_Data_Porometer.csv")
 
 #check out data
 glimpse(Phase1_Data_Porometer)
@@ -40,23 +40,23 @@ Phase1_Data_Porometer$Heatwave <- as.factor(Phase1_Data_Porometer$Heatwave)
 #Find average porometer data for graphing
 ################################################################################
 
-#filter for porometer data
-Phase1_Data_Porometer <- Phase1_Data_Porometer %>% 
-  filter(!is.na(Porometer_Est))
-
-#average data 
-Phase1_Data_Porometer_Avg <- Phase1_Data_Porometer %>%
-  group_by(ScientificName, CommonName, Species, Week, Treatment_temp, Treatment_water) %>% 
-  summarize(Dead_Count = sum(Dead_Count),
-            PercentDead = 100*(Dead_Count/20),
-            Porometer_Est = mean(Porometer_Est),
-            Temperature_C = mean(Temperature_C),
-            LeafSensor_PercentRH = mean(LeafSensor_PercentRH),
-            FilterSensor_PercentRH = mean(FilterSensor_PercentRH)) %>% 
-  arrange(Species, Week)
-
-#save as csv
-write.csv(Phase1_Data_Porometer_Avg, "data_QAQC/Phase1_Data_Porometer_Avg.csv", quote = FALSE, row.names = FALSE)
+# #filter for porometer data
+# Phase1_Data_Porometer <- Phase1_Data_Porometer %>% 
+#   filter(!is.na(Porometer_Est))
+# 
+# #average data 
+# Phase1_Data_Porometer_Avg <- Phase1_Data_Porometer %>%
+#   group_by(ScientificName, CommonName, Species, Week, Treatment_temp, Treatment_water) %>% 
+#   summarize(Dead_Count = sum(Dead_Count),
+#             PercentDead = 100*(Dead_Count/20),
+#             Porometer_Est = mean(Porometer_Est),
+#             Temperature_C = mean(Temperature_C),
+#             LeafSensor_PercentRH = mean(LeafSensor_PercentRH),
+#             FilterSensor_PercentRH = mean(FilterSensor_PercentRH)) %>% 
+#   arrange(Species, Week)
+# 
+# #save as csv
+# write.csv(Phase1_Data_Porometer_Avg, "data_QAQC/Phase1_Data_Porometer_Avg.csv", quote = FALSE, row.names = FALSE)
 
 
 
@@ -108,7 +108,7 @@ Phase1_Data_Porometer_PIPO %>%
 
 ################################################################################
 #read CSVs
-Phase1_Data_Porometer_Avg <- read_csv("data_QAQC/Phase1_Data_Porometer_Avg.csv")
+Phase1_Data_Porometer_Avg <- read_csv("data_analysis/Phase1_Data_Porometer_Avg.csv")
 #SD
 Phase1_Data_Porometer_Avg <- Phase1_Data_Porometer_Avg %>% 
   group_by(Species, Week, Treatment_temp, Treatment_water) %>%
