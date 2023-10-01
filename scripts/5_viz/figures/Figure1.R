@@ -1,41 +1,30 @@
-#kaplan meier survival curve analysis
+#kaplan meier survival curve - Figure 1
 #Alexandra Lalor
 #allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-09-30
-#Last updated: 2022-09-30
+#Last updated: 2022-10-01
 
 #load packages
 library(tidyverse)
 library(ggplot2)
-#library(ggtext) #for italics
-library(RColorBrewer)
 library(survival) # core survival analysis function
-library(survminer) # recommended for visualizing survival curves
-library(ggfortify)
+library(survminer) # recommended for visualizing survival curves, publication quality
 library(gridExtra) # for 2 panel graphs
+#library(RColorBrewer)
 
 
 ################################################################################
 
+# Panel (a) - Ambient temperature survival curves
+
 #read CSVs
 Phase1_Data_All <- read_csv("data_analysis/Phase1_Data_All.csv")
-
-#add stress adjustments
-Phase1_Data_All <- Phase1_Data_All %>% 
-  mutate(WeightAdj = Week - Stress_Week_Avg_Weight,
-         PorometerAdj = Week - Stress_Week_Avg_Porometer)
 
 #define custom color scale
 myColorsPaired <- c("#6A3D9A", "#CAB2D6", "#FF7F00", "#FDBF6F",  "#33A02C", "#B2DF8A", "#E31A1C", "#FB9A99", "#1F78B4", "#A6CEE3")
 myColorsDark <- c("#6A3D9A", "#FF7F00", "#33A02C", "#E31A1C", "#1F78B4")
 myColorsLight <- c("#CAB2D6", "#FDBF6F", "#B2DF8A", "#FB9A99", "#A6CEE3")
-
-# names(myColorsPaired) <- levels(Phase1_Data_All_w$Legend)
-# names(myColorsDark) <- levels(Phase1_Data_All_w$Legend)
-# names(myColorsLight) <- levels(Phase1_Data_All_w$Legend)
-# custom_colors <- scale_colour_manual(values = myColorsLight)
-# custom_colors_fill <- scale_fill_manual(values = myColorsDark)
 
 
 # KM curve - Ambient
@@ -84,7 +73,7 @@ KM_amb <- autoplot(km_species_fit) +
   custom_colors_fill +
   theme(text = element_text(family = "serif", size = 10),
         axis.text = element_text(size = 10),
-        legend.text = element_text(size = 7, face = "italic"),
+        legend.text = element_text(size = 8, face = "italic"),
         strip.text.x = element_text(size = 10),
         plot.tag = element_text(family = "serif"),
         plot.caption = element_text(hjust = 0,
@@ -95,6 +84,9 @@ KM_amb <- autoplot(km_species_fit) +
 
 ################################################################################
 ################################################################################
+
+# Panel (b) - Heatwave temperature survival curves
+
 # KM curve - Heatwave
 
 Phase1_Data_All_hw <- Phase1_Data_All %>%
@@ -154,7 +146,7 @@ KM_HW <- autoplot(km_species_fit) +
   custom_colors_fill +
   theme(text = element_text(family = "serif", size = 10),
         axis.text = element_text(size = 10),
-        legend.text = element_text(size = 7, face = "italic"),
+        legend.text = element_text(size = 8, face = "italic"),
         strip.text.x = element_text(size = 10),
         plot.tag = element_text(family = "serif"),
         plot.caption = element_text(hjust = 0,
@@ -164,7 +156,6 @@ KM_HW <- autoplot(km_species_fit) +
 
 ################################################################################
 ################################################################################
+# 2 panel grid (a and b) for Figure 1
 
-
-require(gridExtra)
 grid.arrange(KM_amb, KM_HW, nrow=2)
