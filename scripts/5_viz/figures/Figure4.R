@@ -14,6 +14,7 @@ Phase1_Data_All <- read_csv("data_analysis/Phase1_Data_All.csv")
 #Phase1_Data_Porometer  <- read_csv("data_analysis/Phase1_Data_Porometer.csv")
 #Phase1_Data_Porometer_Avg  <- read_csv("data_analysis/Phase1_Data_Porometer_Avg.csv")
 
+#add legend
 Phase1_Data_All_p <- Phase1_Data_All %>%
   mutate(Legend = ScientificName)
 Phase1_Data_All_p$Legend <- as.factor(Phase1_Data_All_p$Legend)

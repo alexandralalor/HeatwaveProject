@@ -9,9 +9,10 @@
 library(tidyverse)
 library(ggplot2)
 library(survival) # core survival analysis function
-library(survminer) # recommended for visualizing survival curves, publication quality
+library(survminer) # publication quality graphs
+library(ggfortify)
 library(gridExtra) # for 2 panel graphs
-#library(RColorBrewer)
+library(RColorBrewer)
 
 
 ################################################################################
@@ -54,7 +55,7 @@ custom_colors_fill <- scale_fill_manual(values = myColorsDark)
 #Kaplan Meier Survival Curve - combined
 km_species_fit <- survfit(Surv(Week, Dead_Count)~Legend, data = Phase1_Data_All_amb)
 
-KM_amb <- autoplot(km_species_fit) +
+a <- autoplot(km_species_fit) +
   scale_x_continuous(limits = c(0, 36), breaks = seq(0 , 36, by = 2)) +
   xlab("Weeks") +
   ylab("Survival Probability") +
@@ -114,7 +115,7 @@ custom_colors_fill <- scale_fill_manual(values = myColorsDark)
 #Kaplan Meier Survival Curve - combined
 km_species_fit <- survfit(Surv(Week, Dead_Count)~Legend, data = Phase1_Data_All_hw)
 
-KM_HW <- autoplot(km_species_fit) +
+b <- autoplot(km_species_fit) +
   # scale_fill_brewer(palette = "Paired") +
   # scale_color_brewer(palette = "Paired") +
   scale_x_continuous(limits = c(0, 36), breaks = seq(0 , 36, by = 2)) +
@@ -158,4 +159,4 @@ KM_HW <- autoplot(km_species_fit) +
 ################################################################################
 # 2 panel grid (a and b) for Figure 1
 
-grid.arrange(KM_amb, KM_HW, nrow=2)
+grid.arrange(a, b, nrow=2)

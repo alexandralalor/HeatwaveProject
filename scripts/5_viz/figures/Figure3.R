@@ -14,6 +14,7 @@ Phase1_Data_All <- read_csv("data_analysis/Phase1_Data_All.csv")
 #Phase1_Data_Weight  <- read_csv("data_analysis/Phase1_Data_Weight.csv")
 #Phase1_Data_Weight_Avg  <- read_csv("data_analysis/Phase1_Data_Weight_Avg.csv")
 
+#add legend
 Phase1_Data_All_w <- Phase1_Data_All %>%
   mutate(Legend = ScientificName)
 Phase1_Data_All_w$Legend <- as.factor(Phase1_Data_All_w$Legend)
