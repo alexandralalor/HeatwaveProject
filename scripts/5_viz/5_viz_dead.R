@@ -34,6 +34,7 @@ myColorsLight <- c("#CAB2D6", "#FDBF6F", "#B2DF8A", "#FB9A99", "#A6CEE3")
 # custom_colors <- scale_colour_manual(values = myColorsLight)
 # custom_colors_fill <- scale_fill_manual(values = myColorsDark)
 
+
 ################################################################################
 # KM curve - Ambient
 
@@ -218,13 +219,13 @@ autoplot(km_species_fit_stress_p) +
 
 Phase1_Data_All_hw <- Phase1_Data_All %>%
   mutate(Legend = ScientificName) %>% 
-  mutate(Legend = ifelse(Legend == "Pinus ponderosa", "Pinus ponderosa_HW (a)",
-                         ifelse(Legend == "Pinus edulis", "Pinus edulis_HW (b)",
-                                ifelse(Legend == "Picea engelmannii", "Picea engelmannii_HW (c)",
-                                       ifelse(Legend == "Pseudotsuga menziesii", "Pseudotsuga menziesii_HW (c)", "Pinus flexilis_HW (d)")))))
+  mutate(Legend = ifelse(Legend == "Pinus ponderosa", "Pinus ponderosa (a)",
+                         ifelse(Legend == "Pinus edulis", "Pinus edulis (b)",
+                                ifelse(Legend == "Picea engelmannii", "Picea engelmannii (c)",
+                                       ifelse(Legend == "Pseudotsuga menziesii", "Pseudotsuga menziesii (c)", "Pinus flexilis (d)")))))
 Phase1_Data_All_hw$Legend <- as.factor(Phase1_Data_All_hw$Legend)
 Phase1_Data_All_hw <-
-  transform(Phase1_Data_All_hw, Legend = factor(Legend, levels = c("Pinus ponderosa_HW (a)", "Pinus edulis_HW (b)", "Picea engelmannii_HW (c)", "Pseudotsuga menziesii_HW (c)", "Pinus flexilis_HW (d)")))
+  transform(Phase1_Data_All_hw, Legend = factor(Legend, levels = c("Pinus ponderosa (a)", "Pinus edulis (b)", "Picea engelmannii (c)", "Pseudotsuga menziesii (c)", "Pinus flexilis (d)")))
 levels(Phase1_Data_All_hw$Legend)
 
 #filter data
@@ -273,7 +274,7 @@ autoplot(km_species_fit) +
   custom_colors_fill +
   theme(text = element_text(family = "serif", size = 10),
         axis.text = element_text(size = 10),
-        legend.text = element_text(size = 6, face = "italic"),
+        legend.text = element_text(size = 7, face = "italic"),
         strip.text.x = element_text(size = 10),
         plot.tag = element_text(family = "serif"),
         plot.caption = element_text(hjust = 0,
