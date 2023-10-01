@@ -535,7 +535,7 @@ heatwave_summary_d %>%
 
 ################################################################################
 
-Phase1_Data_Avg <- Phase1_Data %>% 
+Phase1_Data_Avg <- Phase1_Data_All %>% 
   #filter(SpeciesID != "PIFL16") %>%
   group_by(Species, Treatment_temp, Treatment_water, Week) %>%
   summarize(Dead_Count = sum(Dead_Count))
