@@ -1,0 +1,60 @@
+DataSet,Column,DataType,DataCategory,Units,Resolution,Description
+InitialData,Phase,factor,categorical,n/a,n/a,experimental climate setup. 1 = experimental chambers are set up with current climate conditions. Future phases are intended to test future climate conditions
+InitialData; Dates,Chamber,factor,categorical,n/a,n/a,experimental temperature-controlled chamber where plants were located during the experiment. 3 chambers were available for ambient temperature conditions.
+InitialData,ScientificName,character,categorical,n/a,n/a,scientific names of each tree species (Pinus ponderosa; Pinus edulis; Picea engelmannii; Pinus flexilis; Pseudotsuga menziesii)
+InitialData,CommonName,character,categorical,n/a,n/a,common names of each tree species (Ponderosa Pine = Pinus ponderosa; Pinyon Pine = Pinus edulis; Engelman Spruce = Picea engelmannii; Limber Pine = Pinus flexilis; Douglas fir = Pseudotsuga menziesii)
+InitialData; Dates; Porometer; Photos; Plants,Species,character,categorical,n/a,n/a,species included in this experiment expressed as shorthand codes from scientific names (PIPO = Pinus ponderosa; PIED = Pinus edulis; PIEN = Picea engelmannii; PIFL = Pinus flexilis; PSME = Pseudotsuga menziesii)
+InitialData; Porometer; Photos; Plants,SpeciesID,character,categorical,n/a,n/a,individuals among each species in this experiment; with up to 50 individuals per species (e.g. PIFL01; PIFL02; … PIFL49; PIFL50)
+InitialData; Photos,Treatment_temp,binary,categorical,n/a,n/a,Ambient = individual plants which are exposed to ambient climate conditions only. Ambient_HW = individual plants which are exposed to ambient climate conditions with a week-long heatwave.
+InitialData; Photos,Treatment_water,binary,categorical,n/a,n/a,Drought = individual plants which were not watered throughout the duration of the experiment. Watered = individual plants which were watered every 2 weeks.
+InitialData,PorometerSubset,binary,categorical,n/a,n/a,yes = individual plants which were measured for stomatal conductance using a porometer device. no = individual plants which were not measured for stomatal conductance due to time constraints.
+InitialData,Whorls,integer,numerical,n/a,n/a,age was estimated using branch whorl counts
+InitialData,Height_mm,numeric,numerical,millimeters,1,height was measured from the soil surface to the apical bud
+InitialData,BasalDia_mm,numeric,numerical,millimeters,0.01,basal stem diameter was measured with a metric caliper at the base of each tree
+InitialData,BiomassBag_g,numeric,numerical,grams,0.01,biomass was measured at the end of the experiment once all trees had died. Individuals were clipped at the soil surface; placed into labeled paper bags; set in a drying oven at 75°C for 24 hours; and weighed
+InitialData,Bag_g,numeric,numerical,grams,0.01,average weight of three empty paper bags set in the drying oven set at 75°C for 24 hours
+InitialData,Biomass_g,numeric,numerical,grams,0.01,weight of bagged biomass after being set in the drying oven; minus the averaged weight of three empty paper bags set in the drying oven
+InitialData,Comments,character,text,n/a,n/a,Any notable comments about plant individuals
+Dates; Photos; Porometer; Kestrel,Date,date,date,YYYY-MM-DD,daily,calendar date when measurements were taken
+Dates; Photos; Porometer; Plants,Week,numeric,numerical,Weeks,0.5,weeks since the start of experimental data collection
+Dates,Variable,character,categorical,n/a,n/a,type of data collected (PercentBrown; Weight; Photos; Porometer)
+Plants,Dead,binary,categorical,n/a,n/a,alive = plant is alive. dead = plant is dead. Plants were declared dead when they reached a 90% threshold for percent brown; needle loss; or brittle needles
+Plants,PercentBrown,factor,categorical,percent,n/a,visually inspected leaf color twice per week to record leaf browning. We categorized percent brown as 10%; 25%; 50%; 75%; or 90% brown
+Plants,Porometer,numeric,numerical,mmolm−2s−1,0.1,measure of stomatal conductance on the uppermost needles using a leaf porometer (indicator of plant transpiration). This measurement was transcribed from the porometer device to the data sheet.
+Plants,Weight_g,numeric,numerical,grams,1,weight of individual potted plants
+Kestrel; TempSettings; Porometer,Temperature_C,numeric,numerical,degrees Celsius,0.1,temperature of experimental chamber; used to verify temperature settings
+Kestrel; TempSettings,Heatwave,binary,categorical,n/a,n/a,yes = temperatures under heatwave conditions. no = temperatures under ambient conditions
+Kestrel; TempSettings,Kestrel,factor,categorical,n/a,n/a,identifying kestrel number. Each chamber contained 2 kestrels. (1 = kestrel #1; 2 = kestrel #2; calculated = theoretical target temperature for both kestrels; actual = average of both kestrel temperature measurements from each chamber)
+Kestrel; Porometer,DateTime,datetime,datetime,YYYY-MM-DD 00:00:00,30 mins,datetime of measurement
+Kestrel; TempSettings; Porometer,Time,time,time,military,30,time of measurement
+Kestrel,Altitude_M,numeric,numerical,meters,1,Automatic kestrel measurement; altitude
+Kestrel,Barometer_MB,numeric,numerical,millibars,0.1,Automatic kestrel measurement; barometer pressure
+Kestrel,DensityAltitude_M,numeric,numerical,meters,1,Automatic kestrel measurement; density altitude
+Kestrel,DewPoint_C,numeric,numerical,degrees Celsius,0.1,Automatic kestrel measurement; dew point temperature
+Kestrel,HeatIndex_C,numeric,numerical,degrees Celsius,0.1,Automatic kestrel measurement; heat index temperature
+Kestrel,PercentRH,numeric,numerical,percent,0.1,Automatic kestrel measurement; percent relative humidity
+Kestrel,StationPressure_MB,numeric,numerical,millibars,0.1,Automatic kestrel measurement; station pressure
+Kestrel,WetBulb_C,numeric,numerical,degrees Celsius,0.1,Automatic kestrel measurement; wet bulb temperature
+Kestrel,WindChill_C,numeric,numerical,degrees Celsius,0.1,Automatic kestrel measurement; wind chill temperature
+Kestrel,WindSpeed_M/S,numeric,numerical,meters per second,0.1,Automatic kestrel measurement; wind speed
+Kestrel,Name,factor,categorical,n/a,n/a,kestrel name (Phase#_Chamber#_Kestrel#)
+Kestrel,Firmware,factor,categorical,n/a,n/a,kestrel firmware
+Kestrel,HardwareVersion,factor,categorical,n/a,n/a,kestrel hardware version
+Kestrel,LinkVersion,factor,categorical,n/a,n/a,kestrel link version
+Kestrel,Model,factor,categorical,n/a,n/a,kestrel model
+Kestrel,Serial,factor,categorical,n/a,n/a,kestrel serial number
+Porometer,Conductance,numeric,numerical,mmolm−2s−1,0.1,measure of stomatal conductance on the uppermost needles using a leaf porometer (indicator of plant transpiration). This measurement was recorded on the porometer device and was used as a backup and for quality checking data.
+Porometer,FilterSensor_PercentRH,numeric,numerical,percent,0.1,Automatic porometer measurement; percent relative humidity of the filter sensor at the time of measurement
+Porometer,LeafSensor_PercentRH,numeric,numerical,percent,0.1,Automatic porometer measurement; percent relative humidity of the leaf sensor at the time of measurement
+Porometer,CalNum,numeric,categorical,n/a,n/a,porometer cal number
+Porometer,SerialNumber,character,text,n/a,n/a,porometer serial number
+Photos,red,numeric,numerical,unitless,1,red color value. RGB color values reflect the intensity of the color and can be between 0-255. Each color is represented with rgb (red; green; blue) color values.
+Photos,red_class,factor,categorical,n/a,n/a,red color value groupings. System to bin colors into a range of color values in order to simplify the possible color options. Each bin groups ~10 color values (0-10; 11-20; … 241-250; 251-255)
+Photos,green,numeric,numerical,unitless,1,green color value. RGB color values reflect the intensity of the color and can be between 0-255. Each color is represented with rgb (red; green; blue) color values.
+Photos,green_class,factor,categorical,n/a,n/a,green color value groupings. System to bin colors into a range of color values in order to simplify the possible color options. Each bin groups ~10 color values (0-10; 11-20; … 241-250; 251-255)
+Photos,blue,numeric,numerical,unitless,1,blue color value. RGB color values reflect the intensity of the color and can be between 0-255. Each color is represented with rgb (red; green; blue) color values.
+Photos,blue_class,factor,categorical,n/a,n/a,blue color value groupings. System to bin colors into a range of color values in order to simplify the possible color options. Each bin groups ~10 color values (0-10; 11-20; … 241-250; 251-255)
+Photos,col_hex,factor,categorical,n/a,n/a,hex code representing the specific combination of Red Green Blue values for each pixel
+Photos,col_total,numeric,numerical,unitless,1,total number of pixels in the photo
+Photos,col_freq,numeric,numerical,unitless,1,total number of pixels in the photo with each specific combination of Red Green Blue values
+Photos,col_share,numeric,numerical,percent,0.01,percent of the total number of pixels in the photo with each specific combination of Red Green Blue values

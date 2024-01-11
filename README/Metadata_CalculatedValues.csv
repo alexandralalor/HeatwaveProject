@@ -1,0 +1,38 @@
+Column,DataType,DataCategory,Units,Resolution,Description
+SampleSize,numeric,numerical,number plants,1,sample size in each species treatment group
+SampleSize_Porometer,numeric,numerical,number plants,1,sample size in each species treatment group of plants which were measured with a porometer
+SampleSize_Weekly_Dead,numeric,numerical,number plants,1,sample size each week of number of plants measured for this. Accounts for missing data
+SampleSize_Weekly_PercentBrown,numeric,numerical,number plants,1,sample size each week of number of plants measured for this. Accounts for missing data
+SampleSize_Weekly_Photos,numeric,numerical,number plants,1,sample size each week of number of plants measured for this. Accounts for missing data
+SampleSize_Weekly_Weight,numeric,numerical,number plants,1,sample size each week of number of plants measured for this. Accounts for missing data
+SampleSize_Weekly_Porometer,numeric,numerical,number plants,1,sample size each week of number of plants measured for this. Accounts for missing data
+PercentBrownMin,factor,categorical,percent,n/a,minimum value of percent brown measurements of plant individuals
+PercentBrownMax,factor,categorical,percent,n/a,maximum value of percent brown measurements of plant individuals
+PercentBrown_Est,factor,categorical,percent,n/a,estimated percent brown of individuals which we stopped taking measurements on (after dead for 2 weeks). Estimates were based on last measurement. Intention is to retain sample size
+Porometer_Est,numeric,numerical,mmolm-2s-1,0.1,estimated porometer measurement of individuals which we stopped taking measurements on (after dead for 2 weeks). We assumed 0 stomatal conductance if dead. Intention is to retain sample size
+WeightMin,numeric,numerical,grams,1,minimum weight of each plant over the course of the experiment (completely dry)
+WeightMax,numeric,numerical,grams,1,maximum weight of each plant over the course of the experiment (completely saturated)
+Weight_Est,numeric,numerical,grams,1,estimated weight of individuals which we stopped taking measurements on (after dead for 2 weeks). Estimates were based on last measurement. Intention is to retain sample size
+WaterWeight_Base,numeric,numerical,grams,1,grams of water in soil when completely saturated. Calculated as WeightMax – WeightMin
+WaterWeight_Calc,numeric,numerical,grams,1,grams of water in soil each week. Calculated as WeightMax – Weight_g (each week)
+PercentWater,numeric,numerical,percent,0.1,percent water remaining in soil each week
+Temperature_avg,numeric,numerical,degrees Celsius,0.1,calculated average temperature per chamber
+PercentGreen,numeric,numerical,percent,0.01,calculated percent of green pixels in each photo (when green color value intensity exceeds red)
+PercentRed,numeric,numerical,percent,0.01,calculated percent of red pixels in each photo (when red color value intensity exceeds green)
+Heatwave_graph,character,text,n/a,n/a,text to be displayed on a graph
+Dead_Count,numeric,numerical,number plants,1,numerical count of the cumulative number of dead plants per week
+Dead_Week,numeric,numerical,weeks,0.5,week that individuals in each species treatment group died
+Dead_Week_Avg,numeric,numerical,weeks,0.1,average week that individuals in each species treatment group died
+Stress_Week_Weight,numeric,numerical,weeks,0.1,week that individuals in each species treatment reached a stress point (based on water availability and weight measurements)
+Stress_Week_Avg_Weight,numeric,numerical,weeks,0.1,average week that individuals in each species treatment reached a stress point (based on water availability and weight measurements)
+Stress_to_Dead_Weight,numeric,numerical,weeks,0.1,number of weeks since Stress_Week_Weight that each individual took to die
+Stress_to_Dead_Avg_Weight,numeric,numerical,weeks,0.1,average number of weeks since Stress_Week_Weight that individuals took to die
+Stress_Week_Porometer,numeric,numerical,weeks,0.1,week that individuals in each species treatment reached a stress point (based on stomatal closure and porometer measurements)
+Stress_Week_Avg_Porometer,numeric,numerical,weeks,0.1,average week that individuals in each species treatment reached a stress point (based on stomatal closure and porometer measurements)
+Stress_to_Dead_Porometer,numeric,numerical,weeks,0.1,number of weeks since Stress_Week_Porometer that each individual took to die
+Stress_to_Dead_Avg_Porometer,numeric,numerical,weeks,0.1,average number of weeks since Stress_Week_Porometer that individuals took to die
+SD_PercentBrown,numeric,numerical,percent,0.01,standard deviation of percent brown measurements
+SD_PercentRed,numeric,numerical,percent,0.01,standard deviation of percent red calculations (from photos)
+SD_Weight_Total,numeric,numerical,grams,1,standard deviation of total weight measurements
+SD_Weight_Water,numeric,numerical,grams,1,standard deviation of water weight calculations
+SD_Porometer,numeric,numerical,mmolm-2s-1,0.1,standard deviation of porometer measurements

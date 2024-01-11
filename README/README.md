@@ -77,10 +77,8 @@ and Global Change 6, 1–16. <https://doi.org/10.3389/ffgc.2023.1198156>
 
 1.  There are 2 .csv files in the "README" folder. One is titled
     "Metadata_CollectedValues.csv" and the other
-    "Metadata_CalculatedValues.csv". Both files explain each column name
-    found in this project, with information on the Data Set the column
-    is found in, the exact Column name, the Data Type, the Data
-    Category, Units, Resolution, and Description of the column. The
+    "Metadata_CalculatedValues.csv". Both files contain a descriptoin of
+    each column name found in the data folders of this project. The
     CollectedValues.csv file describes data that was collected directly
     (data found in the "data_raw", "data_clean", and "data_QAQC"
     folders). The CalculatedValues.csv file describes data that was
