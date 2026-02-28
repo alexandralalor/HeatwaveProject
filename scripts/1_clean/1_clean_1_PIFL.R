@@ -1,9 +1,12 @@
-#Data wrangling script - Phase 1 PIFL
+#Data wrangling script - PIFL
 #Alexandra Lalor
 #allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-02-01
-#Last updated: 2022-06-11
+#Last updated: 2026-02-28
+
+#working directory
+setwd("~/Desktop/R Projects/HeatwaveProject")
 
 #load tidyverse
 library(tidyverse)
@@ -13,6 +16,11 @@ Phase1_PIFL_Dead <- read_csv(file = "data_raw/plant_data/Phase1_PIFL_Dead.csv")
 Phase1_PIFL_PercentBrown <- read_csv(file = "data_raw/plant_data/Phase1_PIFL_PercentBrown.csv")
 Phase1_PIFL_Porometer <- read_csv(file = "data_raw/plant_data/Phase1_PIFL_Porometer.csv")
 Phase1_PIFL_Weight <- read_csv(file = "data_raw/plant_data/Phase1_PIFL_Weight.csv")
+
+Phase2_PIFL_Dead <- read_csv(file = "data_raw/plant_data/Phase2_PIFL_Dead.csv")
+Phase2_PIFL_PercentBrown <- read_csv(file = "data_raw/plant_data/Phase2_PIFL_PercentBrown.csv")
+Phase2_PIFL_Porometer <- read_csv(file = "data_raw/plant_data/Phase2_PIFL_Porometer.csv")
+Phase2_PIFL_Weight <- read_csv(file = "data_raw/plant_data/Phase2_PIFL_Weight.csv")
 
 
 
@@ -36,6 +44,9 @@ Phase1_PIFL_Weight <- read_csv(file = "data_raw/plant_data/Phase1_PIFL_Weight.cs
 Phase1_PIFL_Weight_NA <- Phase1_PIFL_Weight
 Phase1_PIFL_Weight_NA[Phase1_PIFL_Weight_NA == "X"] <- NA
 
+Phase2_PIFL_Weight_NA <- Phase2_PIFL_Weight
+Phase2_PIFL_Weight_NA[Phase2_PIFL_Weight_NA == "X"] <- NA
+
 
 #make sure that columns which previously had X are not characters, but integers instead
 #make changes across all columns using "across()" function
@@ -44,8 +55,12 @@ Phase1_PIFL_Weight_NA[Phase1_PIFL_Weight_NA == "X"] <- NA
 Phase1_PIFL_Weight_NA <- Phase1_PIFL_Weight_NA %>%
   mutate(across(starts_with("week"), as.integer))
 
+Phase2_PIFL_Weight_NA <- Phase2_PIFL_Weight_NA %>%
+  mutate(across(starts_with("week"), as.integer))
+
 #view structure of data, should show all data as int
 str(Phase1_PIFL_Weight_NA)
+str(Phase2_PIFL_Weight_NA)
 
 
 #I want to rearrange my data to have columns represent Week, Species, speciesID,and Variable
@@ -55,6 +70,23 @@ Phase1_PIFL_Weight_NA_pivot <- tidyr::pivot_longer(Phase1_PIFL_Weight_NA,
                                                    names_to = "Week",
                                                    values_to = "Weight_g",
                                                    names_prefix = "week_")
+Phase2_PIFL_Weight_NA_pivot <- tidyr::pivot_longer(Phase2_PIFL_Weight_NA,
+                                                   cols = starts_with("week"),
+                                                   names_to = "Week",
+                                                   values_to = "Weight_g",
+                                                   names_prefix = "week_")
+
+#Add phase as column
+Phase1_PIFL_Weight_NA_pivot <- Phase1_PIFL_Weight_NA_pivot %>% 
+  mutate(Phase = 1) %>% 
+  relocate(Phase, .before = Species)
+Phase2_PIFL_Weight_NA_pivot <- Phase2_PIFL_Weight_NA_pivot %>% 
+  mutate(Phase = 2) %>% 
+  relocate(Phase, .before = Species)
+#Combine
+PIFL_Weight_NA_pivot <- rbind(Phase1_PIFL_Weight_NA_pivot, Phase2_PIFL_Weight_NA_pivot)
+
+
 
 ###YAY it worked!! Now for all the other protocols! 
 
@@ -65,6 +97,9 @@ Phase1_PIFL_Weight_NA_pivot <- tidyr::pivot_longer(Phase1_PIFL_Weight_NA,
 Phase1_PIFL_Porometer_NA <- Phase1_PIFL_Porometer
 Phase1_PIFL_Porometer_NA[Phase1_PIFL_Porometer_NA == "X"] <- NA
 
+Phase2_PIFL_Porometer_NA <- Phase2_PIFL_Porometer
+Phase2_PIFL_Porometer_NA[Phase2_PIFL_Porometer_NA == "X"] <- NA
+
 
 ####IMPORTANT we don't want integers here! because Porometer readings have decimals
 #make sure that columns which previously had X are not characters, but "double" instead
@@ -72,8 +107,12 @@ Phase1_PIFL_Porometer_NA[Phase1_PIFL_Porometer_NA == "X"] <- NA
 Phase1_PIFL_Porometer_NA <- Phase1_PIFL_Porometer_NA %>% 
   mutate(across(starts_with("week"), as.double))
 
+Phase2_PIFL_Porometer_NA <- Phase2_PIFL_Porometer_NA %>% 
+  mutate(across(starts_with("week"), as.double))
+
 #view structure of data, make sure numbers are not characters
 str(Phase1_PIFL_Porometer_NA)
+str(Phase2_PIFL_Porometer_NA)
 
 
 #I want to rearrange my data to have columns represent Week, Species, speciesID,and Variable
@@ -83,9 +122,25 @@ Phase1_PIFL_Porometer_NA_pivot <- tidyr::pivot_longer(Phase1_PIFL_Porometer_NA,
                                                       names_to = "Week",
                                                       values_to = "Porometer",
                                                       names_prefix = "week_")
+Phase2_PIFL_Porometer_NA_pivot <- tidyr::pivot_longer(Phase2_PIFL_Porometer_NA,
+                                                      cols = starts_with("week"),
+                                                      names_to = "Week",
+                                                      values_to = "Porometer",
+                                                      names_prefix = "week_")
 
-#round data
-round(Phase1_PIFL_Porometer_NA_pivot$Porometer, digits=1)
+#Add phase as column
+Phase1_PIFL_Porometer_NA_pivot <- Phase1_PIFL_Porometer_NA_pivot %>% 
+  mutate(Porometer = round(Porometer, digits = 1)) %>% 
+  mutate(Phase = 1) %>% 
+  relocate(Phase, .before = Species)
+
+Phase2_PIFL_Porometer_NA_pivot <- Phase2_PIFL_Porometer_NA_pivot %>% 
+  mutate(Porometer = round(Porometer, digits = 1)) %>% 
+  mutate(Phase = 2) %>% 
+  relocate(Phase, .before = Species)
+
+#Combine
+PIFL_Porometer_NA_pivot <- rbind(Phase1_PIFL_Porometer_NA_pivot, Phase2_PIFL_Porometer_NA_pivot)
 
 
 
@@ -95,6 +150,9 @@ round(Phase1_PIFL_Porometer_NA_pivot$Porometer, digits=1)
 Phase1_PIFL_PercentBrown_NA <- Phase1_PIFL_PercentBrown
 Phase1_PIFL_PercentBrown_NA[Phase1_PIFL_PercentBrown_NA == "X"] <- NA
 
+Phase2_PIFL_PercentBrown_NA <- Phase2_PIFL_PercentBrown
+Phase2_PIFL_PercentBrown_NA[Phase2_PIFL_PercentBrown_NA == "X"] <- NA
+
 
 ####all percents are read in a characters.... Must change this
 #make sure that columns which previously had X are not characters, but "integer" instead
@@ -103,8 +161,13 @@ Phase1_PIFL_PercentBrown_NA <- Phase1_PIFL_PercentBrown_NA %>%
   mutate(across(.cols=starts_with("week"),.fns=str_remove, pattern="%")) %>%
   mutate(across(starts_with("week"), as.integer))
 
+Phase2_PIFL_PercentBrown_NA <- Phase2_PIFL_PercentBrown_NA %>% 
+  mutate(across(.cols=starts_with("week"),.fns=str_remove, pattern="%")) %>%
+  mutate(across(starts_with("week"), as.integer))
+
 #view structure of data, make sure numbers are not characters
 str(Phase1_PIFL_PercentBrown_NA)
+str(Phase2_PIFL_PercentBrown_NA)
 
 
 #I want to rearrange my data to have columns represent Week, Species, speciesID,and Variable
@@ -114,15 +177,35 @@ Phase1_PIFL_PercentBrown_NA_pivot <- tidyr::pivot_longer(Phase1_PIFL_PercentBrow
                                                          names_to = "Week",
                                                          values_to = "PercentBrown",
                                                          names_prefix = "week_")
+Phase2_PIFL_PercentBrown_NA_pivot <- tidyr::pivot_longer(Phase2_PIFL_PercentBrown_NA,
+                                                         cols = starts_with("week"),
+                                                         names_to = "Week",
+                                                         values_to = "PercentBrown",
+                                                         names_prefix = "week_")
+
+#Add phase as column
+Phase1_PIFL_PercentBrown_NA_pivot <- Phase1_PIFL_PercentBrown_NA_pivot %>% 
+  mutate(Phase = 1) %>% 
+  relocate(Phase, .before = Species)
+
+Phase2_PIFL_PercentBrown_NA_pivot <- Phase2_PIFL_PercentBrown_NA_pivot %>% 
+  mutate(Phase = 2) %>% 
+  relocate(Phase, .before = Species)
+
+#Combine
+PIFL_PercentBrown_NA_pivot <- rbind(Phase1_PIFL_PercentBrown_NA_pivot, Phase2_PIFL_PercentBrown_NA_pivot)
+
+
 
 ###########DEAD
 
 #No Xs in Dead data, but make new df to manipulate
 Phase1_PIFL_Dead_NA <- Phase1_PIFL_Dead
-
+Phase2_PIFL_Dead_NA <- Phase2_PIFL_Dead
 
 #view structure of data, should be characters
 str(Phase1_PIFL_Dead_NA)
+str(Phase2_PIFL_Dead_NA)
 
 
 #I want to rearrange my data to have columns represent Week, Species, speciesID,and Variable
@@ -132,35 +215,57 @@ Phase1_PIFL_Dead_NA_pivot <- tidyr::pivot_longer(Phase1_PIFL_Dead_NA,
                                                  names_to = "Week",
                                                  values_to = "Dead",
                                                  names_prefix = "week_")
+Phase2_PIFL_Dead_NA_pivot <- tidyr::pivot_longer(Phase2_PIFL_Dead_NA,
+                                                 cols = starts_with("week"),
+                                                 names_to = "Week",
+                                                 values_to = "Dead",
+                                                 names_prefix = "week_")
 
+
+#Add phase as column
+Phase1_PIFL_Dead_NA_pivot <- Phase1_PIFL_Dead_NA_pivot %>% 
+  mutate(Phase = 1) %>% 
+  relocate(Phase, .before = Species)
+
+Phase2_PIFL_Dead_NA_pivot <- Phase2_PIFL_Dead_NA_pivot %>% 
+  mutate(Phase = 2) %>% 
+  relocate(Phase, .before = Species)
+
+#Combine
+PIFL_Dead_NA_pivot <- rbind(Phase1_PIFL_Dead_NA_pivot, Phase2_PIFL_Dead_NA_pivot)
+
+
+################################################################################
 #now how can I stitch together these data frames?
-#Phase1_PIFL_Dead_NA_pivot
-#Phase1_PIFL_PercentBrown_NA_pivot
-#Phase1_PIFL_Porometer_NA_pivot
-#Phase1_PIFL_Weight_NA_pivot
+#PIFL_Dead_NA_pivot
+#PIFL_PercentBrown_NA_pivot
+#PIFL_Porometer_NA_pivot
+#PIFL_Weight_NA_pivot
 
 
 #start with Weight & Porometer
 #make sure all data gets in, given that only some species have porometer readings
 #verify and make sure all obs are retained for combined data. do this with all=true
-Phase1_PIFL_1 <- merge(Phase1_PIFL_Weight_NA_pivot,
-                       Phase1_PIFL_Porometer_NA_pivot,
-                       by=c("Species","SpeciesID","Week"), all=TRUE)
-
+PIFL_1 <- merge(
+  PIFL_Weight_NA_pivot,
+  PIFL_Porometer_NA_pivot,
+  by=c("Phase","Species","SpeciesID","Week"), all=TRUE)
 
 #next merge PercentBrown and Dead
 #these have half-weeks recorded, make sure these show up
 #verify and make sure all obs are retained for combined data. do this with all=true
-Phase1_PIFL_2 <- merge(Phase1_PIFL_PercentBrown_NA_pivot,
-                       Phase1_PIFL_Dead_NA_pivot,
-                       by=c("Species","SpeciesID","Week"))
+PIFL_2 <- merge(
+  PIFL_PercentBrown_NA_pivot,
+  PIFL_Dead_NA_pivot,
+  by=c("Phase","Species","SpeciesID","Week"))
 
 #now merge all together
 #YAY working!!
-Phase1_PIFL <- merge(Phase1_PIFL_1,
-                     Phase1_PIFL_2,
-                     by=c("Species","SpeciesID","Week"), all=TRUE)
+PIFL <- merge(
+  PIFL_1,
+  PIFL_2,
+  by=c("Phase","Species","SpeciesID","Week"), all=TRUE)
 
 
 #finally, make a CSV!
-write.csv(Phase1_PIFL, "data_raw/plant_data_2/Phase1_PIFL.csv", quote = FALSE, row.names = FALSE)
+write.csv(PIFL, "data_raw/plant_data_2/PIFL.csv", quote = FALSE, row.names = FALSE)

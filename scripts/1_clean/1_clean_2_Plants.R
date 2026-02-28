@@ -1,26 +1,26 @@
-#Data wrangling script - Phase 1 plants
+#Data wrangling script - Plants
 #Alexandra Lalor
 #allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-02-01
-#Last updated: 2022-06-11
+#Last updated: 2026-02-28
 
 #load tidyverse
 library(tidyverse)
 
 #read in cleaned up csv
 #looking very nice :)
-Phase1_PIED <- read_csv(file = "data_raw/plant_data_2/Phase1_PIED.csv")
-Phase1_PIPO <- read_csv(file = "data_raw/plant_data_2/Phase1_PIPO.csv")
-Phase1_PSME <- read_csv(file = "data_raw/plant_data_2/Phase1_PSME.csv")
-Phase1_PIFL <- read_csv(file = "data_raw/plant_data_2/Phase1_PIFL.csv")
-Phase1_PIEN <- read_csv(file = "data_raw/plant_data_2/Phase1_PIEN.csv")
+PIED <- read_csv(file = "data_raw/plant_data_2/PIED.csv")
+PIPO <- read_csv(file = "data_raw/plant_data_2/PIPO.csv")
+PSME <- read_csv(file = "data_raw/plant_data_2/PSME.csv")
+PIFL <- read_csv(file = "data_raw/plant_data_2/PIFL.csv")
+PIEN <- read_csv(file = "data_raw/plant_data_2/PIEN.csv")
 
 #connect plant data
-Phase1_Plants <- rbind(Phase1_PIED, Phase1_PIPO, Phase1_PSME, Phase1_PIFL, Phase1_PIEN)
+plants <- rbind(PIED, PIPO, PSME, PIFL, PIEN)
 
 #check out data and make sure it looks ok
-glimpse(Phase1_Plants)
+glimpse(plants)
 
 #save as csv
-write.csv(Phase1_plants, "data_clean/Phase1_Plants.csv", quote = FALSE, row.names = FALSE)
+write.csv(plants, "data_clean/Plants.csv", quote = FALSE, row.names = FALSE)
