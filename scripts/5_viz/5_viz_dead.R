@@ -16,10 +16,10 @@ library(ggfortify)
 
 
 #read CSVs
-Phase1_Data_All <- read_csv("data_analysis/Phase1_Data_All.csv")
+Data_All <- read_csv("data_analysis/Data_All.csv")
 
 #add stress adjustments
-Phase1_Data_All <- Phase1_Data_All %>% 
+Data_All <- Data_All %>% 
   mutate(WeightAdj = Week - Stress_Week_Avg_Weight,
          PorometerAdj = Week - Stress_Week_Avg_Porometer)
 
@@ -28,9 +28,9 @@ myColorsPaired <- c("#6A3D9A", "#CAB2D6", "#FF7F00", "#FDBF6F",  "#33A02C", "#B2
 myColorsDark <- c("#6A3D9A", "#FF7F00", "#33A02C", "#E31A1C", "#1F78B4")
 myColorsLight <- c("#CAB2D6", "#FDBF6F", "#B2DF8A", "#FB9A99", "#A6CEE3")
 
-# names(myColorsPaired) <- levels(Phase1_Data_All_w$Legend)
-# names(myColorsDark) <- levels(Phase1_Data_All_w$Legend)
-# names(myColorsLight) <- levels(Phase1_Data_All_w$Legend)
+# names(myColorsPaired) <- levels(Data_All_w$Legend)
+# names(myColorsDark) <- levels(Data_All_w$Legend)
+# names(myColorsLight) <- levels(Data_All_w$Legend)
 # custom_colors <- scale_colour_manual(values = myColorsLight)
 # custom_colors_fill <- scale_fill_manual(values = myColorsDark)
 
@@ -38,30 +38,30 @@ myColorsLight <- c("#CAB2D6", "#FDBF6F", "#B2DF8A", "#FB9A99", "#A6CEE3")
 ################################################################################
 # KM curve - Ambient
 
-Phase1_Data_All_amb <- Phase1_Data_All %>%
+Data_All_amb <- Data_All %>%
   mutate(Legend = ScientificName) %>% 
   mutate(Legend = ifelse(Legend == "Pinus ponderosa", "Pinus ponderosa (a)",
                 ifelse(Legend == "Pinus edulis", "Pinus edulis (b)",
                        ifelse(Legend == "Picea engelmannii", "Picea engelmannii (c)",
                               ifelse(Legend == "Pseudotsuga menziesii", "Pseudotsuga menziesii (c)", "Pinus flexilis (d)")))))
-Phase1_Data_All_amb$Legend <- as.factor(Phase1_Data_All_amb$Legend)
-Phase1_Data_All_amb <-
-  transform(Phase1_Data_All_amb, Legend = factor(Legend, levels = c("Pinus ponderosa (a)", "Pinus edulis (b)", "Picea engelmannii (c)", "Pseudotsuga menziesii (c)", "Pinus flexilis (d)")))
-levels(Phase1_Data_All_amb$Legend)
+Data_All_amb$Legend <- as.factor(Data_All_amb$Legend)
+Data_All_amb <-
+  transform(Data_All_amb, Legend = factor(Legend, levels = c("Pinus ponderosa (a)", "Pinus edulis (b)", "Picea engelmannii (c)", "Pseudotsuga menziesii (c)", "Pinus flexilis (d)")))
+levels(Data_All_amb$Legend)
 
 #filter data
-Phase1_Data_All_amb <- Phase1_Data_All_amb %>% 
+Data_All_amb <- Data_All_amb %>% 
   filter(Treatment_temp == "Ambient")
 
 #define colors
-#names(myColorsPaired) <- levels(Phase1_Data_All_amb$Legend)
-names(myColorsDark) <- levels(Phase1_Data_All_amb$Legend)
-names(myColorsLight) <- levels(Phase1_Data_All_amb$Legend)
+#names(myColorsPaired) <- levels(Data_All_amb$Legend)
+names(myColorsDark) <- levels(Data_All_amb$Legend)
+names(myColorsLight) <- levels(Data_All_amb$Legend)
 custom_colors <- scale_colour_manual(values = myColorsLight)
 custom_colors_fill <- scale_fill_manual(values = myColorsDark)
 
 #Kaplan Meier Survival Curve - combined
-km_species_fit <- survfit(Surv(Week, Dead_Count)~Legend, data = Phase1_Data_All_amb)
+km_species_fit <- survfit(Surv(Week, Dead_Count)~Legend, data = Data_All_amb)
 
 autoplot(km_species_fit) +
   scale_x_continuous(limits = c(0, 36), breaks = seq(0 , 36, by = 2)) +
@@ -94,34 +94,34 @@ autoplot(km_species_fit) +
 ################################################################################
 # KM curve - Ambient Weight
 
-Phase1_Data_All_amb_w <- Phase1_Data_All %>%
+Data_All_amb_w <- Data_All %>%
   mutate(Legend = ScientificName) %>% 
   mutate(Legend = ifelse(Legend == "Pinus ponderosa", "Pinus ponderosa (a)",
                          ifelse(Legend == "Pinus edulis", "Pinus edulis (b)",
                                 ifelse(Legend == "Picea engelmannii", "Picea engelmannii (b)",
                                        ifelse(Legend == "Pseudotsuga menziesii", "Pseudotsuga menziesii (b)", "Pinus flexilis (c)")))))
-Phase1_Data_All_amb_w$Legend <- as.factor(Phase1_Data_All_amb_w$Legend)
-Phase1_Data_All_amb_w <-
-  transform(Phase1_Data_All_amb_w, Legend = factor(Legend, levels = c("Pinus ponderosa (a)", "Pinus edulis (b)", "Picea engelmannii (b)", "Pseudotsuga menziesii (b)", "Pinus flexilis (c)")))
-levels(Phase1_Data_All_amb_w$Legend)
+Data_All_amb_w$Legend <- as.factor(Data_All_amb_w$Legend)
+Data_All_amb_w <-
+  transform(Data_All_amb_w, Legend = factor(Legend, levels = c("Pinus ponderosa (a)", "Pinus edulis (b)", "Picea engelmannii (b)", "Pseudotsuga menziesii (b)", "Pinus flexilis (c)")))
+levels(Data_All_amb_w$Legend)
 
 #adjustments
-Phase1_Data_All_amb_w <- Phase1_Data_All_amb_w %>% 
+Data_All_amb_w <- Data_All_amb_w %>% 
   filter(WeightAdj > 0)
 
 #filter data
-Phase1_Data_All_amb_w <- Phase1_Data_All_amb_w %>% 
+Data_All_amb_w <- Data_All_amb_w %>% 
   filter(Treatment_temp == "Ambient")
 
 #define colors
-#names(myColorsPaired) <- levels(Phase1_Data_All_amb_w$Legend)
-names(myColorsDark) <- levels(Phase1_Data_All_amb_w$Legend)
-names(myColorsLight) <- levels(Phase1_Data_All_amb_w$Legend)
+#names(myColorsPaired) <- levels(Data_All_amb_w$Legend)
+names(myColorsDark) <- levels(Data_All_amb_w$Legend)
+names(myColorsLight) <- levels(Data_All_amb_w$Legend)
 custom_colors <- scale_colour_manual(values = myColorsLight)
 custom_colors_fill <- scale_fill_manual(values = myColorsDark)
 
 #KM curve
-km_species_fit_stress_w <- survfit(Surv(WeightAdj, Dead_Count)~Legend, data = Phase1_Data_All_amb_w)
+km_species_fit_stress_w <- survfit(Surv(WeightAdj, Dead_Count)~Legend, data = Data_All_amb_w)
 
 
 autoplot(km_species_fit_stress_w) +
@@ -155,34 +155,34 @@ autoplot(km_species_fit_stress_w) +
 ################################################################################
 # KM curve - Ambient Porometer
 
-Phase1_Data_All_amb_p <- Phase1_Data_All %>%
+Data_All_amb_p <- Data_All %>%
   mutate(Legend = ScientificName) %>% 
   mutate(Legend = ifelse(Legend == "Pinus ponderosa", "Pinus ponderosa (a)",
                          ifelse(Legend == "Pinus edulis", "Pinus edulis (ab)",
                                 ifelse(Legend == "Picea engelmannii", "Picea engelmannii (ab)",
                                        ifelse(Legend == "Pseudotsuga menziesii", "Pseudotsuga menziesii (b)", "Pinus flexilis (c)")))))
-Phase1_Data_All_amb_p$Legend <- as.factor(Phase1_Data_All_amb_p$Legend)
-Phase1_Data_All_amb_p <-
-  transform(Phase1_Data_All_amb_p, Legend = factor(Legend, levels = c("Pinus ponderosa (a)", "Pinus edulis (ab)", "Picea engelmannii (ab)", "Pseudotsuga menziesii (b)", "Pinus flexilis (c)")))
-levels(Phase1_Data_All_amb_p$Legend)
+Data_All_amb_p$Legend <- as.factor(Data_All_amb_p$Legend)
+Data_All_amb_p <-
+  transform(Data_All_amb_p, Legend = factor(Legend, levels = c("Pinus ponderosa (a)", "Pinus edulis (ab)", "Picea engelmannii (ab)", "Pseudotsuga menziesii (b)", "Pinus flexilis (c)")))
+levels(Data_All_amb_p$Legend)
 
 #adjustments
-Phase1_Data_All_amb_p <- Phase1_Data_All_amb_p %>% 
+Data_All_amb_p <- Data_All_amb_p %>% 
   filter(PorometerAdj > 0)
 
 #filter data
-Phase1_Data_All_amb_p <- Phase1_Data_All_amb_p %>% 
+Data_All_amb_p <- Data_All_amb_p %>% 
   filter(Treatment_temp == "Ambient")
 
 #define colors
-#names(myColorsPaired) <- levels(Phase1_Data_All_amb_p$Legend)
-names(myColorsDark) <- levels(Phase1_Data_All_amb_p$Legend)
-names(myColorsLight) <- levels(Phase1_Data_All_amb_p$Legend)
+#names(myColorsPaired) <- levels(Data_All_amb_p$Legend)
+names(myColorsDark) <- levels(Data_All_amb_p$Legend)
+names(myColorsLight) <- levels(Data_All_amb_p$Legend)
 custom_colors <- scale_colour_manual(values = myColorsLight)
 custom_colors_fill <- scale_fill_manual(values = myColorsDark)
 
 #KM curve
-km_species_fit_stress_p <- survfit(Surv(PorometerAdj, Dead_Count)~Legend, data = Phase1_Data_All_amb_p)
+km_species_fit_stress_p <- survfit(Surv(PorometerAdj, Dead_Count)~Legend, data = Data_All_amb_p)
 
 
 autoplot(km_species_fit_stress_p) +
@@ -217,30 +217,30 @@ autoplot(km_species_fit_stress_p) +
 ################################################################################
 # KM curve - Heatwave
 
-Phase1_Data_All_hw <- Phase1_Data_All %>%
+Data_All_hw <- Data_All %>%
   mutate(Legend = ScientificName) %>% 
   mutate(Legend = ifelse(Legend == "Pinus ponderosa", "Pinus ponderosa (a)",
                          ifelse(Legend == "Pinus edulis", "Pinus edulis (b)",
                                 ifelse(Legend == "Picea engelmannii", "Picea engelmannii (c)",
                                        ifelse(Legend == "Pseudotsuga menziesii", "Pseudotsuga menziesii (c)", "Pinus flexilis (d)")))))
-Phase1_Data_All_hw$Legend <- as.factor(Phase1_Data_All_hw$Legend)
-Phase1_Data_All_hw <-
-  transform(Phase1_Data_All_hw, Legend = factor(Legend, levels = c("Pinus ponderosa (a)", "Pinus edulis (b)", "Picea engelmannii (c)", "Pseudotsuga menziesii (c)", "Pinus flexilis (d)")))
-levels(Phase1_Data_All_hw$Legend)
+Data_All_hw$Legend <- as.factor(Data_All_hw$Legend)
+Data_All_hw <-
+  transform(Data_All_hw, Legend = factor(Legend, levels = c("Pinus ponderosa (a)", "Pinus edulis (b)", "Picea engelmannii (c)", "Pseudotsuga menziesii (c)", "Pinus flexilis (d)")))
+levels(Data_All_hw$Legend)
 
 #filter data
-Phase1_Data_All_hw <- Phase1_Data_All_hw %>% 
+Data_All_hw <- Data_All_hw %>% 
   filter(Treatment_temp == "Ambient_HW")
 
 #define colors
-#names(myColorsPaired) <- levels(Phase1_Data_All_hw$Legend)
-names(myColorsDark) <- levels(Phase1_Data_All_hw$Legend)
-names(myColorsLight) <- levels(Phase1_Data_All_hw$Legend)
+#names(myColorsPaired) <- levels(Data_All_hw$Legend)
+names(myColorsDark) <- levels(Data_All_hw$Legend)
+names(myColorsLight) <- levels(Data_All_hw$Legend)
 custom_colors <- scale_colour_manual(values = myColorsLight)
 custom_colors_fill <- scale_fill_manual(values = myColorsDark)
 
 #Kaplan Meier Survival Curve - combined
-km_species_fit <- survfit(Surv(Week, Dead_Count)~Legend, data = Phase1_Data_All_hw)
+km_species_fit <- survfit(Surv(Week, Dead_Count)~Legend, data = Data_All_hw)
 
 autoplot(km_species_fit) +
   # scale_fill_brewer(palette = "Paired") +
@@ -285,34 +285,34 @@ autoplot(km_species_fit) +
 ################################################################################
 # KM curve - Heatwave Weight
 
-Phase1_Data_All_hw_w <- Phase1_Data_All %>%
+Data_All_hw_w <- Data_All %>%
   mutate(Legend = ScientificName) %>% 
   mutate(Legend = ifelse(Legend == "Pinus ponderosa", "Pinus ponderosa_HW (a)",
                          ifelse(Legend == "Pinus edulis", "Pinus edulis_HW (b)",
                                 ifelse(Legend == "Picea engelmannii", "Picea engelmannii_HW (b)",
                                        ifelse(Legend == "Pseudotsuga menziesii", "Pseudotsuga menziesii_HW (b)", "Pinus flexilis_HW (c)")))))
-Phase1_Data_All_hw_w$Legend <- as.factor(Phase1_Data_All_hw_w$Legend)
-Phase1_Data_All_hw_w <-
-  transform(Phase1_Data_All_hw_w, Legend = factor(Legend, levels = c("Pinus ponderosa_HW (a)", "Pinus edulis_HW (b)", "Picea engelmannii_HW (b)", "Pseudotsuga menziesii_HW (b)", "Pinus flexilis_HW (c)")))
-levels(Phase1_Data_All_hw_w$Legend)
+Data_All_hw_w$Legend <- as.factor(Data_All_hw_w$Legend)
+Data_All_hw_w <-
+  transform(Data_All_hw_w, Legend = factor(Legend, levels = c("Pinus ponderosa_HW (a)", "Pinus edulis_HW (b)", "Picea engelmannii_HW (b)", "Pseudotsuga menziesii_HW (b)", "Pinus flexilis_HW (c)")))
+levels(Data_All_hw_w$Legend)
 
 #adjustments
-Phase1_Data_All_hw_w <- Phase1_Data_All_hw_w %>% 
+Data_All_hw_w <- Data_All_hw_w %>% 
   filter(WeightAdj > 0)
 
 #filter data
-Phase1_Data_All_hw_w <- Phase1_Data_All_hw_w %>% 
+Data_All_hw_w <- Data_All_hw_w %>% 
   filter(Treatment_temp == "Ambient_HW")
 
 #define colors
-#names(myColorsPaired) <- levels(Phase1_Data_All_hw_w$Legend)
-names(myColorsDark) <- levels(Phase1_Data_All_hw_w$Legend)
-names(myColorsLight) <- levels(Phase1_Data_All_hw_w$Legend)
+#names(myColorsPaired) <- levels(Data_All_hw_w$Legend)
+names(myColorsDark) <- levels(Data_All_hw_w$Legend)
+names(myColorsLight) <- levels(Data_All_hw_w$Legend)
 custom_colors <- scale_colour_manual(values = myColorsLight)
 custom_colors_fill <- scale_fill_manual(values = myColorsDark)
 
 #KM curve
-km_species_fit_stress_w <- survfit(Surv(WeightAdj, Dead_Count)~Legend, data = Phase1_Data_All_hw_w)
+km_species_fit_stress_w <- survfit(Surv(WeightAdj, Dead_Count)~Legend, data = Data_All_hw_w)
 
 
 autoplot(km_species_fit_stress_w) +
@@ -345,34 +345,34 @@ autoplot(km_species_fit_stress_w) +
 ################################################################################
 # KM curve - Heatwave Porometer
 
-Phase1_Data_All_hw_p <- Phase1_Data_All %>%
+Data_All_hw_p <- Data_All %>%
   mutate(Legend = ScientificName) %>% 
   mutate(Legend = ifelse(Legend == "Pinus ponderosa", "Pinus ponderosa_HW (a)",
                          ifelse(Legend == "Pinus edulis", "Pinus edulis_HW (b)",
                                 ifelse(Legend == "Picea engelmannii", "Picea engelmannii_HW (ab)",
                                        ifelse(Legend == "Pseudotsuga menziesii", "Pseudotsuga menziesii_HW (b)", "Pinus flexilis_HW (c)")))))
-Phase1_Data_All_hw_p$Legend <- as.factor(Phase1_Data_All_hw_p$Legend)
-Phase1_Data_All_hw_p <-
-  transform(Phase1_Data_All_hw_p, Legend = factor(Legend, levels = c("Pinus ponderosa_HW (a)", "Pinus edulis_HW (b)", "Picea engelmannii_HW (ab)", "Pseudotsuga menziesii_HW (b)", "Pinus flexilis_HW (c)")))
-levels(Phase1_Data_All_hw_p$Legend)
+Data_All_hw_p$Legend <- as.factor(Data_All_hw_p$Legend)
+Data_All_hw_p <-
+  transform(Data_All_hw_p, Legend = factor(Legend, levels = c("Pinus ponderosa_HW (a)", "Pinus edulis_HW (b)", "Picea engelmannii_HW (ab)", "Pseudotsuga menziesii_HW (b)", "Pinus flexilis_HW (c)")))
+levels(Data_All_hw_p$Legend)
 
 #adjustments
-Phase1_Data_All_hw_p <- Phase1_Data_All_hw_p %>% 
+Data_All_hw_p <- Data_All_hw_p %>% 
   filter(PorometerAdj > 0)
 
 #filter data
-Phase1_Data_All_hw_p <- Phase1_Data_All_hw_p %>% 
+Data_All_hw_p <- Data_All_hw_p %>% 
   filter(Treatment_temp == "Ambient_HW")
 
 #define colors
-#names(myColorsPaired) <- levels(Phase1_Data_All_hw_p$Legend)
-names(myColorsDark) <- levels(Phase1_Data_All_hw_p$Legend)
-names(myColorsLight) <- levels(Phase1_Data_All_hw_p$Legend)
+#names(myColorsPaired) <- levels(Data_All_hw_p$Legend)
+names(myColorsDark) <- levels(Data_All_hw_p$Legend)
+names(myColorsLight) <- levels(Data_All_hw_p$Legend)
 custom_colors <- scale_colour_manual(values = myColorsLight)
 custom_colors_fill <- scale_fill_manual(values = myColorsDark)
 
 #KM curve
-km_species_fit_stress_p <- survfit(Surv(PorometerAdj, Dead_Count)~Legend, data = Phase1_Data_All_hw_p)
+km_species_fit_stress_p <- survfit(Surv(PorometerAdj, Dead_Count)~Legend, data = Data_All_hw_p)
 
 
 autoplot(km_species_fit_stress_p) +
@@ -405,7 +405,7 @@ autoplot(km_species_fit_stress_p) +
 ################################################################################
 # KM curve - Ambient and Heatwave
 
-Phase1_Data_All_amb_hw <- Phase1_Data_All %>%
+Data_All_amb_hw <- Data_All %>%
   mutate(Legend = Heatwave_graph) %>% 
   mutate(Legend = ifelse(Legend == "Ponderosa Pine", "Pinus ponderosa (a)",
                          ifelse(Legend == "Ponderosa Pine_heatwave", "Pinus ponderosa_HW (a)",
@@ -416,24 +416,24 @@ Phase1_Data_All_amb_hw <- Phase1_Data_All %>%
                                        ifelse(Legend == "Douglas fir", "Pseudotsuga menziesii (c)",
                                               ifelse(Legend == "Douglas fir_heatwave", "Pseudotsuga menziesii_HW (c)",
                                                      ifelse(Legend == "Limber Pine", "Pinus flexilis (d)", "Pinus flexilis_HW (d)"))))))))))
-Phase1_Data_All_amb_hw$Legend <- as.factor(Phase1_Data_All_amb_hw$Legend)
-Phase1_Data_All_amb_hw <-
-  transform(Phase1_Data_All_amb_hw, Legend = factor(Legend, levels = c("Pinus ponderosa (a)", "Pinus ponderosa_HW (a)",
+Data_All_amb_hw$Legend <- as.factor(Data_All_amb_hw$Legend)
+Data_All_amb_hw <-
+  transform(Data_All_amb_hw, Legend = factor(Legend, levels = c("Pinus ponderosa (a)", "Pinus ponderosa_HW (a)",
                                                                        "Pinus edulis (b)", "Pinus edulis_HW (b)",
                                                                        "Picea engelmannii (c)", "Picea engelmannii_HW (c)", 
                                                                        "Pseudotsuga menziesii (c)", "Pseudotsuga menziesii_HW (c)",
                                                                        "Pinus flexilis (d)", "Pinus flexilis_HW (d)")))
-levels(Phase1_Data_All_amb_hw$Legend)
+levels(Data_All_amb_hw$Legend)
 
 #define colors
-names(myColorsPaired) <- levels(Phase1_Data_All_amb_hw$Legend)
-#names(myColorsDark) <- levels(Phase1_Data_All_amb_hw$Legend)
-#names(myColorsLight) <- levels(Phase1_Data_All_amb_hw$Legend)
+names(myColorsPaired) <- levels(Data_All_amb_hw$Legend)
+#names(myColorsDark) <- levels(Data_All_amb_hw$Legend)
+#names(myColorsLight) <- levels(Data_All_amb_hw$Legend)
 custom_colors <- scale_colour_manual(values = myColorsPaired)
 custom_colors_fill <- scale_fill_manual(values = myColorsPaired)
 
 #Kaplan Meier Survival Curve - separated by treatment
-km_treatment_fit <- survfit(Surv(Week, Dead_Count)~Legend, data=Phase1_Data_All_amb_hw)
+km_treatment_fit <- survfit(Surv(Week, Dead_Count)~Legend, data=Data_All_amb_hw)
 #summary(km_treatment_fit)
 
 
@@ -535,15 +535,15 @@ heatwave_summary_d %>%
 
 ################################################################################
 
-Phase1_Data_Avg <- Phase1_Data_All %>% 
+Data_Avg <- Data_All %>% 
   #filter(SpeciesID != "PIFL16") %>%
   group_by(Species, Treatment_temp, Treatment_water, Week) %>%
   summarize(Dead_Count = sum(Dead_Count))
-Phase1_Data_Avg <- Phase1_Data_Avg %>% 
+Data_Avg <- Data_Avg %>% 
   mutate(Live_Count = 20 - Dead_Count,
          Survivorship = ((Live_Count/20)*100))
 
-Phase1_Data_Avg %>% 
+Data_Avg %>% 
   filter(Treatment_water == "Drought", !is.na(Dead_Count)) %>% 
   group_by(Species, Treatment_temp) %>% 
   ggplot(aes(x = Week,
@@ -555,7 +555,7 @@ Phase1_Data_Avg %>%
   theme_minimal() +
   scale_color_discrete(direction = -1)
 
-Phase1_Data_Avg %>% 
+Data_Avg %>% 
   filter(Treatment_water == "Drought", !is.na(Dead_Count)) %>% 
   group_by(Species, Treatment_temp) %>% 
   ggplot(aes(x = Week,
@@ -570,15 +570,15 @@ Phase1_Data_Avg %>%
 
 ###################################################################################
 #read csv
-Phase1_Data_All <- read_csv("data_analysis/Phase1_Data_All.csv")
+Data_All <- read_csv("data_analysis/Data_All.csv")
 
 #factor levels
-# Phase1_Data_All <- 
-#   transform(Phase1_Data_All, Species = factor(Species, levels = c("PIPO", "PIED", "PSME", "PIEN", "PIFL")))
-# Phase1_Data_All <- 
-#   transform(Phase1_Data_All, Species = factor(Species, levels = c("PIFL", "PIEN", "PSME", "PIED", "PIPO")))
+# Data_All <- 
+#   transform(Data_All, Species = factor(Species, levels = c("PIPO", "PIED", "PSME", "PIEN", "PIFL")))
+# Data_All <- 
+#   transform(Data_All, Species = factor(Species, levels = c("PIFL", "PIEN", "PSME", "PIED", "PIPO")))
 
-# Phase1_Data_All <- Phase1_Data_All %>%
+# Data_All <- Data_All %>%
 #   mutate(Legend = Heatwave_graph) %>% 
 #   mutate(Legend = ifelse(Legend == "Ponderosa Pine", "Pinus ponderosa",
 #                          ifelse(Legend == "Ponderosa Pine_heatwave", "Pinus ponderosa_heatwave",
@@ -589,42 +589,43 @@ Phase1_Data_All <- read_csv("data_analysis/Phase1_Data_All.csv")
 #                                                             ifelse(Legend == "Douglas fir", "Pseudotsuga menziesii",
 #                                                                    ifelse(Legend == "Douglas fir_heatwave", "Pseudotsuga menziesii_heatwave",
 #                                                                           ifelse(Legend == "Limber Pine", "Pinus flexilis", "Pinus flexilis_heatwave"))))))))))
-# Phase1_Data_All$Legend <- as.factor(Phase1_Data_All$Legend)
-# Phase1_Data_All <-
-#   transform(Phase1_Data_All, Legend = factor(Legend, levels = c("Pinus ponderosa", "Pinus ponderosa_heatwave",
+# Data_All$Legend <- as.factor(Data_All$Legend)
+# Data_All <-
+#   transform(Data_All, Legend = factor(Legend, levels = c("Pinus ponderosa", "Pinus ponderosa_heatwave",
 #                                                                        "Pinus edulis", "Pinus edulis_heatwave",
 #                                                                        "Picea engelmannii", "Picea engelmannii_heatwave", 
 #                                                                        "Pseudotsuga menziesii", "Pseudotsuga menziesii_heatwave",
 #                                                                        "Pinus flexilis", "Pinus flexilis_heatwave")))
-# levels(Phase1_Data_All$Legend)
+# levels(Data_All$Legend)
 # 
 # #define colors
-# names(myColorsPaired) <- levels(Phase1_Data_All$Legend)
-# #names(myColorsDark) <- levels(Phase1_Data_All$Legend)
-# #names(myColorsLight) <- levels(Phase1_Data_All$Legend)
+# names(myColorsPaired) <- levels(Data_All$Legend)
+# #names(myColorsDark) <- levels(Data_All$Legend)
+# #names(myColorsLight) <- levels(Data_All$Legend)
 # custom_colors <- scale_colour_manual(values = myColorsPaired)
 # custom_colors_fill <- scale_fill_manual(values = myColorsPaired)
 
 
-Phase1_Data_All <- Phase1_Data_All %>%
+Data_All <- Data_All %>%
   mutate(Legend = ScientificName)
-Phase1_Data_All$Legend <- as.factor(Phase1_Data_All$Legend)
-Phase1_Data_All <-
-  transform(Phase1_Data_All, Legend = factor(Legend, levels = c("Pinus flexilis",
+Data_All$Legend <- as.factor(Data_All$Legend)
+Data_All <-
+  transform(Data_All, Legend = factor(Legend, levels = c("Pinus flexilis",
                                                                 "Pseudotsuga menziesii",
                                                                 "Picea engelmannii",
                                                                 "Pinus edulis",
                                                                 "Pinus ponderosa")))
-levels(Phase1_Data_All$Legend)
+levels(Data_All$Legend)
 
 #boxplot
-Phase1_Data_All %>% 
-  group_by(Species, Treatment_temp) %>% 
+Data_All %>% 
+  group_by(Phase, Species, Treatment_temp) %>% 
   arrange(Dead_Week) %>% 
   ggplot(aes(x = Dead_Week,
              y = Legend,
              fill = Treatment_temp)) +
   geom_boxplot() +
+  facet_wrap(~Phase)+
   scale_x_continuous(limits = c(0, 40), breaks = seq(0 , 40, by = 2)) +
   xlab("Weeks to Mortality") +
   annotate("rect",

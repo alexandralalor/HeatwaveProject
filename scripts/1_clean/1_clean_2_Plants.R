@@ -17,10 +17,10 @@ PIFL <- read_csv(file = "data_raw/plant_data_2/PIFL.csv")
 PIEN <- read_csv(file = "data_raw/plant_data_2/PIEN.csv")
 
 #connect plant data
-plants <- rbind(PIED, PIPO, PSME, PIFL, PIEN)
+Plants <- rbind(PIED, PIPO, PSME, PIFL, PIEN)
 
 #check out data and make sure it looks ok
-glimpse(plants)
+glimpse(Plants)
 
 #save as csv
-write.csv(plants, "data_clean/Plants.csv", quote = FALSE, row.names = FALSE)
+write.csv(Plants, "data_clean/Plants.csv", quote = FALSE, row.names = FALSE)

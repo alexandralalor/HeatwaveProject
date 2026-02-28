@@ -15,27 +15,27 @@ library(rootSolve) #find where y crosses 0
 ################################################################################
 
 #read CSVs
-Phase1_Data_Weight <- read_csv("data_QAQC/Phase1_Data_Weight.csv")
-Phase1_InitialData <- read_csv("data_clean/Phase1_InitialData.csv")
+Data_Weight <- read_csv("data_QAQC/Data_Weight.csv")
+InitialData <- read_csv("data_clean/InitialData.csv")
 
 #smooth.spline doesn't allow NA values, so filter them out
-Phase1_Data_Weight <- Phase1_Data_Weight %>% 
+Data_Weight <- Data_Weight %>% 
   filter(!is.na(Weight_g), Treatment_water == "Drought")
-Phase1_InitialData <- Phase1_InitialData %>% 
+InitialData <- InitialData %>% 
   filter(Treatment_water == "Drought")
 
 #make empty files names df
 stress_week <- data.frame(matrix(ncol = 0, nrow = 0))
 #define paths
-SpeciesID <- Phase1_InitialData$SpeciesID
+SpeciesID <- InitialData$SpeciesID
 
 #for loop to compile stress points
 for(i in 1:length(SpeciesID)) {
   ID <- SpeciesID[i]
-  Phase1_Data_Weight_filter <- Phase1_Data_Weight %>% 
+  Data_Weight_filter <- Data_Weight %>% 
     filter(SpeciesID == ID)
-  smooth <- smooth.spline(x = Phase1_Data_Weight_filter$Week,
-                          y = Phase1_Data_Weight_filter$Weight_g)
+  smooth <- smooth.spline(x = Data_Weight_filter$Week,
+                          y = Data_Weight_filter$Weight_g)
   predict_d2 <- predict(smooth, deriv=2)
   stress_week_1 <- as.matrix(uniroot.all(approxfun(predict_d2$x, predict_d2$y),
                                          interval = range(predict_d2$x)))
@@ -51,7 +51,7 @@ stress_week <- stress_week %>%
   filter(!is.na(Stress_Week))
 
 # add meta data
-file_add <- Phase1_InitialData %>%
+file_add <- InitialData %>%
   filter(Treatment_water == "Drought") %>% 
   select(c("Species","SpeciesID"))
 
@@ -66,7 +66,7 @@ write.csv(stress_week, "data_QAQC/stress_week_weight.csv", quote = FALSE, row.na
 
 #read  csv
 stress_week <- read.csv("data_QAQC/stress_week_weight.csv")
-Phase1_Data_Weight <- read_csv("data_QAQC/Phase1_Data_Weight.csv")
+Data_Weight <- read_csv("data_QAQC/Data_Weight.csv")
 
 #exclude false points with low values (early weeks)
 #outlier individuals specified in filters
@@ -144,18 +144,18 @@ stress_week_new <- rbind(stress_week_PIED,
 stress_week_new <- stress_week_new %>% 
   select(c("SpeciesID","Stress_Week"))
 
-#add to Phase1_Data_Weights
-Phase1_Data_Weight <- merge(Phase1_Data_Weight, stress_week_new, by = "SpeciesID", all = T)
+#add to Data_Weights
+Data_Weight <- merge(Data_Weight, stress_week_new, by = "SpeciesID", all = T)
 
 # #reorder and rearrange columns
-# Phase1_Data_Weight <- Phase1_Data_Weight[, c(4,5,6,7,1,2,3,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,30,31,32,33,29)]
-# Phase1_Data_Weight <- Phase1_Data_Weight %>% 
+# Data_Weight <- Data_Weight[, c(4,5,6,7,1,2,3,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,30,31,32,33,29)]
+# Data_Weight <- Data_Weight %>% 
 #   group_by(Species) %>% 
 #   arrange(SpeciesID, Week)
 
 
 #save csv
-write.csv(Phase1_Data_Weight, "data_analysis/Phase1_Data_Weight.csv", quote = FALSE, row.names = FALSE)
+write.csv(Data_Weight, "data_analysis/Data_Weight.csv", quote = FALSE, row.names = FALSE)
 
 
 ################################################################################
@@ -165,7 +165,7 @@ write.csv(Phase1_Data_Weight, "data_analysis/Phase1_Data_Weight.csv", quote = FA
 #   filter(SpeciesID == "PIED06")
 #
 # #Weight over time (averaged)
-# Phase1_Data_Weight %>% 
+# Data_Weight %>% 
 #   filter(Treatment_water == "Drought") %>% 
 #   filter(SpeciesID == "PIED06") %>% 
 #   ggplot(aes(x = Week,
@@ -183,7 +183,7 @@ write.csv(Phase1_Data_Weight, "data_analysis/Phase1_Data_Weight.csv", quote = FA
 #            x = 7, xend = 7,
 #            y = 200, yend = 800,
 #            color = "red",
-#            linetype = "dashed",
+#            linetype = "dashed",s
 #            size = 0.6) +
 #   ylim(200, 950) +
 #   xlim(0,36) +

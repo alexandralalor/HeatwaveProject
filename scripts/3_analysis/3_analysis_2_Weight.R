@@ -10,23 +10,23 @@
 library(tidyverse)
 
 #read csv
-Phase1_Data_Weight <- read_csv("data_analysis/Phase1_Data_Weight.csv")
+Data_Weight <- read_csv("data_analysis/Data_Weight.csv")
 
 ################################################################################
 # Average stress week by species and treatment
 # Remember that watered trees don't have a stress week
 ################################################################################
 
-Phase1_Data_Weight <- Phase1_Data_Weight %>%
-  group_by(Heatwave_graph) %>%
+Data_Weight <- Data_Weight %>%
+  group_by(Phase, Heatwave_graph) %>%
   mutate(Stress_Week_Avg = mean(Stress_Week, na.rm = T))
 
 ################################################################################
 # SD
 ################################################################################
 
-Phase1_Data_Weight <- Phase1_Data_Weight %>% 
-  group_by(Species, Week, Treatment_temp, Treatment_water) %>%
+Data_Weight <- Data_Weight %>% 
+  group_by(Phase, Species, Week, Treatment_temp, Treatment_water) %>%
   mutate(SD_Weight_Total = sd(Weight_Est, na.rm = T),
          SD_Weight_Water = sd(WaterWeight_Calc, na.rm = T))
 
@@ -36,19 +36,19 @@ Phase1_Data_Weight <- Phase1_Data_Weight %>%
 ################################################################################
 
 #samples sizes per week
-summary_1 <- Phase1_Data_Weight %>% 
-  group_by(Species, Treatment_temp, Treatment_water, Week) %>% 
+summary_1 <- Data_Weight %>% 
+  group_by(Phase, Species, Treatment_temp, Treatment_water, Week) %>% 
   summarize(SampleSize_Weekly_Weight = sum(!is.na(Weight_Est)))
 
-Phase1_Data_Weight <- merge(Phase1_Data_Weight, summary_1, all.x = T)
+Data_Weight <- merge(Data_Weight, summary_1, all.x = T)
 
 
 ################################################################################
 # Stress Week to Dead Week
 ################################################################################
 
-summary_2 <- Phase1_Data_Weight %>% 
-  group_by(Species, SpeciesID, Treatment_temp, Treatment_water) %>% 
+summary_2 <- Data_Weight %>% 
+  group_by(Phase, Species, SpeciesID, Treatment_temp, Treatment_water) %>% 
   filter(Dead == "dead") %>% 
   mutate(Dead_Week = min(Week)) %>% 
   summarize(Dead_Week = mean(Dead_Week),
@@ -58,14 +58,14 @@ summary_2 <- Phase1_Data_Weight %>%
 
 #select("Species", "SpeciesID", "Treatment_temp", "Treatment_water", "Dead_Week")
 
-Phase1_Data_Weight <- merge(Phase1_Data_Weight, summary_2, all.x = T)
+Data_Weight <- merge(Data_Weight, summary_2, all.x = T)
 
-Phase1_Data_Weight <- Phase1_Data_Weight %>% 
+Data_Weight <- Data_Weight %>% 
   mutate(Stress_Week_Weight = Stress_Week) %>% 
   select(-c("Stress_Week", "Stress_Week_Avg"))
 
 #save csv
-write.csv(Phase1_Data_Weight, "data_analysis/Phase1_Data_Weight.csv", quote = FALSE, row.names = FALSE)
+write.csv(Data_Weight, "data_analysis/Data_Weight.csv", quote = FALSE, row.names = FALSE)
 
 
 ################################################################################
@@ -73,13 +73,13 @@ write.csv(Phase1_Data_Weight, "data_analysis/Phase1_Data_Weight.csv", quote = FA
 ################################################################################
 
 #filter NAs
-Phase1_Data_Weight_Avg <- Phase1_Data_Weight %>% 
+Data_Weight_Avg <- Data_Weight %>% 
   filter(!is.na(Weight_Est))
 
 #average data 
-Phase1_Data_Weight_Avg <- Phase1_Data_Weight_Avg %>%
+Data_Weight_Avg <- Data_Weight_Avg %>%
   #filter(SpeciesID != "PIFL16") %>%
-  group_by(Species, Treatment_temp, Treatment_water, Week) %>%
+  group_by(Phase, Species, Treatment_temp, Treatment_water, Week) %>%
   summarize(SampleSize_Weekly_Weight = mean(SampleSize_Weekly_Weight),
             Dead_Count = sum(Dead_Count),
             Weight_g = round(mean(Weight_g, na.rm = T), digits = 0),
@@ -91,9 +91,9 @@ Phase1_Data_Weight_Avg <- Phase1_Data_Weight_Avg %>%
             PercentWater = round(mean(PercentWater, na.rm = T), digits = 0),
             SD_Weight_Total = mean(SD_Weight_Total, na.rm = T),
             SD_Weight_Water = mean(SD_Weight_Water, na.rm = T),
-            Stress_Week_Avg_Weight = mean(Stress_Week_Avg_Weight, na.rm = T),
+            #Stress_Week_Avg_Weight = mean(Stress_Week_Avg_Weight, na.rm = T),
             Stress_to_Dead_Weight = mean(Stress_to_Dead_Weight, na.rm = T))
 
 #save csv
-write.csv(Phase1_Data_Weight_Avg, "data_analysis/Phase1_Data_Weight_Avg.csv", quote = FALSE, row.names = FALSE)
+write.csv(Data_Weight_Avg, "data_analysis/Data_Weight_Avg.csv", quote = FALSE, row.names = FALSE)
 
