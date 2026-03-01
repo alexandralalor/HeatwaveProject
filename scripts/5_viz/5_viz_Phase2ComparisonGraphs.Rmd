@@ -1,0 +1,943 @@
+---
+title: "Phase 2 Comparison Graphs"
+output:
+  html_document:
+    theme: readable
+    highlight: 
+    toc: yes
+    toc_depth: 2
+    toc_float:
+      smooth_scroll: yes
+    code_download: true
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
+---
+
+```{r setup, include=FALSE}
+## Markdown Options
+knitr::opts_chunk$set(echo = FALSE, error = FALSE, warning = FALSE, message = FALSE)
+```
+
+```{r}
+#load packages
+library(tidyverse)
+library(ggplot2)
+#library(ggtext) #for italics
+library(RColorBrewer)
+library(survival) # core survival analysis function
+library(survminer) # recommended for visualizing survival curves
+library(ggfortify)
+```
+
+# Load Data  {.hidden}
+
+```{r}
+#read CSVs
+path_file <- "C:/Users/allie/OneDrive/Desktop/R Projects/HeatwaveProject/"
+Data_All <- read_csv(paste0(path_file, "data/data_analysis/Data_All.csv")) %>% 
+  mutate(Phase = as.factor(Phase))
+
+Kestrel_AvgTemp_Sum <- read_csv(paste0(path_file, "data/data_QAQC/Kestrel_AvgTemp_Sum.csv"))
+Kestrel_AvgTemp_Sum_Total <- read_csv(paste0(path_file, "data/data_QAQC/Kestrel_AvgTemp_Sum_Total.csv"))
+```
+
+# Plant Size Graphs
+
+## Height by Basal Diameter
+
+```{r}
+Data_All %>% 
+  group_by(Phase, Species) %>% 
+  ggplot(aes(x = BasalDia_mm,
+             y = Height_mm,
+             color = Phase)) +
+  geom_point(alpha = 0.03) +
+  facet_wrap(~CommonName) +
+  #geom_point(aes(size = Data$Biomass_g)) +
+  xlim(2,11) +
+  ylim(0,500) +
+  xlab("Basal Stem Diameter") +
+  ylab("Height (mm)") +
+  labs(title = "Species Size Distribution") +
+  scale_color_discrete(guide = guide_legend(override.aes = list(alpha = 1, size = 2))) +
+  theme_minimal()
+```
+
+## Height
+
+```{r}
+#size boxplot
+Data_All %>% 
+  group_by(Phase, Species) %>% 
+  ggplot(aes(x = Species,
+             y = Height_mm,
+             color = Phase)) +
+  geom_boxplot() +
+  ylim(0,600) +
+  xlab("Basal Stem Diameter") +
+  ylab("Height (mm)") +
+  labs(title = "Species Size Distribution") +
+  scale_color_discrete(guide = guide_legend(override.aes = list(alpha = 1, size = 2))) +
+  theme_minimal()
+```
+
+## Basal Diameter
+
+```{r}
+#size boxplot
+Data_All %>% 
+  group_by(Phase, Species) %>% 
+  ggplot(aes(x = Species,
+             y = BasalDia_mm,
+             color = Phase)) +
+  geom_boxplot() +
+  #ylim(0,.03) +
+  xlab("Species") +
+  ylab("Basal Diameter (mm)") +
+  labs(title = "Species Size Distribution") +
+  scale_color_discrete(guide = guide_legend(override.aes = list(alpha = 1, size = 2))) +
+  theme_minimal()
+```
+
+## Age
+
+```{r}
+#size boxplot
+Data_All %>% 
+  group_by(Phase, Species) %>% 
+  ggplot(aes(x = Species,
+             y = Whorls,
+             color = Phase)) +
+  geom_boxplot() +
+  ylim(0,8) +
+  xlab("Species") +
+  ylab("Whorls") +
+  labs(title = "Species Size Distribution") +
+  scale_color_discrete(guide = guide_legend(override.aes = list(alpha = 1, size = 2))) +
+  theme_minimal()
+```
+
+# Temperature Graphs
+
+```{r}
+
+
+#add placeholder date to make graph
+Kestrel_AvgTemp_Sum <- Kestrel_AvgTemp_Sum %>% 
+  mutate(Date = as.Date("2021-10-15"))
+Kestrel_AvgTemp_Sum$DateTime <- paste(Kestrel_AvgTemp_Sum$Date, " ", Kestrel_AvgTemp_Sum$Time)
+Kestrel_AvgTemp_Sum$DateTime <- strptime(Kestrel_AvgTemp_Sum$DateTime, format="%Y-%m-%d %H%M")
+
+Kestrel_AvgTemp_Sum$Phase <- as.factor(Kestrel_AvgTemp_Sum$Phase)
+Kestrel_AvgTemp_Sum$Chamber <- as.factor(Kestrel_AvgTemp_Sum$Chamber)
+```
+
+## Temperature Fluctuations
+
+```{r}
+#All chambers
+Kestrel_AvgTemp_Sum_graph <- Kestrel_AvgTemp_Sum %>% 
+  filter(Kestrel == "actual", Heatwave == "no")
+
+Kestrel_AvgTemp_Sum_graph %>% 
+  group_by(Phase, Chamber, Kestrel, Heatwave) %>%
+  ggplot(aes(x = as.POSIXct(DateTime),
+              y = Temperature_avg,
+              color = Chamber)) +
+  geom_point() +
+  facet_wrap(~Phase) +
+  ylim(0, 40) +
+  scale_x_datetime(date_labels = "%H%M") +
+  xlab("Time") +
+  ylab("Temperature (Celsius)") +
+  labs(fill = "", tag = "(a)") +
+  #labs(caption = "\nFIGURE S1a | Average Daily Temperatures Fluctuations of Growth Chambers") +
+  theme_minimal() +
+  theme(text = element_text(family = "serif", size = 10),
+        axis.text = element_text(size = 10),
+        legend.text = element_text(size = 10),
+        strip.text.x = element_text(size = 10),
+        plot.caption = element_text(hjust = 0,
+                                    family = "serif",
+                                    #face = "bold",
+                                    size = 10))
+```
+
+## Mean Temperatures
+
+```{r}
+#filter for actual temps
+Kestrel_AvgTemp_Sum_Total_graph <- Kestrel_AvgTemp_Sum_Total %>% 
+  filter(Kestrel == "actual")
+
+#Graph!
+
+#Bar graph
+Kestrel_AvgTemp_Sum_Total_graph %>% 
+  group_by(Phase, Heatwave) %>%
+  ggplot(aes(x = Chamber,
+             y = Temperature_avg,
+             fill = Heatwave)) +
+  geom_col(position= "dodge") +
+  facet_wrap(~Phase) +
+  ylim(0, 40) +
+  ylab("Temperature (Celsius)") +
+  labs(fill = "", tag = "(b)") +
+  #labs(caption = "\nFIGURE S1b | Average Temperatures of Growth Chambers") +
+  geom_text(label = Kestrel_AvgTemp_Sum_Total_graph$Temperature_avg,
+            vjust = 1.5, position = position_dodge(0.9), color = "white") +
+  #scale_fill_brewer(palette = "Set2") +
+  scale_fill_discrete(direction = -1,
+                      labels = c("Ambient", "Heatwave")) +
+  theme_minimal() +
+  theme(text = element_text(family = "serif", size = 10),
+        axis.text = element_text(size = 10),
+        legend.text = element_text(size = 10),
+        strip.text.x = element_text(size = 10),
+        plot.caption = element_text(hjust = 0,
+                                    family = "serif",
+                                    #face = "bold",
+                                    size = 10))
+```
+
+# Kaplan Meier Survival Curve
+
+```{r}
+#define custom color scale
+myColorsPaired <- c("#6A3D9A", "#CAB2D6", "#FF7F00", "#FDBF6F",  "#33A02C", "#B2DF8A", "#E31A1C", "#FB9A99", "#1F78B4", "#A6CEE3")
+myColorsDark <- c("#6A3D9A", "#FF7F00", "#33A02C", "#E31A1C", "#1F78B4")
+myColorsLight <- c("#CAB2D6", "#FDBF6F", "#B2DF8A", "#FB9A99", "#A6CEE3")
+
+# names(myColorsPaired) <- levels(Data_All_w$Legend)
+# names(myColorsDark) <- levels(Data_All_w$Legend)
+# names(myColorsLight) <- levels(Data_All_w$Legend)
+# custom_colors <- scale_colour_manual(values = myColorsLight)
+# custom_colors_fill <- scale_fill_manual(values = myColorsDark)
+
+Data_All <- Data_All %>%
+  mutate(Legend = Heatwave_graph)
+#Phase 1 - Ambient
+Data_All_amb <- Data_All %>% 
+  filter(Phase == 1,
+         Treatment_temp == "Ambient")
+#Phase 1 - Ambient Heatwave
+Data_All_amb_hw <- Data_All %>% 
+  filter(Phase == 1,
+         Treatment_temp == "Ambient_HW")
+#Phase 1 - Combined graphs
+Data_All_Phase1 <- Data_All %>% 
+  filter(Phase == 1)
+#Phase 2 - Hotter
+Data_All_hot <- Data_All %>% 
+  filter(Phase == 2,
+         Treatment_temp == "Hotter")
+#Phase 2 - Hotter Heatwave
+Data_All_hot_hw <- Data_All %>% 
+  filter(Phase == 2,
+         Treatment_temp == "Hotter_HW")
+#Phase 2 - Combined graphs
+Data_All_Phase2 <- Data_All %>% 
+  filter(Phase == 2)
+```
+
+## Phase 1 - Ambient
+
+### Ambient  {.hidden}
+
+```{r}
+# KM curve - Ambient
+
+#define colors
+#names(myColorsPaired) <- levels(Data_All_amb$Legend)
+names(myColorsDark) <- levels(Data_All_amb$Legend)
+names(myColorsLight) <- levels(Data_All_amb$Legend)
+custom_colors <- scale_colour_manual(values = myColorsLight)
+custom_colors_fill <- scale_fill_manual(values = myColorsDark)
+
+#Kaplan Meier Survival Curve - combined
+km_species_fit <- survfit(Surv(Week, Dead_Count)~Legend, data = Data_All_amb)
+
+autoplot(km_species_fit) +
+  scale_x_continuous(limits = c(0, 36), breaks = seq(0 , 36, by = 2)) +
+  xlab("Weeks") +
+  ylab("Survival Probability") +
+  # geom_text(label = "ponderosa pine",
+  #           x = 12, y = 0.05, color = "black", size = 3, family = "serif") +
+  # geom_text(label = "limber pine",
+  #           x = 33, y = 0.05, color = "black", size = 3, family = "serif") +
+  # geom_text(label = "Pinus ponderosa",
+  #           x = 12, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
+  # geom_text(label = "Pinus flexilis",
+  #           x = 33, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
+  labs(color = "", fill = "", tag = "(a)") +
+  #labs(caption = "\nFIGURE 1 | Kaplan Meier Survival Curve of Juvenile Survival Probability under Drought.\nCurves shows the survival probability of each species under droughted and ambient temperature\ntreatments (n = 20 per species). Weeks show time since the start of the experiment, adjusted to\naccount for staggered start times. Survival probability is estimated from observed data\nusing a Kaplan Meier survival function. Letters in the legend (a, b, c, d) show species\nwhich are significantly different (post-hoc Tukey HSD test, p < 0.05).") +
+  theme_pubclean() +
+  custom_colors + 
+  custom_colors_fill +
+  theme(text = element_text(family = "serif", size = 10),
+        axis.text = element_text(size = 10),
+        legend.text = element_text(size = 7, face = "italic"),
+        strip.text.x = element_text(size = 10),
+        plot.tag = element_text(family = "serif"),
+        plot.caption = element_text(hjust = 0,
+                                    family = "serif",
+                                    #face = "bold",
+                                    size = 10))
+```
+
+### Ambient Heatwave  {.hidden}
+
+```{r}
+# KM curve - Heatwave
+
+#define colors
+#names(myColorsPaired) <- levels(Data_All_hw$Legend)
+names(myColorsDark) <- levels(Data_All_amb_hw$Legend)
+names(myColorsLight) <- levels(Data_All_amb_hw$Legend)
+custom_colors <- scale_colour_manual(values = myColorsLight)
+custom_colors_fill <- scale_fill_manual(values = myColorsDark)
+
+#Kaplan Meier Survival Curve - combined
+km_species_fit <- survfit(Surv(Week, Dead_Count)~Legend, data = Data_All_amb_hw)
+
+autoplot(km_species_fit) +
+  # scale_fill_brewer(palette = "Paired") +
+  # scale_color_brewer(palette = "Paired") +
+  scale_x_continuous(limits = c(0, 36), breaks = seq(0 , 36, by = 2)) +
+  #ylim(0,1) +
+  annotate("rect",
+           xmin = 7, xmax = 8,
+           ymin = 0, ymax = 1,
+           color = "red",
+           fill = "red",
+           linetype = "dashed",
+           size = 0.8,
+           alpha = 0.1) +
+  geom_text(label = "heatwave",
+            x = 5, y = 0.05, color = "red", size = 3.5, family = "serif") +
+  xlab("Weeks") +
+  ylab("Survival Probability") +
+  # geom_text(label = "ponderosa pine",
+  #           x = 13, y = 0.05, color = "black", size = 3, family = "serif") +
+  # geom_text(label = "limber pine",
+  #           x = 33, y = 0.05, color = "black", size = 3, family = "serif") +
+  # geom_text(label = "Pinus ponderosa",
+  #           x = 13, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
+  # geom_text(label = "Pinus flexilis",
+  #           x = 33, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
+  labs(color = "", fill = "", tag = "(b)") +
+  #labs(caption = "\nFIGURE S2a | Kaplan Meier Survival Curve of Juvenile Survival Probability under Drought and Heatwave. \nCurves shows the survival probability of each species under droughted and heatwave temperature \ntreatments (n = 20 per species). Weeks show time since the start of the experiment, adjusted to \naccount for staggered start times. Survival probability is estimated from observed data \nusing a Kaplan Meier survival function. Letters in the legend (a, b, c, d) show species \nwhich are significantly different (post-hoc Tukey HSD test, p < 0.05).") +
+  theme_pubclean() +
+  custom_colors +
+  custom_colors_fill +
+  theme(text = element_text(family = "serif", size = 10),
+        axis.text = element_text(size = 10),
+        legend.text = element_text(size = 7, face = "italic"),
+        strip.text.x = element_text(size = 10),
+        plot.tag = element_text(family = "serif"),
+        plot.caption = element_text(hjust = 0,
+                                    family = "serif",
+                                    #face = "bold",
+                                    size = 10))
+
+```
+
+### Combined
+
+```{r}
+# KM curve - Ambient and Heatwave
+
+#define colors
+names(myColorsPaired) <- levels(Data_All_Phase1$Legend)
+custom_colors <- scale_colour_manual(values = myColorsPaired)
+custom_colors_fill <- scale_fill_manual(values = myColorsPaired)
+
+#Kaplan Meier Survival Curve - separated by treatment
+km_treatment_fit <- survfit(Surv(Week, Dead_Count)~Legend, data=Data_All_Phase1)
+#summary(km_treatment_fit)
+
+
+autoplot(km_treatment_fit) +
+  # scale_fill_brewer(palette = "Paired") +
+  # scale_color_brewer(palette = "Paired") +
+  scale_x_continuous(breaks = seq(0 , 36, by = 2)) +
+  annotate("rect",
+           xmin = 7, xmax = 8,
+           ymin = 0, ymax = 1,
+           color = "red",
+           fill = "red",
+           linetype = "dashed",
+           size = 0.8,
+           alpha = 0.1) +
+  geom_text(label = "heatwave",
+            x = 5, y = 0.05, color = "red", size = 3.5, family = "serif") +
+  xlab("Weeks") +
+  ylab("Survival Probability") +
+  # geom_text(label = "ponderosa pine",
+  #           x = 13, y = 0.05, color = "black", size = 3, family = "serif") +
+  # geom_text(label = "limber pine",
+  #           x = 33, y = 0.05, color = "black", size = 3, family = "serif") +
+  # geom_text(label = "Pinus ponderosa",
+  #           x = 12.8, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
+  # geom_text(label = "Pinus flexilis",
+  #           x = 33, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
+  labs(color = "", fill = "", tag = "(c)") +
+  #labs(caption = "\nFIGURE S2b | Kaplan Meier Survival Curve of Juvenile Survival Probability under Drought. \nCurves shows the survival probability of each species under both ambient and heatwave temperature \ntreatments (n = 20 per species and treatment). Weeks show time since the start of the experiment, \nadjusted to account for staggered start times. Survival probability is estimated from observed data \nusing a Kaplan Meier survival function. Letters in the legend (a, b, c, d) show species \nwhich are significantly different (post-hoc Tukey HSD test, p < 0.05).") +
+  theme_pubclean() +
+  custom_colors +
+  custom_colors_fill +
+  theme(text = element_text(family = "serif", size = 10),
+        axis.text = element_text(size = 10),
+        legend.text = element_text(size = 6, face = "italic"),
+        strip.text.x = element_text(size = 10),
+        plot.tag = element_text(family = "serif"),
+        plot.caption = element_text(hjust = 0,
+                                    family = "serif",
+                                    #face = "bold",
+                                    size = 10))
+```
+
+## Phase 2 - Hotter
+
+### Hotter  {.hidden}
+
+```{r}
+# KM curve - Hotter
+
+#define colors
+#names(myColorsPaired) <- levels(Data_All_amb$Legend)
+names(myColorsDark) <- levels(Data_All_hot$Legend)
+names(myColorsLight) <- levels(Data_All_hot$Legend)
+custom_colors <- scale_colour_manual(values = myColorsLight)
+custom_colors_fill <- scale_fill_manual(values = myColorsDark)
+
+#Kaplan Meier Survival Curve - combined
+km_species_fit <- survfit(Surv(Week, Dead_Count)~Legend, data = Data_All_hot)
+
+autoplot(km_species_fit) +
+  scale_x_continuous(limits = c(0, 36), breaks = seq(0 , 36, by = 2)) +
+  xlab("Weeks") +
+  ylab("Survival Probability") +
+  # geom_text(label = "ponderosa pine",
+  #           x = 12, y = 0.05, color = "black", size = 3, family = "serif") +
+  # geom_text(label = "limber pine",
+  #           x = 33, y = 0.05, color = "black", size = 3, family = "serif") +
+  # geom_text(label = "Pinus ponderosa",
+  #           x = 12, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
+  # geom_text(label = "Pinus flexilis",
+  #           x = 33, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
+  labs(color = "", fill = "", tag = "(a)") +
+  #labs(caption = "\nFIGURE 1 | Kaplan Meier Survival Curve of Juvenile Survival Probability under Drought.\nCurves shows the survival probability of each species under droughted and ambient temperature\ntreatments (n = 20 per species). Weeks show time since the start of the experiment, adjusted to\naccount for staggered start times. Survival probability is estimated from observed data\nusing a Kaplan Meier survival function. Letters in the legend (a, b, c, d) show species\nwhich are significantly different (post-hoc Tukey HSD test, p < 0.05).") +
+  theme_pubclean() +
+  custom_colors + 
+  custom_colors_fill +
+  theme(text = element_text(family = "serif", size = 10),
+        axis.text = element_text(size = 10),
+        legend.text = element_text(size = 7, face = "italic"),
+        strip.text.x = element_text(size = 10),
+        plot.tag = element_text(family = "serif"),
+        plot.caption = element_text(hjust = 0,
+                                    family = "serif",
+                                    #face = "bold",
+                                    size = 10))
+
+```
+
+### Hotter Heatwave  {.hidden}
+
+```{r}
+# KM curve - Heatwave
+
+#define colors
+#names(myColorsPaired) <- levels(Data_All_hw$Legend)
+names(myColorsDark) <- levels(Data_All_hot_hw$Legend)
+names(myColorsLight) <- levels(Data_All_hot_hw$Legend)
+custom_colors <- scale_colour_manual(values = myColorsLight)
+custom_colors_fill <- scale_fill_manual(values = myColorsDark)
+
+#Kaplan Meier Survival Curve - combined
+km_species_fit <- survfit(Surv(Week, Dead_Count)~Legend, data = Data_All_hot_hw)
+
+autoplot(km_species_fit) +
+  # scale_fill_brewer(palette = "Paired") +
+  # scale_color_brewer(palette = "Paired") +
+  scale_x_continuous(limits = c(0, 36), breaks = seq(0 , 36, by = 2)) +
+  #ylim(0,1) +
+  annotate("rect",
+           xmin = 7, xmax = 8,
+           ymin = 0, ymax = 1,
+           color = "red",
+           fill = "red",
+           linetype = "dashed",
+           size = 0.8,
+           alpha = 0.1) +
+  geom_text(label = "heatwave",
+            x = 5, y = 0.05, color = "red", size = 3.5, family = "serif") +
+  xlab("Weeks") +
+  ylab("Survival Probability") +
+  # geom_text(label = "ponderosa pine",
+  #           x = 13, y = 0.05, color = "black", size = 3, family = "serif") +
+  # geom_text(label = "limber pine",
+  #           x = 33, y = 0.05, color = "black", size = 3, family = "serif") +
+  # geom_text(label = "Pinus ponderosa",
+  #           x = 13, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
+  # geom_text(label = "Pinus flexilis",
+  #           x = 33, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
+  labs(color = "", fill = "", tag = "(b)") +
+  #labs(caption = "\nFIGURE S2a | Kaplan Meier Survival Curve of Juvenile Survival Probability under Drought and Heatwave. \nCurves shows the survival probability of each species under droughted and heatwave temperature \ntreatments (n = 20 per species). Weeks show time since the start of the experiment, adjusted to \naccount for staggered start times. Survival probability is estimated from observed data \nusing a Kaplan Meier survival function. Letters in the legend (a, b, c, d) show species \nwhich are significantly different (post-hoc Tukey HSD test, p < 0.05).") +
+  theme_pubclean() +
+  custom_colors +
+  custom_colors_fill +
+  theme(text = element_text(family = "serif", size = 10),
+        axis.text = element_text(size = 10),
+        legend.text = element_text(size = 7, face = "italic"),
+        strip.text.x = element_text(size = 10),
+        plot.tag = element_text(family = "serif"),
+        plot.caption = element_text(hjust = 0,
+                                    family = "serif",
+                                    #face = "bold",
+                                    size = 10))
+```
+
+### Combined
+
+```{r}
+# KM curve - Hotter and Heatwave
+
+#define colors
+names(myColorsPaired) <- levels(Data_All_Phase2$Legend)
+custom_colors <- scale_colour_manual(values = myColorsPaired)
+custom_colors_fill <- scale_fill_manual(values = myColorsPaired)
+
+#Kaplan Meier Survival Curve - separated by treatment
+km_treatment_fit <- survfit(Surv(Week, Dead_Count)~Legend, data=Data_All_Phase2)
+#summary(km_treatment_fit)
+
+
+autoplot(km_treatment_fit) +
+  # scale_fill_brewer(palette = "Paired") +
+  # scale_color_brewer(palette = "Paired") +
+  scale_x_continuous(breaks = seq(0 , 36, by = 2)) +
+  annotate("rect",
+           xmin = 7, xmax = 8,
+           ymin = 0, ymax = 1,
+           color = "red",
+           fill = "red",
+           linetype = "dashed",
+           size = 0.8,
+           alpha = 0.1) +
+  geom_text(label = "heatwave",
+            x = 5, y = 0.05, color = "red", size = 3.5, family = "serif") +
+  xlab("Weeks") +
+  ylab("Survival Probability") +
+  # geom_text(label = "ponderosa pine",
+  #           x = 13, y = 0.05, color = "black", size = 3, family = "serif") +
+  # geom_text(label = "limber pine",
+  #           x = 33, y = 0.05, color = "black", size = 3, family = "serif") +
+  # geom_text(label = "Pinus ponderosa",
+  #           x = 12.8, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
+  # geom_text(label = "Pinus flexilis",
+  #           x = 33, y = 0.05, color = "black", size = 3, family = "serif", fontface = "italic") +
+  labs(color = "", fill = "", tag = "(c)") +
+  #labs(caption = "\nFIGURE S2b | Kaplan Meier Survival Curve of Juvenile Survival Probability under Drought. \nCurves shows the survival probability of each species under both ambient and heatwave temperature \ntreatments (n = 20 per species and treatment). Weeks show time since the start of the experiment, \nadjusted to account for staggered start times. Survival probability is estimated from observed data \nusing a Kaplan Meier survival function. Letters in the legend (a, b, c, d) show species \nwhich are significantly different (post-hoc Tukey HSD test, p < 0.05).") +
+  theme_pubclean() +
+  custom_colors +
+  custom_colors_fill +
+  theme(text = element_text(family = "serif", size = 10),
+        axis.text = element_text(size = 10),
+        legend.text = element_text(size = 6, face = "italic"),
+        strip.text.x = element_text(size = 10),
+        plot.tag = element_text(family = "serif"),
+        plot.caption = element_text(hjust = 0,
+                                    family = "serif",
+                                    #face = "bold",
+                                    size = 10))
+
+```
+
+# Death Date
+
+```{r}
+Data_Avg <- Data_All %>% 
+  group_by(Phase, Species, Treatment_temp, Treatment_water, Week) %>%
+  summarize(Dead_Count = sum(Dead_Count))
+
+Data_Avg <- Data_Avg %>% 
+  mutate(Live_Count = 20 - Dead_Count,
+         Survivorship = ((Live_Count/20)*100))
+
+Data_Avg %>% 
+  filter(Treatment_water == "Drought", !is.na(Dead_Count)) %>% 
+  group_by(Phase, Species, Treatment_temp) %>% 
+  ggplot(aes(x = Week,
+             y = Survivorship,
+             color = Treatment_temp)) +
+  geom_point() +
+  geom_line() +
+  facet_wrap(~Species) +
+  theme_minimal()
+```
+
+```{r}
+#boxplot
+Data_All %>% 
+  group_by(Phase, Species, Treatment_temp) %>% 
+  arrange(Dead_Week) %>% 
+  ggplot(aes(x = Dead_Week,
+             y = Legend,
+             fill = Treatment_temp)) +
+  geom_boxplot() +
+  facet_wrap(~Phase)+
+  scale_x_continuous(limits = c(0, 40), breaks = seq(0 , 40, by = 2)) +
+  xlab("Weeks to Mortality") +
+  annotate("rect",
+           xmin = 7, xmax = 8,
+           ymin = 0, ymax = 10.25,
+           color = "red",
+           linetype = "dashed",
+           size = 0.4,
+           fill = "red",
+           alpha = 0.3) +
+  geom_text(label = "heatwave",
+            x = 7.5, y = 10.5, color = "red", size = 3.5, family = "serif") +
+  labs(fill = "") +
+  theme_pubclean() +
+  theme(text = element_text(family = "serif", size = 10),
+        axis.text = element_text(size = 10),
+        axis.text.y = element_text(face = "italic"),
+        axis.title.y = element_blank(),
+        legend.text = element_text(size = 10),
+        strip.text.x = element_text(size = 10),
+        plot.caption = element_text(hjust = 0,
+                                    family = "serif",
+                                    #face = "bold",
+                                    size = 10))
+```
+
+# Porometer
+
+```{r}
+Data_All_p <- Data_All %>%
+  mutate(Legend = ScientificName)
+Data_All_p$Legend <- as.factor(Data_All_p$Legend)
+Data_All_p <-
+  transform(Data_All_p, Legend = factor(Legend, levels = c("Pinus ponderosa", "Pinus edulis", "Picea engelmannii", "Pseudotsuga menziesii", "Pinus flexilis")))
+levels(Data_All_p$Legend)
+
+label <- data.frame(x = c(6.0, 8.1, 12.5, 11.5, 16.4),
+                    Legend = factor(c("Pinus ponderosa","Pinus edulis", "Picea engelmannii", "Pseudotsuga menziesii", "Pinus flexilis"), 
+                                    levels = c("Pinus ponderosa", "Pinus edulis", "Picea engelmannii", "Pseudotsuga menziesii", "Pinus flexilis")))
+
+
+#define custom color scale
+myColorsPaired <- c("#6A3D9A", "#CAB2D6", "#FF7F00", "#FDBF6F",  "#33A02C", "#B2DF8A", "#E31A1C", "#FB9A99", "#1F78B4", "#A6CEE3")
+myColorsDark <- c("#6A3D9A", "#FF7F00", "#33A02C", "#E31A1C", "#1F78B4")
+myColorsLight <- c("#CAB2D6", "#FDBF6F", "#B2DF8A", "#FB9A99", "#A6CEE3")
+names(myColorsPaired) <- levels(Data_All_p$Legend)
+names(myColorsDark) <- levels(Data_All_p$Legend)
+names(myColorsLight) <- levels(Data_All_p$Legend)
+
+custom_colors <- scale_colour_manual(values = myColorsLight)
+custom_colors_fill <- scale_fill_manual(values = myColorsDark)
+```
+
+## Phase 1 - Ambient
+
+```{r}
+#Graph
+Data_All_p %>% 
+  filter(Phase == 1,
+         Treatment_water == "Drought") %>% 
+  ggplot(aes(x = Week,
+             y = Porometer,
+             color = SpeciesID)) +
+  geom_point() +
+  #geom_line() +
+  geom_segment(data = label,
+               aes(x = x, xend = x,
+                   y = 0, yend = 500),
+               color = "black",
+               linetype = "dashed",
+               size = 0.8) +
+  geom_segment(aes(x = 0, xend = 36,
+                   y = 90, yend = 90),
+               color = "grey",
+               linetype = "solid",
+               size = 0.8) +
+  ylim(0, 500) +
+  scale_x_continuous(breaks = seq(0 , 36, by = 4)) +
+  facet_wrap(~Legend) +
+  xlab("Weeks") +
+  ylab(bquote("Stomatal Conductance  "~(mmol/m^2*s))) +
+  #labs(caption = "\nFIGURE 4 | Stomatal Conductance of Juveniles under Droughted and Ambient Treatments.\nThe black dotted line shows the average time of permanent stomatal closure (n = 10 per species), when \nmeasurements were consistently at or below a minimum value of 90 mmol m-2s-1 (solid gray horizonal line).") +
+  #custom_colors +
+  theme_minimal() +
+  theme(legend.position="none",
+        text = element_text(family = "serif", size = 10),
+        #axis.title.y = element_markdown(),
+        axis.text = element_text(size = 10),
+        legend.text = element_text(size = 10),
+        strip.text.x = element_text(size = 10, face = "italic"),
+        plot.caption = element_text(hjust = 0,
+                                    family = "serif",
+                                    size = 10))
+```
+
+## Phase 2 - Hotter
+
+```{r}
+Data_All_p %>% 
+  filter(Phase == 2,
+         Treatment_water == "Drought") %>% 
+  ggplot(aes(x = Week,
+             y = Porometer,
+             color = SpeciesID)) +
+  geom_point() +
+  #geom_line() +
+  # geom_segment(data = label,
+  #              aes(x = x, xend = x,
+  #                  y = 0, yend = 500),
+  #              color = "black",
+  #              linetype = "dashed",
+  #              size = 0.8) +
+  geom_segment(aes(x = 0, xend = 36,
+                   y = 90, yend = 90),
+               color = "grey",
+               linetype = "solid",
+               size = 0.8) +
+  ylim(0, 500) +
+  scale_x_continuous(breaks = seq(0 , 36, by = 4)) +
+  facet_wrap(~Legend) +
+  xlab("Weeks") +
+  ylab(bquote("Stomatal Conductance  "~(mmol/m^2*s))) +
+  #labs(caption = "\nFIGURE 4 | Stomatal Conductance of Juveniles under Droughted and Ambient Treatments.\nThe black dotted line shows the average time of permanent stomatal closure (n = 10 per species), when \nmeasurements were consistently at or below a minimum value of 90 mmol m-2s-1 (solid gray horizonal line).") +
+  #custom_colors +
+  theme_minimal() +
+  theme(legend.position="none",
+        text = element_text(family = "serif", size = 10),
+        #axis.title.y = element_markdown(),
+        axis.text = element_text(size = 10),
+        legend.text = element_text(size = 10),
+        strip.text.x = element_text(size = 10, face = "italic"),
+        plot.caption = element_text(hjust = 0,
+                                    family = "serif",
+                                    size = 10))
+```
+
+# Weight
+
+```{r}
+Data_All_w <- Data_All %>%
+  mutate(Legend = ScientificName)
+Data_All_w$Legend <- as.factor(Data_All_w$Legend)
+Data_All_w <-
+  transform(Data_All_w, Legend = factor(Legend, levels = c("Pinus ponderosa", "Pinus edulis", "Picea engelmannii", "Pseudotsuga menziesii", "Pinus flexilis")))
+levels(Data_All_w$Legend)
+
+#filter data
+Data_All_w <- Data_All_w %>% 
+  filter(Treatment_water == "Drought",
+         !is.na(WaterWeight_Calc))
+
+#make label for inflection point segment
+Data_All_w %>% 
+  group_by(Legend) %>% 
+  summarize(Stress_Week_Avg = mean(Stress_Week_Avg_Weight))
+
+label <- data.frame(x = c(4.39, 4.32, 7.67, 7.82, 11.48),
+                   Legend = factor(c("Pinus ponderosa","Pinus edulis", "Picea engelmannii", "Pseudotsuga menziesii", "Pinus flexilis"), 
+                                   levels = c("Pinus ponderosa", "Pinus edulis", "Picea engelmannii", "Pseudotsuga menziesii", "Pinus flexilis")))
+
+#define custom color scale
+myColorsPaired <- c("#6A3D9A", "#CAB2D6", "#FF7F00", "#FDBF6F",  "#33A02C", "#B2DF8A", "#E31A1C", "#FB9A99", "#1F78B4", "#A6CEE3")
+myColorsDark <- c("#6A3D9A", "#FF7F00", "#33A02C", "#E31A1C", "#1F78B4")
+myColorsLight <- c("#CAB2D6", "#FDBF6F", "#B2DF8A", "#FB9A99", "#A6CEE3")
+names(myColorsPaired) <- levels(Data_All_w$Legend)
+names(myColorsDark) <- levels(Data_All_w$Legend)
+names(myColorsLight) <- levels(Data_All_w$Legend)
+
+custom_colors <- scale_colour_manual(values = myColorsLight)
+custom_colors_fill <- scale_fill_manual(values = myColorsDark)
+```
+
+## Phase 1 - Ambient
+
+```{r}
+#Graph
+Data_All_w %>% 
+  filter(Phase == 1) %>% 
+  ggplot(aes(x = Week,
+             y = WaterWeight_Calc,
+             color = SpeciesID)) +
+  geom_point() +
+  geom_line() +
+  geom_segment(data = label,
+               aes(x = x, xend = x,
+                   y = 0, yend = 500),
+               color = "black",
+               linetype = "dashed",
+               size = 0.8) +
+  ylim(0, 500) +
+  scale_x_continuous(breaks = seq(0 , 36, by = 4)) +
+  facet_wrap(~Legend) +
+  xlab("Weeks") +
+  ylab("Water Weight (g)") +
+  #labs(caption = "\nFIGURE 3 | Water Weight of Juveniles under Droughted and Ambient Treatments.\nCurves were calculated using individual weight data (n = 20 per species). Black dotted lines show the\naverage inflection point among all curves to show where concavity changes from concave up to concave down,\nreflecting the time when water availability transitioned from a non-limiting to a limiting resource.") +
+  #custom_colors +
+  theme_minimal() +
+  theme(legend.position="none",
+        text = element_text(family = "serif", size = 10),
+        axis.text = element_text(size = 10),
+        legend.text = element_text(size = 10),
+        strip.text.x = element_text(size = 10, face = "italic"),
+        plot.caption = element_text(hjust = 0,
+                                    family = "serif",
+                                    #face = "bold",
+                                    size = 10))
+```
+
+## Phase 2 - Hotter
+
+```{r}
+#Graph
+Data_All_w %>% 
+  filter(Phase == 2) %>% 
+  ggplot(aes(x = Week,
+             y = WaterWeight_Calc,
+             color = SpeciesID)) +
+  geom_point() +
+  geom_line() +
+  ylim(0, 500) +
+  scale_x_continuous(breaks = seq(0 , 36, by = 4)) +
+  facet_wrap(~Legend) +
+  xlab("Weeks") +
+  ylab("Water Weight (g)") +
+  #labs(caption = "\nFIGURE 3 | Water Weight of Juveniles under Droughted and Ambient Treatments.\nCurves were calculated using individual weight data (n = 20 per species). Black dotted lines show the\naverage inflection point among all curves to show where concavity changes from concave up to concave down,\nreflecting the time when water availability transitioned from a non-limiting to a limiting resource.") +
+  #custom_colors +
+  theme_minimal() +
+  theme(legend.position="none",
+        text = element_text(family = "serif", size = 10),
+        axis.text = element_text(size = 10),
+        legend.text = element_text(size = 10),
+        strip.text.x = element_text(size = 10, face = "italic"),
+        plot.caption = element_text(hjust = 0,
+                                    family = "serif",
+                                    #face = "bold",
+                                    size = 10))
+
+```
+
+# Percent Brown
+
+```{r}
+#filter NAs
+Data_All_pb <- Data_All %>% 
+  filter(!is.na(PercentBrown_Est)) %>% 
+  mutate(PercentGreen_Est = 100 - PercentBrown_Est)
+
+#average data 
+Data_All_pb <- Data_All_pb %>%
+  group_by(Phase, ScientificName, Species, Treatment_temp, Treatment_water, Week) %>%
+  summarize(SampleSize_Weekly_PercentBrown = mean(SampleSize_Weekly_PercentBrown),
+            Dead_Count = sum(Dead_Count),
+            PercentBrown = round(mean(PercentBrown, na.rm = T), digits = 0),
+            PercentBrown_Est = round(mean(PercentBrown_Est, na.rm = T), digits = 0),
+            PercentGreen_Est = round(mean(PercentGreen_Est, na.rm = T), digits = 0),
+            SD_PercentBrown = mean(SD_PercentBrown, na.rm = T))
+
+#legend
+Data_All_pb <- Data_All_pb %>%
+  mutate(Legend = ScientificName)
+Data_All_pb$Legend <- as.factor(Data_All_pb$Legend)
+Data_All_pb <-
+  transform(Data_All_pb, Legend = factor(Legend, levels = c("Pinus ponderosa", "Pinus edulis", "Picea engelmannii", "Pseudotsuga menziesii", "Pinus flexilis")))
+levels(Data_All_pb$Legend)
+
+#filter data
+Data_All_pb <- Data_All_pb %>% 
+  filter(Treatment_water == "Drought")
+
+#define custom color scale
+myColorsPaired <- c("#6A3D9A", "#CAB2D6", "#FF7F00", "#FDBF6F",  "#33A02C", "#B2DF8A", "#E31A1C", "#FB9A99", "#1F78B4", "#A6CEE3")
+myColorsDark <- c("#6A3D9A", "#FF7F00", "#33A02C", "#E31A1C", "#1F78B4")
+myColorsLight <- c("#CAB2D6", "#FDBF6F", "#B2DF8A", "#FB9A99", "#A6CEE3")
+names(myColorsPaired) <- levels(Data_All_pb$Legend)
+names(myColorsDark) <- levels(Data_All_pb$Legend)
+names(myColorsLight) <- levels(Data_All_pb$Legend)
+
+custom_colors <- scale_colour_manual(values = myColorsDark)
+custom_colors_fill <- scale_fill_manual(values = myColorsDark)
+```
+
+## Phase 1 - Ambient
+
+```{r}
+#Graph
+Data_All_pb %>% 
+  filter(Phase == 1) %>% 
+  ggplot(aes(x = Week,
+             y = PercentGreen_Est,
+             color = Legend)) +
+  geom_point() +
+  #scale_y_reverse() +
+  geom_line() +
+  geom_errorbar(aes(x = Week,
+                    ymin = (PercentGreen_Est - SD_PercentBrown),
+                    ymax = (PercentGreen_Est + SD_PercentBrown))) +
+  # geom_segment(aes(x = 0, xend = 36,
+  #                  y = 90, yend = 90),
+  #              color = "grey",
+  #              linetype = "solid",
+  #              size = 0.8) +
+  xlim(0, 36) +
+  facet_grid(Legend~.) +
+  xlab("Weeks") +
+  ylab("Percent Green") +
+  labs(caption = "FIGURE 5 | Ocular estimates of percent brown, averaged by each species per week") +
+  custom_colors +
+  theme_minimal() +
+  theme(legend.position="none",
+        text = element_text(family = "serif"),
+        strip.text.y = element_text(angle = 0),
+        plot.caption = element_text(hjust = 0,
+                                    family = "serif",
+                                    #face = "bold",
+                                    size = 10))
+```
+
+## Phase 2 - Hotter
+
+```{r}
+#Graph
+Data_All_pb %>% 
+  filter(Phase == 2) %>% 
+  ggplot(aes(x = Week,
+             y = PercentGreen_Est,
+             color = Legend)) +
+  geom_point() +
+  #scale_y_reverse() +
+  geom_line() +
+  geom_errorbar(aes(x = Week,
+                    ymin = (PercentGreen_Est - SD_PercentBrown),
+                    ymax = (PercentGreen_Est + SD_PercentBrown))) +
+  # geom_segment(aes(x = 0, xend = 36,
+  #                  y = 90, yend = 90),
+  #              color = "grey",
+  #              linetype = "solid",
+  #              size = 0.8) +
+  xlim(0, 36) +
+  facet_grid(Legend~.) +
+  xlab("Weeks") +
+  ylab("Percent Green") +
+  labs(caption = "FIGURE 5 | Ocular estimates of percent brown, averaged by each species per week") +
+  custom_colors +
+  theme_minimal() +
+  theme(legend.position="none",
+        text = element_text(family = "serif"),
+        strip.text.y = element_text(angle = 0),
+        plot.caption = element_text(hjust = 0,
+                                    family = "serif",
+                                    #face = "bold",
+                                    size = 10))
+```
