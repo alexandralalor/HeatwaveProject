@@ -13,8 +13,8 @@ library(ggplot2)
 
 #read_csv
 #Phase1_Data_Photos <- read_csv("data_analysis/Phase1_Data_Photos.csv")
-Phase1_Data_Photos_Avg <- read_csv("data_analysis/Phase1_Data_Photos_Avg.csv")
-Phase1_Data_PercentBrown_Avg  <- read_csv("data_analysis/Phase1_Data_PercentBrown_Avg.csv")
+Phase1_Data_Photos_Avg <- read_csv("data/data_analysis/Phase1_Data_Photos_Avg.csv")
+Phase1_Data_PercentBrown_Avg  <- read_csv("data/data_analysis/Phase1_Data_PercentBrown_Avg.csv")
 
 #condense data to graph
 Phase1_Data_Photos_Avg <- Phase1_Data_Photos_Avg %>% 

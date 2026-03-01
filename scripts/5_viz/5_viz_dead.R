@@ -3,7 +3,7 @@
 #allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-02-01
-#Last updated: 2022-08-27
+#Last updated: 2026-03-01
 
 #load packages
 library(tidyverse)
@@ -16,7 +16,7 @@ library(ggfortify)
 
 
 #read CSVs
-Data_All <- read_csv("data_analysis/Data_All.csv")
+Data_All <- read_csv("data/data_analysis/Data_All.csv")
 
 #add stress adjustments
 Data_All <- Data_All %>% 
@@ -479,10 +479,10 @@ autoplot(km_treatment_fit) +
 
 
 #################################################################################
-heatwave_summary <- read_csv("data_analysis/heatwave_summary.csv")
-heatwave_summary_d <- read_csv("data_analysis/anova_Dead_Week.csv")
-heatwave_summary_w <- read_csv("data_analysis/anova_Dead_Week_Weight.csv")
-heatwave_summary_p <- read_csv("data_analysis/anova_Dead_Week_Porometer.csv")
+heatwave_summary <- read_csv("data/data_analysis/heatwave_summary.csv")
+heatwave_summary_d <- read_csv("data/data_analysis/anova_Dead_Week.csv")
+heatwave_summary_w <- read_csv("data/data_analysis/anova_Dead_Week_Weight.csv")
+heatwave_summary_p <- read_csv("data/data_analysis/anova_Dead_Week_Porometer.csv")
 
 heatwave_summary_CI <- heatwave_summary %>% 
   filter(Treatment_temp == "Ambient") %>% 
@@ -494,7 +494,7 @@ heatwave_summary_d <-
   transform(heatwave_summary_d, Species = factor(Species, levels = c("PIFL", "PIEN", "PSME", "PIED", "PIPO")))
 heatwave_summary_d <- heatwave_summary_d %>% 
   group_by(Species) %>% 
-  summarize(Mean = mean(Ambient, na.rm = T),
+  summarize(Mean = mean(Baseline, na.rm = T),
             CI_lower_mean = Mean - half_width,
             CI_upper_mean = Mean + half_width)
 
@@ -570,7 +570,7 @@ Data_Avg %>%
 
 ###################################################################################
 #read csv
-Data_All <- read_csv("data_analysis/Data_All.csv")
+Data_All <- read_csv("data/data_analysis/Data_All.csv")
 
 #factor levels
 # Data_All <- 
@@ -672,13 +672,13 @@ Data_All %>%
 
 ################################################################################3
 #read csv
-Dead_Week <- read_csv("data_analysis/Dead_Week.csv")
-Dead_Week_Weight <- read_csv("data_analysis/Dead_Week_Weight.csv")
-Dead_Week_Porometer <- read_csv("data_analysis/anova_Dead_Week_Porometer.csv")
+Dead_Week <- read_csv("data/data_analysis/Dead_Week.csv")
+Dead_Week_Weight <- read_csv("data/data_analysis/Dead_Week_Weight.csv")
+Dead_Week_Porometer <- read_csv("data/data_analysis/anova_Dead_Week_Porometer.csv")
 
 #histogram
 Dead_Week %>% 
-  group_by(Species, Treatment_temp) %>% 
+  group_by(Phase,Species, Treatment_temp) %>% 
   ggplot(aes(x = Dead_Week,
              fill = Treatment_temp)) +
   geom_histogram(binwidth = 1) +
@@ -691,7 +691,7 @@ Dead_Week %>%
 
 #boxplot
 Dead_Week %>% 
-  group_by(Species, Treatment_temp) %>% 
+  group_by(Phase,Species, Treatment_temp) %>% 
   arrange(Dead_Week) %>% 
   #filter(Species == "PIFL") %>% 
   ggplot(aes(x = Dead_Week,

@@ -11,9 +11,9 @@ library(RColorBrewer)
 
 #read csvs
 #Data_All <- read_csv("data_QAQC/Data.csv")
-Data_All <- read_csv("data_analysis/Data_All.csv")
-#Data_Porometer  <- read_csv("data_analysis/Data_Porometer.csv")
-#Data_Porometer_Avg  <- read_csv("data_analysis/Data_Porometer_Avg.csv")
+Data_All <- read_csv("data/data_analysis/Data_All.csv")
+#Data_Porometer  <- read_csv("data/data_analysis/Data_Porometer.csv")
+#Data_Porometer_Avg  <- read_csv("data/data_analysis/Data_Porometer_Avg.csv")
 
 Data_All_p <- Data_All %>%
   mutate(Legend = ScientificName)
@@ -86,5 +86,42 @@ Data_All_p %>%
                                     family = "serif",
                                     size = 10))
 
+Data_All_p %>% 
+  filter(Phase == 2,
+         Treatment_water == "Drought") %>% 
+  ggplot(aes(x
+             = Week,
+             y = Porometer,
+             color = SpeciesID)) +
+  geom_point() +
+  geom_line() +
+  # geom_segment(data = label,
+  #              aes(x = x, xend = x,
+  #                  y = 0, yend = 500),
+  #              color = "black",
+  #              linetype = "dashed",
+  #              size = 0.8) +
+  geom_segment(aes(x = 0, xend = 36,
+                   y = 90, yend = 90),
+               color = "grey",
+               linetype = "solid",
+               size = 0.8) +
+  ylim(0, 500) +
+  scale_x_continuous(breaks = seq(0 , 36, by = 4)) +
+  facet_wrap(~Legend) +
+  xlab("Weeks") +
+  ylab(bquote("Stomatal Conductance  "~(mmol/m^2*s))) +
+  #labs(caption = "\nFIGURE 4 | Stomatal Conductance of Juveniles under Droughted and Ambient Treatments.\nThe black dotted line shows the average time of permanent stomatal closure (n = 10 per species), when \nmeasurements were consistently at or below a minimum value of 90 mmol m-2s-1 (solid gray horizonal line).") +
+  #custom_colors +
+  theme_minimal() +
+  theme(legend.position="none",
+        text = element_text(family = "serif", size = 10),
+        #axis.title.y = element_markdown(),
+        axis.text = element_text(size = 10),
+        legend.text = element_text(size = 10),
+        strip.text.x = element_text(size = 10, face = "italic"),
+        plot.caption = element_text(hjust = 0,
+                                    family = "serif",
+                                    size = 10))
 
 

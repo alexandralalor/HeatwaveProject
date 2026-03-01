@@ -10,23 +10,23 @@ library(tidyverse)
 library(scales)
 
 #read CSVs
-Phase1_Data <- read_csv("data_QAQC/Phase1_Data.csv")
+Data <- read_csv("data/data_QAQC/Data.csv")
 
 #check out data
-glimpse(Phase1_Data)
+glimpse(Data)
 
 #convert variables
-Phase1_Data$Phase <- as.factor(Phase1_Data$Phase)
-Phase1_Data$Chamber <- as.factor(Phase1_Data$Chamber)
-Phase1_Data$ScientificName <- as.factor(Phase1_Data$ScientificName)
-Phase1_Data$CommonName <- as.factor(Phase1_Data$CommonName)
-Phase1_Data$Species <- as.factor(Phase1_Data$Species)
-Phase1_Data$Treatment_temp <- as.factor(Phase1_Data$Treatment_temp)
-Phase1_Data$Treatment_water <- as.factor(Phase1_Data$Treatment_water)
-Phase1_Data$PorometerSubset <- as.factor(Phase1_Data$PorometerSubset)
-Phase1_Data$Dead <- as.factor(Phase1_Data$Dead)
-Phase1_Data$Heatwave_graph <- as.factor(Phase1_Data$Heatwave_graph)
-Phase1_Data$Heatwave <- as.factor(Phase1_Data$Heatwave)
+Data$Phase <- as.factor(Data$Phase)
+Data$Chamber <- as.factor(Data$Chamber)
+Data$ScientificName <- as.factor(Data$ScientificName)
+Data$CommonName <- as.factor(Data$CommonName)
+Data$Species <- as.factor(Data$Species)
+Data$Treatment_temp <- as.factor(Data$Treatment_temp)
+Data$Treatment_water <- as.factor(Data$Treatment_water)
+Data$PorometerSubset <- as.factor(Data$PorometerSubset)
+Data$Dead <- as.factor(Data$Dead)
+Data$Heatwave_graph <- as.factor(Data$Heatwave_graph)
+Data$Heatwave <- as.factor(Data$Heatwave)
 
 
 ################################################################################
@@ -34,13 +34,14 @@ Phase1_Data$Heatwave <- as.factor(Phase1_Data$Heatwave)
 ################################################################################
 
 #size scatterplot
-Phase1_Data %>% 
+Data %>% 
   group_by(Species) %>% 
   ggplot(aes(x = BasalDia_mm,
              y = Height_mm,
-             color = CommonName)) +
+             color = Phase)) +
   geom_point(alpha = 0.03) +
-  #geom_point(aes(size = Phase1_Data$Biomass_g)) +
+  facet_wrap(~CommonName) +
+  #geom_point(aes(size = Data$Biomass_g)) +
   xlim(2,11) +
   ylim(0,500) +
   xlab("Basal Stem Diameter") +
@@ -50,65 +51,61 @@ Phase1_Data %>%
   theme_minimal()
 
 #size boxplot
-Phase1_Data %>% 
+Data %>% 
   group_by(Species) %>% 
   ggplot(aes(x = Species,
              y = Height_mm,
-             color = CommonName)) +
+             color = Phase)) +
   geom_point() +
   ylim(0,600) +
   xlab("Basal Stem Diameter") +
   ylab("Height (mm)") +
   labs(title = "Species Size Distribution") +
   scale_color_discrete(guide = guide_legend(override.aes = list(alpha = 1, size = 2))) +
-  theme_minimal() +
-  theme(legend.position = "none")
+  theme_minimal()
 
 
 #size boxplot
-Phase1_Data %>% 
+Data %>% 
   group_by(Species) %>% 
   ggplot(aes(x = Species,
              y = BasalDia_mm,
-             color = CommonName)) +
+             color = Phase)) +
   geom_boxplot() +
   #ylim(0,.03) +
   xlab("Species") +
   ylab("Basal Diameter (mm)") +
   labs(title = "Species Size Distribution") +
   scale_color_discrete(guide = guide_legend(override.aes = list(alpha = 1, size = 2))) +
-  theme_minimal() +
-  theme(legend.position = "none")
+  theme_minimal()
 
 #size boxplot
-Phase1_Data %>% 
+Data %>% 
   group_by(Species) %>% 
   ggplot(aes(x = Species,
              y = Biomass_g,
-             color = CommonName)) +
+             color = Phase)) +
   geom_boxplot() +
   #ylim(0,.03) +
   xlab("Species") +
   ylab("Biomass (g)") +
   labs(title = "Species Size Distribution") +
   scale_color_discrete(guide = guide_legend(override.aes = list(alpha = 1, size = 2))) +
-  theme_minimal() +
-  theme(legend.position = "none")
+  theme_minimal()
 
 #size boxplot
-Phase1_Data %>% 
+Data %>% 
   group_by(Species) %>% 
   ggplot(aes(x = Species,
              y = Whorls,
-             color = CommonName)) +
+             color = Phase)) +
   geom_boxplot() +
   ylim(0,8) +
   xlab("Species") +
   ylab("Whorls") +
   labs(title = "Species Size Distribution") +
   scale_color_discrete(guide = guide_legend(override.aes = list(alpha = 1, size = 2))) +
-  theme_minimal() +
-  theme(legend.position = "none")
+  theme_minimal()
 
 
 ################################################################################
@@ -116,17 +113,17 @@ Phase1_Data %>%
 # basal diameter to area
 # pi*(basaldai/2)^2
 # basal area * height = volume
-Phase1_Data_test <- Phase1_Data %>% 
+Data_test <- Data %>% 
   mutate(Volume = Height_mm * (pi * (BasalDia_mm / 2)^2))
 
 #density boxplot
-Phase1_Data_test %>% 
+Data_test %>% 
   group_by(Species) %>% 
   ggplot(aes(x = Species,
              y = Biomass_g / Volume,
              color = CommonName)) +
   geom_boxplot() +
-  #geom_point(aes(size = Phase1_Data$Biomass_g)) +
+  #geom_point(aes(size = Data$Biomass_g)) +
   #xlim(2,11) +
   #ylim(0,.03) +
   xlab("Species") +
@@ -139,33 +136,33 @@ Phase1_Data_test %>%
 #################################################################################
 # calculations
 
-Phase1_Data %>% 
-  group_by(Species) %>% 
+Data %>% 
+  group_by(Phase, Species) %>% 
   summarize(mean = mean(Height_mm),
             range_min = min(Height_mm),
             range_max = max(Height_mm))
-Phase1_Data %>% 
-  group_by(Species) %>% 
+Data %>% 
+  group_by(Phase, Species) %>% 
   summarize(mean = mean(BasalDia_mm),
             range_min = min(BasalDia_mm),
             range_max = max(BasalDia_mm))
 
-Phase1_Data %>% 
+Data %>% 
   filter(Treatment_water == "Drought") %>% 
-  group_by(Species) %>% 
+  group_by(Phase, Species) %>% 
   summarize(mean = mean(Biomass_g),
             range_min = min(Biomass_g),
             range_max = max(Biomass_g))
 
-Phase1_Data %>% 
+Data %>% 
   filter(Treatment_water == "Drought") %>% 
-  group_by(Species) %>% 
+  group_by(Phase, Species) %>% 
   summarize(mean = mean(Whorls),
             range_min = min(Whorls),
             range_max = max(Whorls))
 
-Phase1_Data %>% 
+Data %>% 
   #filter(Treatment_water == "Drought") %>% 
-  group_by(Species, Treatment_temp, Treatment_water) %>% 
+  group_by(Phase, Species, Treatment_temp, Treatment_water) %>% 
   summarize(N = length(unique(SpeciesID)))
 
