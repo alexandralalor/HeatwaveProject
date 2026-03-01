@@ -3,14 +3,14 @@
 #allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-09-01
-#Last updated: 2022-09-03
+#Last updated: 2026-03-01
 
 
 #load packages
 library(tidyverse)
 
 #read csv
-Data_Weight <- read_csv("data_analysis/Data_Weight.csv")
+Data_Weight <- read_csv("data/data_analysis/Data_Weight.csv")
 
 ################################################################################
 # Average stress week by species and treatment
@@ -61,11 +61,12 @@ summary_2 <- Data_Weight %>%
 Data_Weight <- merge(Data_Weight, summary_2, all.x = T)
 
 Data_Weight <- Data_Weight %>% 
-  mutate(Stress_Week_Weight = Stress_Week) %>% 
+  mutate(Stress_Week_Weight = Stress_Week,
+         Stress_Week_Avg_Weight = Stress_Week_Avg) %>% 
   select(-c("Stress_Week", "Stress_Week_Avg"))
 
 #save csv
-write.csv(Data_Weight, "data_analysis/Data_Weight.csv", quote = FALSE, row.names = FALSE)
+write.csv(Data_Weight, "data/data_analysis/Data_Weight.csv", quote = FALSE, row.names = FALSE)
 
 
 ################################################################################
@@ -91,9 +92,9 @@ Data_Weight_Avg <- Data_Weight_Avg %>%
             PercentWater = round(mean(PercentWater, na.rm = T), digits = 0),
             SD_Weight_Total = mean(SD_Weight_Total, na.rm = T),
             SD_Weight_Water = mean(SD_Weight_Water, na.rm = T),
-            #Stress_Week_Avg_Weight = mean(Stress_Week_Avg_Weight, na.rm = T),
+            Stress_Week_Avg_Weight = mean(Stress_Week_Avg_Weight, na.rm = T),
             Stress_to_Dead_Weight = mean(Stress_to_Dead_Weight, na.rm = T))
 
 #save csv
-write.csv(Data_Weight_Avg, "data_analysis/Data_Weight_Avg.csv", quote = FALSE, row.names = FALSE)
+write.csv(Data_Weight_Avg, "data/data_analysis/Data_Weight_Avg.csv", quote = FALSE, row.names = FALSE)
 

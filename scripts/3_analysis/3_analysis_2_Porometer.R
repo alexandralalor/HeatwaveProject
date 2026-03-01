@@ -3,14 +3,14 @@
 #allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-09-18
-#Last updated: 2022-09-18
+#Last updated: 2026-03-01
 
 
 #load packages
 library(tidyverse)
 
 #read csv
-Data_Porometer <- read_csv("data_analysis/Data_Porometer.csv")
+Data_Porometer <- read_csv("data/data_analysis/Data_Porometer.csv")
 
 ################################################################################
 # Average stress week by species and treatment
@@ -64,7 +64,7 @@ Data_Porometer <- Data_Porometer %>%
 
 
 #save as csv
-write.csv(Data_Porometer, "data_analysis/Data_Porometer.csv", quote = FALSE, row.names = FALSE)
+write.csv(Data_Porometer, "data/data_analysis/Data_Porometer.csv", quote = FALSE, row.names = FALSE)
 
 
 ################################################################################
@@ -91,5 +91,5 @@ Data_Porometer_Avg <- Data_Porometer_Avg %>%
             Stress_to_Dead_Porometer = mean(Stress_to_Dead_Porometer, na.rm = T))
 
 #save as csv
-write.csv(Data_Porometer_Avg, "data_analysis/Data_Porometer_Avg.csv", quote = FALSE, row.names = FALSE)
+write.csv(Data_Porometer_Avg, "data/data_analysis/Data_Porometer_Avg.csv", quote = FALSE, row.names = FALSE)
 

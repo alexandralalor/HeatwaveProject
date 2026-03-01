@@ -3,14 +3,14 @@
 #allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-09-18
-#Last updated: 2022-09-18
+#Last updated: 2026-03-01
 
 
 #load packages
 library(tidyverse)
 
 #read csv
-Data_PercentBrown <- read_csv("data_QAQC/Data_PercentBrown.csv")
+Data_PercentBrown <- read_csv("data/data_QAQC/Data_PercentBrown.csv")
 
 ################################################################################
 # SD
@@ -32,15 +32,15 @@ summary_1 <- Data_PercentBrown %>%
 Data_PercentBrown <- merge(Data_PercentBrown, summary_1, all.x = T)
 
 #reorder columns
-#Data_PercentBrown <- Data_PercentBrown[, c(5,6,7,8,1,9,2,3,10,11,12,13,14,4,26,15,16,17,18,19,20,21,22,23,24,25)]
+Data_PercentBrown <- Data_PercentBrown[, c(1,6,7,8,2,9,3,4,10,11,12,13,14,5,26,15,16,17,18,19,20,21,22,23,24,25)]
 
 #save as csv
-write.csv(Data_PercentBrown, "data_analysis/Data_PercentBrown.csv", quote = FALSE, row.names = FALSE)
+write.csv(Data_PercentBrown, "data/data_analysis/Data_PercentBrown.csv", quote = FALSE, row.names = FALSE)
 
 
 ################################################################################
 #read csv
-Data_PercentBrown <- read_csv("data_analysis/Data_PercentBrown.csv")
+Data_PercentBrown <- read_csv("data/data_analysis/Data_PercentBrown.csv")
 
 
 ################################################################################
@@ -63,5 +63,5 @@ Data_PercentBrown_Avg <- Data_PercentBrown %>%
             SD_PercentBrown = mean(SD_PercentBrown, na.rm = T))
 
 #save as csv
-write.csv(Data_PercentBrown_Avg, "data_analysis/Data_PercentBrown_Avg.csv", quote = FALSE, row.names = FALSE)
+write.csv(Data_PercentBrown_Avg, "data/data_analysis/Data_PercentBrown_Avg.csv", quote = FALSE, row.names = FALSE)
 
