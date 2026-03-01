@@ -3,7 +3,7 @@
 #allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-06-17
-#Last updated: 2022-06-17
+#Last updated: 2026-03-01
 
 #load tidyverse
 library(tidyverse)
@@ -13,8 +13,8 @@ library(tidyverse)
 #Temperatures combined (daily temps), keeping Kestrel number intact for verification
 ################################################################################
 #read in clean csvs
-TempSettings <- read_csv("data_clean/TempSettings.csv")
-Kestrel <- read_csv("data_clean/Kestrel.csv")
+TempSettings <- read_csv("data/data_clean/TempSettings.csv")
+Kestrel <- read_csv("data/data_clean/Kestrel.csv")
 
 #check structure, ensure consistent formats
 #Phase as <fctr>
@@ -37,19 +37,19 @@ Kestrel$Heatwave <- as.factor(Kestrel$Heatwave)
 #average temps
 Kestrel_Chamber1 <- Kestrel %>% 
   filter(Heatwave == "no", Chamber == 1) %>%
-  filter(Date >= as.Date("2021-09-01")) %>% 
+  #filter(Date >= as.Date("2021-09-01")) %>% 
   group_by(Phase, Chamber, Kestrel, Heatwave, Time) %>% 
   summarize(Temperature_avg = mean(Temperature_C))
 
 Kestrel_Chamber2 <- Kestrel %>% 
   filter(Heatwave == "no", Chamber == 2) %>%
-  filter(Date >= as.Date("2021-09-15")) %>% 
+  #filter(Date >= as.Date("2021-09-15")) %>% 
   group_by(Phase, Chamber, Kestrel, Heatwave, Time) %>% 
   summarize(Temperature_avg = mean(Temperature_C))
 
 Kestrel_Chamber3 <- Kestrel %>% 
   filter(Heatwave == "no", Chamber == 3) %>%
-  filter(Date >= as.Date("2021-10-06")) %>% 
+  #filter(Date >= as.Date("2021-10-06")) %>% 
   group_by(Phase, Chamber, Kestrel, Heatwave, Time) %>% 
   summarize(Temperature_avg = mean(Temperature_C))
 
@@ -57,19 +57,19 @@ Kestrel_Chamber3 <- Kestrel %>%
 #average temps - heatwave
 Kestrel_Chamber1_HW <- Kestrel %>% 
   filter(Heatwave == "yes", Chamber == 1) %>%
-  filter(Date >= as.Date("2021-10-07"), Date <= as.Date("2021-10-14")) %>% 
+  #filter(Date >= as.Date("2021-10-07"), Date <= as.Date("2021-10-14")) %>% 
   group_by(Phase, Chamber, Kestrel, Heatwave, Time) %>% 
   summarize(Temperature_avg = mean(Temperature_C))
 
 Kestrel_Chamber2_HW <- Kestrel %>% 
   filter(Heatwave == "yes", Chamber == 2) %>%
-  filter(Date >= as.Date("2021-10-21"), Date <= as.Date("2021-10-28")) %>% 
+  #filter(Date >= as.Date("2021-10-21"), Date <= as.Date("2021-10-28")) %>% 
   group_by(Phase, Chamber, Kestrel, Heatwave, Time) %>% 
   summarize(Temperature_avg = mean(Temperature_C))
 
 Kestrel_Chamber3_HW <- Kestrel %>% 
   filter(Heatwave == "yes", Chamber == 3) %>%
-  filter(Date >= as.Date("2021-11-11"), Date <= as.Date("2021-11-18")) %>% 
+  #filter(Date >= as.Date("2021-11-11"), Date <= as.Date("2021-11-18")) %>% 
   group_by(Phase, Chamber, Kestrel, Heatwave, Time) %>% 
   summarize(Temperature_avg = mean(Temperature_C))
 
@@ -125,7 +125,7 @@ Kestrel_AvgTemp <- rbind(Chamber1_AvgTemp, Chamber2_AvgTemp, Chamber3_AvgTemp)
 
 
 #save csv
-write.csv(Kestrel_AvgTemp, "data_QAQC/Kestrel_AvgTemp.csv", quote=FALSE, row.names = FALSE)
+write.csv(Kestrel_AvgTemp, "data/data_QAQC/Kestrel_AvgTemp.csv", quote=FALSE, row.names = FALSE)
 
 
 
@@ -137,7 +137,7 @@ write.csv(Kestrel_AvgTemp, "data_QAQC/Kestrel_AvgTemp.csv", quote=FALSE, row.nam
 ################################################################################
 
 #read csv
-Kestrel_AvgTemp <- read_csv("data_QAQC/Kestrel_AvgTemp.csv")
+Kestrel_AvgTemp <- read_csv("data/data_QAQC/Kestrel_AvgTemp.csv")
 
 #separate actual data vs calculated data
 Kestrel_AvgTemp_Actual <- Kestrel_AvgTemp %>% 
@@ -167,7 +167,7 @@ Kestrel_AvgTemp_Actual <- Kestrel_AvgTemp_Actual %>%
 Kestrel_AvgTemp_Sum <- rbind(Kestrel_AvgTemp_Actual, Kestrel_AvgTemp_Calculated)
 
 #write csv
-write.csv(Kestrel_AvgTemp_Sum, "data_QAQC/Kestrel_AvgTemp_Sum.csv", quote=FALSE, row.names = FALSE)
+write.csv(Kestrel_AvgTemp_Sum, "data/data_QAQC/Kestrel_AvgTemp_Sum.csv", quote=FALSE, row.names = FALSE)
 
 
 ################################################################################
@@ -176,12 +176,12 @@ write.csv(Kestrel_AvgTemp_Sum, "data_QAQC/Kestrel_AvgTemp_Sum.csv", quote=FALSE,
 ################################################################################
 
 #read csv
-Kestrel_AvgTemp_Sum <- read_csv("data_QAQC/Kestrel_AvgTemp_Sum.csv")
+Kestrel_AvgTemp_Sum <- read_csv("data/data_QAQC/Kestrel_AvgTemp_Sum.csv")
 
 Kestrel_AvgTemp_Sum_Total <- Kestrel_AvgTemp_Sum %>% 
   group_by(Phase, Chamber, Heatwave, Kestrel) %>% 
   summarize(Temperature_avg = round(mean(Temperature_avg), digits = 1))
 
 #write csv
-write.csv(Kestrel_AvgTemp_Sum_Total, "data_QAQC/Kestrel_AvgTemp_Sum_Total.csv", quote=FALSE, row.names = FALSE)
+write.csv(Kestrel_AvgTemp_Sum_Total, "data/data_QAQC/Kestrel_AvgTemp_Sum_Total.csv", quote=FALSE, row.names = FALSE)
 

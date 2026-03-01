@@ -3,14 +3,14 @@
 #allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-07-07
-#Last updated: 2022-07-07
+#Last updated: 2026-03-01
 
 #load tidyverse
 library(tidyverse)
 
 #read CSVs
-Plants <- read_csv("data_clean/Plants.csv")
-InitialData <- read_csv("data_clean/InitialData.csv")
+Plants <- read_csv("data/data_clean/Plants.csv")
+InitialData <- read_csv("data/data_clean/InitialData.csv")
 
 #check structure, ensure consistent formats
 #Date as <date>
@@ -96,4 +96,4 @@ Data <- Data %>%
 ################################################################################
 
 #save as csv
-write.csv(Data, "data_QAQC/Data.csv", quote = FALSE, row.names = FALSE)
+write.csv(Data, "data/data_QAQC/Data.csv", quote = FALSE, row.names = FALSE)

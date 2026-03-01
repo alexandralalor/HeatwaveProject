@@ -3,13 +3,13 @@
 #allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-02-01
-#Last updated: 2022-07-13
+#Last updated: 2026-03-01
 
 #load tidyverse
 library(tidyverse)
 
 #read CSVs
-Data <- read_csv("data_QAQC/Data.csv")
+Data <- read_csv("data/data_QAQC/Data.csv")
 
 #check structure, ensure consistent formats
 glimpse(Data)
@@ -122,4 +122,4 @@ Data_Weight <- Data_Weight %>%
 
 
 #save as csv
-write.csv(Data_Weight, "data_QAQC/Data_Weight.csv", quote = FALSE, row.names = FALSE)
+write.csv(Data_Weight, "data/data_QAQC/Data_Weight.csv", quote = FALSE, row.names = FALSE)
