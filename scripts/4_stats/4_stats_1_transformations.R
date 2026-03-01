@@ -3,7 +3,7 @@
 #allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-09-15
-#Last updated: 2022-10-25
+#Last updated: 2026-03-01
 
 #ultimately none of these transformations worked well, and I stuck with original data
 
@@ -13,7 +13,7 @@ library(MASS) #boxcox
 library(fitdistrplus) #weinbull distribution
 
 #read csv
-heatwave <- read.csv("data_analysis/Dead_Week.csv")
+heatwave <- read.csv("data/data_analysis/Dead_Week.csv")
 
 #for some reason need to make a function to round
 rnd <- function(x) trunc(x+sign(x)*0.5)
@@ -41,41 +41,72 @@ heatwave <- heatwave %>%
 #   group_by(Species, Treatment_temp) %>% 
 #   mutate(Dead_Week = 1/Dead_Week)
 
-
+####PHASE1###
 #PIPO
 heatwave.pipo.amb <- heatwave %>% 
   filter(Species == "PIPO", Treatment_temp == "Ambient")
-heatwave.pipo.hw <- heatwave %>% 
+heatwave.pipo.amb.hw <- heatwave %>% 
   filter(Species == "PIPO", Treatment_temp == "Ambient_HW")
 
 #PIED
 heatwave.pied.amb <- heatwave %>% 
   filter(Species == "PIED", Treatment_temp == "Ambient")
-heatwave.pied.hw <- heatwave %>% 
+heatwave.pied.amb.hw <- heatwave %>% 
   filter(Species == "PIED", Treatment_temp == "Ambient_HW")
 
 #PIFL
 heatwave.pifl.amb <- heatwave %>% 
   filter(Species == "PIFL", Treatment_temp == "Ambient")
-heatwave.pifl.hw <- heatwave %>% 
+heatwave.pifl.amb.hw <- heatwave %>% 
   filter(Species == "PIFL", Treatment_temp == "Ambient_HW")
 
 #PSME
 heatwave.psme.amb <- heatwave %>% 
   filter(Species == "PSME", Treatment_temp == "Ambient")
-heatwave.psme.hw <- heatwave %>% 
+heatwave.psme.amb.hw <- heatwave %>% 
   filter(Species == "PSME", Treatment_temp == "Ambient_HW")
 
 #PIEN
 heatwave.pien.amb <- heatwave %>% 
   filter(Species == "PIEN", Treatment_temp == "Ambient")
-heatwave.pien.hw <- heatwave %>% 
+heatwave.pien.amb.hw <- heatwave %>% 
   filter(Species == "PIEN", Treatment_temp == "Ambient_HW")
+
+####PHASE2###
+#PIPO
+heatwave.pipo.hot <- heatwave %>% 
+  filter(Species == "PIPO", Treatment_temp == "Hotter")
+heatwave.pipo.hot.hw <- heatwave %>% 
+  filter(Species == "PIPO", Treatment_temp == "Hotter_HW")
+
+#PIED
+heatwave.pied.hot <- heatwave %>% 
+  filter(Species == "PIED", Treatment_temp == "Hotter")
+heatwave.pied.hot.hw <- heatwave %>% 
+  filter(Species == "PIED", Treatment_temp == "Hotter_HW")
+
+#PIFL
+heatwave.pifl.hot <- heatwave %>% 
+  filter(Species == "PIFL", Treatment_temp == "Hotter")
+heatwave.pifl.hot.hw <- heatwave %>% 
+  filter(Species == "PIFL", Treatment_temp == "Hotter_HW")
+
+#PSME
+heatwave.psme.hot <- heatwave %>% 
+  filter(Species == "PSME", Treatment_temp == "Hotter")
+heatwave.psme.hot.hw <- heatwave %>% 
+  filter(Species == "PSME", Treatment_temp == "Hotter_HW")
+
+#PIEN
+heatwave.pien.hot <- heatwave %>% 
+  filter(Species == "PIEN", Treatment_temp == "Hotter")
+heatwave.pien.hot.hw <- heatwave %>% 
+  filter(Species == "PIEN", Treatment_temp == "Hotter_HW")
 
 
 fw <- fitdist(heatwave.pipo.amb$Dead_Week, "weibull")
 summary(fw)
-hist(fw$)
+hist(fw$data)
 qqnorm(fw$data)
 ?fitdist
 

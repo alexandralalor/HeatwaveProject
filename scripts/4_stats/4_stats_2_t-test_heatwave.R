@@ -3,70 +3,90 @@
 #allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-09-15
-#Last updated: 2022-10-10
+#Last updated: 2026-03-01
 
 #load packages
 library(tidyverse)
 
 #read csv
-heatwave <- read.csv("data_analysis/Dead_Week.csv")
+heatwave <- read.csv("data/data_analysis/Dead_Week.csv")
+
+
+###########
+# PHASE 1 #
+###########
 
 #PIPO
 amb <- heatwave %>%
   filter(Species == "PIPO", Treatment_temp == "Ambient") %>% 
-  mutate(Ambient = Dead_Week) %>% 
-  select("Ambient")
-hw <- heatwave %>%
+  mutate(Baseline = Dead_Week) %>% 
+  select("Baseline")
+amb.hw <- heatwave %>%
   filter(Species == "PIPO", Treatment_temp == "Ambient_HW") %>% 
   mutate(Heatwave = Dead_Week) %>% 
   select("Heatwave")
-PIPO <- cbind(amb, hw)
+PIPO <- cbind(amb, amb.hw)
+PIPO <- PIPO %>% 
+  mutate(Phase = 1,
+         Species = "PIPO")
 
 #PIED
 amb <- heatwave %>%
   filter(Species == "PIED", Treatment_temp == "Ambient") %>% 
-  mutate(Ambient = Dead_Week) %>% 
-  select("Ambient")
-hw <- heatwave %>%
+  mutate(Baseline = Dead_Week) %>% 
+  select("Baseline")
+amb.hw <- heatwave %>%
   filter(Species == "PIED", Treatment_temp == "Ambient_HW") %>% 
   mutate(Heatwave = Dead_Week) %>% 
   select("Heatwave")
-PIED <- merge(amb, hw, by = 0, all.y = TRUE)
+PIED <- merge(amb, amb.hw, by = 0, all.y = TRUE)
 PIED <- PIED %>% 
-  select("Ambient","Heatwave")
+  select("Baseline","Heatwave")
+PIED <- PIED %>% 
+  mutate(Phase = 1,
+         Species = "PIED")
 
 #PIFL
 amb <- heatwave %>%
   filter(Species == "PIFL", Treatment_temp == "Ambient") %>% 
-  mutate(Ambient = Dead_Week) %>% 
-  select("Ambient")
-hw <- heatwave %>%
+  mutate(Baseline = Dead_Week) %>% 
+  select("Baseline")
+amb.hw <- heatwave %>%
   filter(Species == "PIFL", Treatment_temp == "Ambient_HW") %>% 
   mutate(Heatwave = Dead_Week) %>% 
   select("Heatwave")
-PIFL <- cbind(amb, hw)
+PIFL <- cbind(amb, amb.hw)
+PIFL <- PIFL %>% 
+  mutate(Phase = 1,
+         Species = "PIFL")
 
 #PSME
 amb <- heatwave %>%
   filter(Species == "PSME", Treatment_temp == "Ambient") %>% 
-  mutate(Ambient = Dead_Week) %>% 
-  select("Ambient")
-hw <- heatwave %>%
+  mutate(Baseline = Dead_Week) %>% 
+  select("Baseline")
+amb.hw <- heatwave %>%
   filter(Species == "PSME", Treatment_temp == "Ambient_HW") %>% 
   mutate(Heatwave = Dead_Week) %>% 
   select("Heatwave")
-PSME <- cbind(amb, hw)
+PSME <- cbind(amb, amb.hw)
+PSME <- PSME %>% 
+  mutate(Phase = 1,
+         Species = "PSME")
 
 #PIEN
 amb <- heatwave %>%
   filter(Species == "PIEN", Treatment_temp == "Ambient") %>% 
-  mutate(Ambient = Dead_Week) %>% 
-  select("Ambient")
-hw <- heatwave %>%
+  mutate(Baseline = Dead_Week) %>% 
+  select("Baseline")
+amb.hw <- heatwave %>%
   filter(Species == "PIEN", Treatment_temp == "Ambient_HW") %>% 
   mutate(Heatwave = Dead_Week) %>% 
   select("Heatwave")
-PIEN <- cbind(amb, hw)
+PIEN <- cbind(amb, amb.hw)
+PIEN <- PIEN %>% 
+  mutate(Phase = 1,
+         Species = "PIEN")
 
 ################################################################################
 
@@ -75,7 +95,7 @@ PIEN <- cbind(amb, hw)
 
 #PIPO
 PIPO.t <- t.test(x = PIPO$Heatwave,
-                 y = PIPO$Ambient,
+                 y = PIPO$Baseline,
                  alternative = "less",
                  mu = 0,
                  var.equal = TRUE, 
@@ -83,7 +103,7 @@ PIPO.t <- t.test(x = PIPO$Heatwave,
 PIPO.t
 #PIED
 PIED.t <- t.test(x = PIED$Heatwave,
-                 y = PIED$Ambient,
+                 y = PIED$Baseline,
                  alternative = "less",
                  mu = 0,
                  var.equal = TRUE, 
@@ -91,7 +111,7 @@ PIED.t <- t.test(x = PIED$Heatwave,
 PIED.t
 #PIFL
 PIFL.t <- t.test(x = PIFL$Heatwave,
-                 y = PIFL$Ambient,
+                 y = PIFL$Baseline,
                  alternative = "less",
                  mu = 0,
                  var.equal = TRUE, 
@@ -99,7 +119,7 @@ PIFL.t <- t.test(x = PIFL$Heatwave,
 PIFL.t
 #PSME
 PSME.t <- t.test(x = PSME$Heatwave,
-                 y = PSME$Ambient,
+                 y = PSME$Baseline,
                  alternative = "less",
                  mu = 0,
                  var.equal = TRUE, 
@@ -107,7 +127,131 @@ PSME.t <- t.test(x = PSME$Heatwave,
 PSME.t
 #PIEN
 PIEN.t <- t.test(x = PIEN$Heatwave,
-                 y = PIEN$Ambient,
+                 y = PIEN$Baseline,
+                 alternative = "less",
+                 mu = 0,
+                 var.equal = TRUE, 
+                 conf.level = 0.95)
+PIEN.t
+
+
+###########
+# PHASE 2 #
+###########
+
+#PIPO
+hot <- heatwave %>%
+  filter(Species == "PIPO", Treatment_temp == "Hotter") %>% 
+  mutate(Baseline = Dead_Week) %>% 
+  select("Baseline")
+hot.hw <- heatwave %>%
+  filter(Species == "PIPO", Treatment_temp == "Hotter_HW") %>% 
+  mutate(Heatwave = Dead_Week) %>% 
+  select("Heatwave")
+PIPO <- cbind(hot, hot.hw)
+PIPO <- PIPO %>% 
+  mutate(Phase = 2,
+         Species = "PIPO")
+
+#PIED
+hot <- heatwave %>%
+  filter(Species == "PIED", Treatment_temp == "Hotter") %>% 
+  mutate(Baseline = Dead_Week) %>% 
+  select("Baseline")
+hot.hw <- heatwave %>%
+  filter(Species == "PIED", Treatment_temp == "Hotter_HW") %>% 
+  mutate(Heatwave = Dead_Week) %>% 
+  select("Heatwave")
+PIED <- merge(hot, hot.hw, by = 0, all.y = TRUE)
+PIED <- PIED %>% 
+  select("Baseline","Heatwave")
+PIED <- PIED %>% 
+  mutate(Phase = 2,
+         Species = "PIED")
+
+#PIFL
+hot <- heatwave %>%
+  filter(Species == "PIFL", Treatment_temp == "Hotter") %>% 
+  mutate(Baseline = Dead_Week) %>% 
+  select("Baseline")
+hot.hw <- heatwave %>%
+  filter(Species == "PIFL", Treatment_temp == "Hotter_HW") %>% 
+  mutate(Heatwave = Dead_Week) %>% 
+  select("Heatwave")
+PIFL <- cbind(hot, hot.hw)
+PIFL <- PIFL %>% 
+  mutate(Phase = 2,
+         Species = "PIFL")
+
+#PSME
+hot <- heatwave %>%
+  filter(Species == "PSME", Treatment_temp == "Hotter") %>% 
+  mutate(Baseline = Dead_Week) %>% 
+  select("Baseline")
+hot.hw <- heatwave %>%
+  filter(Species == "PSME", Treatment_temp == "Hotter_HW") %>% 
+  mutate(Heatwave = Dead_Week) %>% 
+  select("Heatwave")
+PSME <- cbind(hot, hot.hw)
+PSME <- PSME %>% 
+  mutate(Phase = 2,
+         Species = "PSME")
+
+#PIEN
+hot <- heatwave %>%
+  filter(Species == "PIEN", Treatment_temp == "Hotter") %>% 
+  mutate(Baseline = Dead_Week) %>% 
+  select("Baseline")
+hot.hw <- heatwave %>%
+  filter(Species == "PIEN", Treatment_temp == "Hotter_HW") %>% 
+  mutate(Heatwave = Dead_Week) %>% 
+  select("Heatwave")
+PIEN <- cbind(hot, hot.hw)
+PIEN <- PIEN %>% 
+  mutate(Phase = 2,
+         Species = "PIEN")
+
+
+################################################################################
+
+# t-tests:
+# Two-sample t-test, for differences in mean
+
+#PIPO
+PIPO.t <- t.test(x = PIPO$Heatwave,
+                 y = PIPO$Baseline,
+                 alternative = "less",
+                 mu = 0,
+                 var.equal = TRUE, 
+                 conf.level = 0.95)
+PIPO.t
+#PIED
+PIED.t <- t.test(x = PIED$Heatwave,
+                 y = PIED$Baseline,
+                 alternative = "less",
+                 mu = 0,
+                 var.equal = TRUE, 
+                 conf.level = 0.95)
+PIED.t
+#PIFL
+PIFL.t <- t.test(x = PIFL$Heatwave,
+                 y = PIFL$Baseline,
+                 alternative = "less",
+                 mu = 0,
+                 var.equal = TRUE, 
+                 conf.level = 0.95)
+PIFL.t
+#PSME
+PSME.t <- t.test(x = PSME$Heatwave,
+                 y = PSME$Baseline,
+                 alternative = "less",
+                 mu = 0,
+                 var.equal = TRUE, 
+                 conf.level = 0.95)
+PSME.t
+#PIEN
+PIEN.t <- t.test(x = PIEN$Heatwave,
+                 y = PIEN$Baseline,
                  alternative = "less",
                  mu = 0,
                  var.equal = TRUE, 

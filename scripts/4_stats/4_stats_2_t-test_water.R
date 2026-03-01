@@ -9,12 +9,12 @@
 library(tidyverse)
 
 #read csvs
-Phase1_Data_All <- read_csv("data_analysis/Phase1_Data_All.csv")
-Phase1_Data_All_Avg <- read_csv("data_analysis/Phase1_Data_All_Avg.csv")
+Data_All <- read_csv("data/data_analysis/Data_All.csv")
+Data_All_Avg <- read_csv("data/data_analysis/Data_All_Avg.csv")
 
 #dead count
-drought <- Phase1_Data_All %>% 
-  group_by(Species, Treatment_water, SpeciesID) %>% 
+drought <- Data_All %>% 
+  group_by(Phase, Species, Treatment_water, SpeciesID) %>% 
   summarize(Dead_Count = max(Dead_Count, na.rm = T))
 
 #save csv
