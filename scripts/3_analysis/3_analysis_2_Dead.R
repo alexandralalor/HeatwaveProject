@@ -3,13 +3,13 @@
 #allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-08-27
-#Last updated: 2022-08-27
+#Last updated: 2026-03-01
 
 #load packages
 library(tidyverse)
 
 #read CSVs
-Data <- read_csv("data_QAQC/Data.csv")
+Data <- read_csv("data/data_QAQC/Data.csv")
 
 ################################################################################
 # add in samples size
@@ -57,7 +57,7 @@ Data <- merge(Data, summary_4, all.x = T)
 
 
 #reorder and rearrange columns
-#Data <- Data[, c(7,8,9,10,1,4,2,3,6,22,23,24,11,12,13,14,5,15,16,17,18,25,19,20,21)]
+Data <- Data[, c(1,8,9,10,2,5,3,4,7,22,23,24,11,12,13,14,6,15,16,17,18,25,19,20,21)]
 Data <- Data %>% 
   group_by(Phase, Species) %>% 
   arrange(SpeciesID, Week)
@@ -65,5 +65,5 @@ Data <- Data %>%
 ################################################################################
 
 #save csv
-write.csv(Data, "data_analysis/Data.csv", quote = FALSE, row.names = FALSE)
+write.csv(Data, "data/data_analysis/Data.csv", quote = FALSE, row.names = FALSE)
 

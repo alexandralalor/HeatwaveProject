@@ -4,13 +4,13 @@
 #allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-09-03
-#Last updated: 2022-09-03
+#Last updated: 2026-03-01
 
 #load packages
 library(tidyverse)
 
 #read CSVs
-Data_Porometer <- read_csv("data_QAQC/Data_Porometer.csv")
+Data_Porometer <- read_csv("data/data_QAQC/Data_Porometer.csv")
 
 #rearrange columns
 #Data_Porometer <- Data_Porometer[ ,c(5,6,14,1,2,3,4,7,8,9,10,11,12,13,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31)]
@@ -42,7 +42,7 @@ Data_Porometer$Heatwave <- as.factor(Data_Porometer$Heatwave)
 
 
 ################################################################################
-# Stress Weeks
+# Stress Weeks - specific to Phase 1 but could still be useful?
 ################################################################################
 
 #new df
@@ -66,7 +66,7 @@ Data_Porometer_test_add_2 <- Data_Porometer_test %>%
   summarize(Stress_Week_yes = min(Week))
 
 Data_Porometer_test_add_3 <- Data_Porometer_test %>% 
-  filter(Stress_Level == "maybe", Week != 20, Week != 21) %>% 
+  filter(Stress_Level == "maybe") %>% 
   group_by(Phase,SpeciesID) %>% 
   summarize(Stress_Week_maybe = max(Week))
 
@@ -128,7 +128,7 @@ Data_Porometer_1 <- merge(Data_Porometer, Data_Porometer_add, all = T)
 
 
 #reorder and rearrange columns
-#Data_Porometer_1 <- Data_Porometer_1[, c(3,4,5,6,7,1,8,9,10,11,12,13,14,2,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33)]
+Data_Porometer_1 <- Data_Porometer_1[, c(1,4,5,6,7,2,8,9,10,11,12,13,14,3,15,16,17,18,19,20,21,22,23,24)]
 Data_Porometer <- Data_Porometer_1 %>% 
   group_by(Phase,Species) %>% 
   arrange(Phase,SpeciesID, Week)
@@ -136,7 +136,7 @@ Data_Porometer <- Data_Porometer_1 %>%
 
 
 #save as csv
-write.csv(Data_Porometer, "data_analysis/Data_Porometer.csv", quote = FALSE, row.names = FALSE)
+write.csv(Data_Porometer, "data/data_analysis/Data_Porometer.csv", quote = FALSE, row.names = FALSE)
 
 
 

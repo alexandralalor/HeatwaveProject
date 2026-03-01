@@ -3,7 +3,7 @@
 #allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-08-27
-#Last updated: 2022-09-18
+#Last updated: 2026-03-01
 
 #load packages
 library(tidyverse)
@@ -15,8 +15,8 @@ library(rootSolve) #find where y crosses 0
 ################################################################################
 
 #read CSVs
-Data_Weight <- read_csv("data_QAQC/Data_Weight.csv")
-InitialData <- read_csv("data_clean/InitialData.csv")
+Data_Weight <- read_csv("data/data_QAQC/Data_Weight.csv")
+InitialData <- read_csv("data/data_clean/InitialData.csv")
 
 #smooth.spline doesn't allow NA values, so filter them out
 Data_Weight <- Data_Weight %>% 
@@ -53,11 +53,11 @@ stress_week <- stress_week %>%
 # add meta data
 file_add <- InitialData %>%
   filter(Treatment_water == "Drought") %>% 
-  select(c("Species","SpeciesID"))
+  select(c("Phase","Species","SpeciesID"))
 
 stress_week <- merge(stress_week, file_add, by = "SpeciesID")
 
-write.csv(stress_week, "data_QAQC/stress_week_weight.csv", quote = FALSE, row.names = FALSE)
+write.csv(stress_week, "data/data_QAQC/stress_week_weight.csv", quote = FALSE, row.names = FALSE)
 
 
 ################################################################################
@@ -65,39 +65,39 @@ write.csv(stress_week, "data_QAQC/stress_week_weight.csv", quote = FALSE, row.na
 ################################################################################
 
 #read  csv
-stress_week <- read.csv("data_QAQC/stress_week_weight.csv")
-Data_Weight <- read_csv("data_QAQC/Data_Weight.csv")
+stress_week <- read.csv("data/data_QAQC/stress_week_weight.csv")
+Data_Weight <- read_csv("data/data_QAQC/Data_Weight.csv")
 
 #exclude false points with low values (early weeks)
 #outlier individuals specified in filters
 
 #PIED
-stress_week_PIED <- stress_week %>% 
-  filter(Species == "PIED", ifelse(SpeciesID == "PIED41", Stress_Week > 7, 
+stress_week_PIED <- stress_week %>%
+  filter(Species == "PIED", ifelse(SpeciesID == "PIED41", Stress_Week > 7,
                                    Stress_Week > 2.4))
 #PIPO
-stress_week_PIPO <- stress_week %>% 
+stress_week_PIPO <- stress_week %>%
   filter(Species == "PIPO", Stress_Week > 3.23)
 #PIFL
-stress_week_PIFL <- stress_week %>% 
+stress_week_PIFL <- stress_week %>%
   filter(Species == "PIFL", ifelse(SpeciesID == "PIFL08" | SpeciesID == "PIFL11" |
                                      SpeciesID == "PIFL14" | SpeciesID == "PIFL15" |
                                      SpeciesID == "PIFL17" | SpeciesID == "PIFL18" |
                                      SpeciesID == "PIFL21" | SpeciesID == "PIFL22" |
                                      SpeciesID == "PIFL23", Stress_Week > 7,
-                                   ifelse(SpeciesID == "PIFL25", Stress_Week > 8, 
-                                          ifelse(SpeciesID == "PIFL39", Stress_Week > 15, 
+                                   ifelse(SpeciesID == "PIFL25", Stress_Week > 8,
+                                          ifelse(SpeciesID == "PIFL39", Stress_Week > 15,
                                                  Stress_Week > 9.87))))
 #PSME
-stress_week_PSME <- stress_week %>% 
+stress_week_PSME <- stress_week %>%
   filter(Species == "PSME", ifelse(SpeciesID == "PSME07" | SpeciesID == "PSME13" |
                                      SpeciesID == "PSME15" | SpeciesID == "PSME18" |
                                      SpeciesID == "PSME19" | SpeciesID == "PSME22" |
-                                     SpeciesID == "PSME32" | SpeciesID == "PSME45" | 
-                                     SpeciesID == "PSME49", Stress_Week > 5, 
+                                     SpeciesID == "PSME32" | SpeciesID == "PSME45" |
+                                     SpeciesID == "PSME49", Stress_Week > 5,
                                    Stress_Week > 7))
 #PIEN
-stress_week_PIEN <- stress_week %>% 
+stress_week_PIEN <- stress_week %>%
   filter(Species == "PIEN", ifelse(SpeciesID == "PIEN39", Stress_Week > 8,
                                    Stress_Week > 7))
 
@@ -106,31 +106,31 @@ stress_week_PIEN <- stress_week %>%
 
 #PIED
 stress_week_PIED <- stress_week_PIED %>% 
-  group_by(SpeciesID) %>% 
+  group_by(Phase,SpeciesID) %>% 
   mutate(min = min(Stress_Week)) %>% 
   filter(Stress_Week == min) %>% 
   select(-min)
 #PIPO
 stress_week_PIPO <- stress_week_PIPO %>% 
-  group_by(SpeciesID) %>% 
+  group_by(Phase,SpeciesID) %>% 
   mutate(min = min(Stress_Week)) %>% 
   filter(Stress_Week == min) %>% 
   select(-min)
 #PIFL
 stress_week_PIFL <- stress_week_PIFL %>% 
-  group_by(SpeciesID) %>% 
+  group_by(Phase,SpeciesID) %>% 
   mutate(min = min(Stress_Week)) %>% 
   filter(Stress_Week == min) %>% 
   select(-min)
 #PSME
 stress_week_PSME <- stress_week_PSME %>% 
-  group_by(SpeciesID) %>% 
+  group_by(Phase,SpeciesID) %>% 
   mutate(min = min(Stress_Week)) %>% 
   filter(Stress_Week == min) %>% 
   select(-min)
 #PIEN
 stress_week_PIEN <- stress_week_PIEN %>% 
-  group_by(SpeciesID) %>% 
+  group_by(Phase,SpeciesID) %>% 
   mutate(min = min(Stress_Week)) %>% 
   filter(Stress_Week == min) %>% 
   select(-min)
@@ -142,20 +142,20 @@ stress_week_new <- rbind(stress_week_PIED,
                          stress_week_PSME,
                          stress_week_PIEN)
 stress_week_new <- stress_week_new %>% 
-  select(c("SpeciesID","Stress_Week"))
+  select(c("Phase","SpeciesID","Stress_Week"))
 
 #add to Data_Weights
-Data_Weight <- merge(Data_Weight, stress_week_new, by = "SpeciesID", all = T)
+Data_Weight <- merge(Data_Weight, stress_week_new, by = c("Phase","SpeciesID"), all = T)
 
-# #reorder and rearrange columns
-# Data_Weight <- Data_Weight[, c(4,5,6,7,1,2,3,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,30,31,32,33,29)]
-# Data_Weight <- Data_Weight %>% 
-#   group_by(Species) %>% 
-#   arrange(SpeciesID, Week)
+#reorder and rearrange columns
+Data_Weight <- Data_Weight[, c(1,3,4,5,6,2,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28)]
+Data_Weight <- Data_Weight %>%
+  group_by(Phase,Species) %>%
+  arrange(SpeciesID, Week)
 
 
 #save csv
-write.csv(Data_Weight, "data_analysis/Data_Weight.csv", quote = FALSE, row.names = FALSE)
+write.csv(Data_Weight, "data/data_analysis/Data_Weight.csv", quote = FALSE, row.names = FALSE)
 
 
 ################################################################################
