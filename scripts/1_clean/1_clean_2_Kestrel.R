@@ -3,33 +3,30 @@
 #allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-02-01
-#Last updated: 2026-02-28
+#Last updated: 2026-03-01
 
 #load tidyverse
 library(tidyverse)
 
 #read in csv
-Phase1_Chamber1_Kestrel1 <- read_csv("data_raw/kestrel/Phase1_Chamber1_Kestrel1.csv")
-Phase1_Chamber1_Kestrel2 <- read_csv("data_raw/kestrel/Phase1_Chamber1_Kestrel2.csv")
-Phase1_Chamber2_Kestrel1 <- read_csv("data_raw/kestrel/Phase1_Chamber2_Kestrel1.csv")
-Phase1_Chamber2_Kestrel2 <- read_csv("data_raw/kestrel/Phase1_Chamber2_Kestrel2.csv")
-Phase1_Chamber3_Kestrel1 <- read_csv("data_raw/kestrel/Phase1_Chamber3_Kestrel1.csv")
-Phase1_Chamber3_Kestrel2 <- read_csv("data_raw/kestrel/Phase1_Chamber3_Kestrel2.csv")
-Phase1_Heatwave_Kestrel1 <- read_csv("data_raw/kestrel/Phase1_Heatwave_Kestrel1.csv")
-Phase1_Heatwave_Kestrel2 <- read_csv("data_raw/kestrel/Phase1_Heatwave_Kestrel2.csv")
+Phase1_Chamber1_Kestrel1 <- read_csv("data/data_raw/kestrel/Phase1_Chamber1_Kestrel1.csv")
+Phase1_Chamber1_Kestrel2 <- read_csv("data/data_raw/kestrel/Phase1_Chamber1_Kestrel2.csv")
+Phase1_Chamber2_Kestrel1 <- read_csv("data/data_raw/kestrel/Phase1_Chamber2_Kestrel1.csv")
+Phase1_Chamber2_Kestrel2 <- read_csv("data/data_raw/kestrel/Phase1_Chamber2_Kestrel2.csv")
+Phase1_Chamber3_Kestrel1 <- read_csv("data/data_raw/kestrel/Phase1_Chamber3_Kestrel1.csv")
+Phase1_Chamber3_Kestrel2 <- read_csv("data/data_raw/kestrel/Phase1_Chamber3_Kestrel2.csv")
+Phase1_Heatwave_Kestrel1 <- read_csv("data/data_raw/kestrel/Phase1_Heatwave_Kestrel1.csv")
+Phase1_Heatwave_Kestrel2 <- read_csv("data/data_raw/kestrel/Phase1_Heatwave_Kestrel2.csv")
 
-Phase1_Kestrel_Meta <- read_csv("data_raw/kestrel/Phase1_Kestrel_Meta.csv")
+Phase2_Chamber1_Kestrel1 <- read_csv("data/data_raw/kestrel/Phase2_Chamber1_Kestrel1.csv")
+Phase2_Chamber1_Kestrel2 <- read_csv("data/data_raw/kestrel/Phase2_Chamber1_Kestrel2.csv")
+Phase2_Chamber2_Kestrel1 <- read_csv("data/data_raw/kestrel/Phase2_Chamber2_Kestrel1.csv")
+Phase2_Chamber2_Kestrel2 <- read_csv("data/data_raw/kestrel/Phase2_Chamber2_Kestrel2.csv")
+Phase2_Chamber3_Kestrel1 <- read_csv("data/data_raw/kestrel/Phase2_Chamber3_Kestrel1.csv")
+Phase2_Chamber3_Kestrel2 <- read_csv("data/data_raw/kestrel/Phase2_Chamber3_Kestrel2.csv")
+Phase2_Heatwave_Kestrel1 <- read_csv("data/data_raw/kestrel/Phase2_Heatwave_Kestrel1.csv")
+Phase2_Heatwave_Kestrel2 <- read_csv("data/data_raw/kestrel/Phase2_Heatwave_Kestrel2.csv")
 
-Phase2_Chamber1_Kestrel1 <- read_csv("data_raw/kestrel/Phase2_Chamber1_Kestrel1.csv")
-Phase2_Chamber1_Kestrel2 <- read_csv("data_raw/kestrel/Phase2_Chamber1_Kestrel2.csv")
-Phase2_Chamber2_Kestrel1 <- read_csv("data_raw/kestrel/Phase2_Chamber2_Kestrel1.csv")
-Phase2_Chamber2_Kestrel2 <- read_csv("data_raw/kestrel/Phase2_Chamber2_Kestrel2.csv")
-Phase2_Chamber3_Kestrel1 <- read_csv("data_raw/kestrel/Phase2_Chamber3_Kestrel1.csv")
-Phase2_Chamber3_Kestrel2 <- read_csv("data_raw/kestrel/Phase2_Chamber3_Kestrel2.csv")
-Phase2_Heatwave_Kestrel1 <- read_csv("data_raw/kestrel/Phase2_Heatwave_Kestrel1.csv")
-Phase2_Heatwave_Kestrel2 <- read_csv("data_raw/kestrel/Phase2_Heatwave_Kestrel2.csv")
-
-Phase2_Kestrel_Meta <- read_csv("data_raw/kestrel/Phase2_Kestrel_Meta.csv")
 
 
 #Combine df
@@ -48,24 +45,16 @@ Phase2_Kestrel <- rbind(Phase2_Chamber1_Kestrel, Phase2_Chamber2_Kestrel, Phase2
 
 #take a look at data
 glimpse(Phase1_Kestrel)
-glimpse(Phase1_Kestrel_Meta)
+
 
 #Convert variables
 Phase1_Kestrel$Phase <- as.factor(Phase1_Kestrel$Phase)
 Phase1_Kestrel$Chamber <- as.factor(Phase1_Kestrel$Chamber)
 Phase1_Kestrel$Kestrel <- as.factor(Phase1_Kestrel$Kestrel)
 
-Phase1_Kestrel_Meta$Phase <- as.factor(Phase1_Kestrel_Meta$Phase)
-Phase1_Kestrel_Meta$Chamber <- as.factor(Phase1_Kestrel_Meta$Chamber)
-Phase1_Kestrel_Meta$Kestrel <- as.factor(Phase1_Kestrel_Meta$Kestrel)
-
 Phase2_Kestrel$Phase <- as.factor(Phase2_Kestrel$Phase)
 Phase2_Kestrel$Chamber <- as.factor(Phase2_Kestrel$Chamber)
 Phase2_Kestrel$Kestrel <- as.factor(Phase2_Kestrel$Kestrel)
-
-Phase2_Kestrel_Meta$Phase <- as.factor(Phase2_Kestrel_Meta$Phase)
-Phase2_Kestrel_Meta$Chamber <- as.factor(Phase2_Kestrel_Meta$Chamber)
-Phase2_Kestrel_Meta$Kestrel <- as.factor(Phase2_Kestrel_Meta$Kestrel)
 
 
 #DateTime
@@ -112,21 +101,9 @@ Phase2_Kestrel$DateTime <- strptime(Phase2_Kestrel$DateTime, format="%Y-%m-%d %H
 Phase2_Kestrel$Date <- as.Date(Phase2_Kestrel$Date)
 
 
-#take another look at data
-glimpse(Phase1_Kestrel)
-glimpse(Phase1_Kestrel_Meta)
-
-#merge Kestrel + Kestrel_Meta data
-Phase1_Kestrel <- merge(Phase1_Kestrel, Phase1_Kestrel_Meta, by = c("Phase", "Chamber", "Kestrel", "Heatwave"))
-Phase2_Kestrel <- merge(Phase2_Kestrel, Phase2_Kestrel_Meta, by = c("Phase", "Chamber", "Kestrel", "Heatwave"))
-
-
-#take another look at data
-glimpse(Phase1_Kestrel)
-
 #combine
 Kestrel <- rbind(Phase1_Kestrel, Phase2_Kestrel)
 
 
 #Save csv
-write.csv(Kestrel, "data_clean/Kestrel.csv", quote=FALSE, row.names = FALSE)
+write.csv(Kestrel, "data/data_clean/Kestrel.csv", quote=FALSE, row.names = FALSE)

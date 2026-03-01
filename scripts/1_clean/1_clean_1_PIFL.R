@@ -3,7 +3,7 @@
 #allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-02-01
-#Last updated: 2026-02-28
+#Last updated: 2026-03-01
 
 #working directory
 setwd("~/Desktop/R Projects/HeatwaveProject")
@@ -12,15 +12,15 @@ setwd("~/Desktop/R Projects/HeatwaveProject")
 library(tidyverse)
 
 #read in data
-Phase1_PIFL_Dead <- read_csv(file = "data_raw/plant_data/Phase1_PIFL_Dead.csv")
-Phase1_PIFL_PercentBrown <- read_csv(file = "data_raw/plant_data/Phase1_PIFL_PercentBrown.csv")
-Phase1_PIFL_Porometer <- read_csv(file = "data_raw/plant_data/Phase1_PIFL_Porometer.csv")
-Phase1_PIFL_Weight <- read_csv(file = "data_raw/plant_data/Phase1_PIFL_Weight.csv")
+Phase1_PIFL_Dead <- read_csv(file = "data/data_raw/plant_data/Phase1_PIFL_Dead.csv")
+Phase1_PIFL_PercentBrown <- read_csv(file = "data/data_raw/plant_data/Phase1_PIFL_PercentBrown.csv")
+Phase1_PIFL_Porometer <- read_csv(file = "data/data_raw/plant_data/Phase1_PIFL_Porometer.csv")
+Phase1_PIFL_Weight <- read_csv(file = "data/data_raw/plant_data/Phase1_PIFL_Weight.csv")
 
-Phase2_PIFL_Dead <- read_csv(file = "data_raw/plant_data/Phase2_PIFL_Dead.csv")
-Phase2_PIFL_PercentBrown <- read_csv(file = "data_raw/plant_data/Phase2_PIFL_PercentBrown.csv")
-Phase2_PIFL_Porometer <- read_csv(file = "data_raw/plant_data/Phase2_PIFL_Porometer.csv")
-Phase2_PIFL_Weight <- read_csv(file = "data_raw/plant_data/Phase2_PIFL_Weight.csv")
+Phase2_PIFL_Dead <- read_csv(file = "data/data_raw/plant_data/Phase2_PIFL_Dead.csv")
+Phase2_PIFL_PercentBrown <- read_csv(file = "data/data_raw/plant_data/Phase2_PIFL_PercentBrown.csv")
+Phase2_PIFL_Porometer <- read_csv(file = "data/data_raw/plant_data/Phase2_PIFL_Porometer.csv")
+Phase2_PIFL_Weight <- read_csv(file = "data/data_raw/plant_data/Phase2_PIFL_Weight.csv")
 
 
 
@@ -268,4 +268,4 @@ PIFL <- merge(
 
 
 #finally, make a CSV!
-write.csv(PIFL, "data_raw/plant_data_2/PIFL.csv", quote = FALSE, row.names = FALSE)
+write.csv(PIFL, "data/data_raw/plant_data_2/PIFL.csv", quote = FALSE, row.names = FALSE)

@@ -3,7 +3,7 @@
 #allielalor@arizona.edu
 #allielalor@gmail.com
 #First created: 2022-02-01
-#Last updated: 2026-02-28
+#Last updated: 2026-03-01
 
 #working directory
 setwd("~/Desktop/R Projects/HeatwaveProject")
@@ -12,15 +12,15 @@ setwd("~/Desktop/R Projects/HeatwaveProject")
 library(tidyverse)
 
 #read in data
-Phase1_PIED_Dead <- read_csv(file = "data_raw/plant_data/Phase1_PIED_Dead.csv")
-Phase1_PIED_PercentBrown <- read_csv(file = "data_raw/plant_data/Phase1_PIED_PercentBrown.csv")
-Phase1_PIED_Porometer <- read_csv(file = "data_raw/plant_data/Phase1_PIED_Porometer.csv")
-Phase1_PIED_Weight <- read_csv(file = "data_raw/plant_data/Phase1_PIED_Weight.csv")
+Phase1_PIED_Dead <- read_csv(file = "data/data_raw/plant_data/Phase1_PIED_Dead.csv")
+Phase1_PIED_PercentBrown <- read_csv(file = "data/data_raw/plant_data/Phase1_PIED_PercentBrown.csv")
+Phase1_PIED_Porometer <- read_csv(file = "data/data_raw/plant_data/Phase1_PIED_Porometer.csv")
+Phase1_PIED_Weight <- read_csv(file = "data/data_raw/plant_data/Phase1_PIED_Weight.csv")
 
-Phase2_PIED_Dead <- read_csv(file = "data_raw/plant_data/Phase2_PIED_Dead.csv")
-Phase2_PIED_PercentBrown <- read_csv(file = "data_raw/plant_data/Phase2_PIED_PercentBrown.csv")
-Phase2_PIED_Porometer <- read_csv(file = "data_raw/plant_data/Phase2_PIED_Porometer.csv")
-Phase2_PIED_Weight <- read_csv(file = "data_raw/plant_data/Phase2_PIED_Weight.csv")
+Phase2_PIED_Dead <- read_csv(file = "data/data_raw/plant_data/Phase2_PIED_Dead.csv")
+Phase2_PIED_PercentBrown <- read_csv(file = "data/data_raw/plant_data/Phase2_PIED_PercentBrown.csv")
+Phase2_PIED_Porometer <- read_csv(file = "data/data_raw/plant_data/Phase2_PIED_Porometer.csv")
+Phase2_PIED_Weight <- read_csv(file = "data/data_raw/plant_data/Phase2_PIED_Weight.csv")
 
 
 #my first goal is to structurally rearrange PIED data
@@ -303,6 +303,6 @@ PIED <- merge(
 
 
 #finally, make a CSV!
-write.csv(PIED, "data_raw/plant_data_2/PIED.csv", quote = FALSE, row.names = FALSE)
+write.csv(PIED, "data/data_raw/plant_data_2/PIED.csv", quote = FALSE, row.names = FALSE)
 
 
