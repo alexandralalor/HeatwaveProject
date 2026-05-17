@@ -44,7 +44,7 @@ Data %>%
   #geom_point(aes(size = Data$Biomass_g)) +
   xlim(2,11) +
   ylim(0,500) +
-  xlab("Basal Stem Diameter") +
+  xlab("Basal Diameter (mm)") +
   ylab("Height (mm)") +
   labs(title = "Species Size Distribution") +
   scale_color_discrete(guide = guide_legend(override.aes = list(alpha = 1, size = 2))) +
@@ -56,9 +56,9 @@ Data %>%
   ggplot(aes(x = Species,
              y = Height_mm,
              color = Phase)) +
-  geom_point() +
+  geom_boxplot() +
   ylim(0,600) +
-  xlab("Basal Stem Diameter") +
+  xlab("Species") +
   ylab("Height (mm)") +
   labs(title = "Species Size Distribution") +
   scale_color_discrete(guide = guide_legend(override.aes = list(alpha = 1, size = 2))) +

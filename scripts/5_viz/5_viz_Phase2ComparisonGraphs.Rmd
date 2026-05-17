@@ -30,7 +30,7 @@ library(survminer) # recommended for visualizing survival curves
 library(ggfortify)
 ```
 
-# Load Data  {.hidden}
+# Load Data {.hidden}
 
 ```{r}
 #read CSVs
@@ -75,7 +75,7 @@ Data_All %>%
              color = Phase)) +
   geom_boxplot() +
   ylim(0,600) +
-  xlab("Basal Stem Diameter") +
+  xlab("Species") +
   ylab("Height (mm)") +
   labs(title = "Species Size Distribution") +
   scale_color_discrete(guide = guide_legend(override.aes = list(alpha = 1, size = 2))) +
@@ -243,7 +243,7 @@ Data_All_Phase2 <- Data_All %>%
 
 ## Phase 1 - Ambient
 
-### Ambient  {.hidden}
+### Ambient {.hidden}
 
 ```{r}
 # KM curve - Ambient
@@ -286,7 +286,7 @@ autoplot(km_species_fit) +
                                     size = 10))
 ```
 
-### Ambient Heatwave  {.hidden}
+### Ambient Heatwave {.hidden}
 
 ```{r}
 # KM curve - Heatwave
@@ -400,7 +400,7 @@ autoplot(km_treatment_fit) +
 
 ## Phase 2 - Hotter
 
-### Hotter  {.hidden}
+### Hotter {.hidden}
 
 ```{r}
 # KM curve - Hotter
@@ -444,7 +444,7 @@ autoplot(km_species_fit) +
 
 ```
 
-### Hotter Heatwave  {.hidden}
+### Hotter Heatwave {.hidden}
 
 ```{r}
 # KM curve - Heatwave
@@ -586,9 +586,9 @@ Data_All %>%
   arrange(Dead_Week) %>% 
   ggplot(aes(x = Dead_Week,
              y = Legend,
-             fill = Treatment_temp)) +
-  geom_boxplot() +
-  facet_wrap(~Phase)+
+             color = Treatment_temp)) +
+  geom_point() +
+  #facet_wrap(~Treatment_temp)+
   scale_x_continuous(limits = c(0, 40), breaks = seq(0 , 40, by = 2)) +
   xlab("Weeks to Mortality") +
   annotate("rect",
@@ -601,7 +601,8 @@ Data_All %>%
            alpha = 0.3) +
   geom_text(label = "heatwave",
             x = 7.5, y = 10.5, color = "red", size = 3.5, family = "serif") +
-  labs(fill = "") +
+  scale_color_manual(values=c("bisque3","darksalmon","orange","red")) +
+  labs(color = "") +
   theme_pubclean() +
   theme(text = element_text(family = "serif", size = 10),
         axis.text = element_text(size = 10),

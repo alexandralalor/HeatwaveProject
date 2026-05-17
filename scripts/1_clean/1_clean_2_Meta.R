@@ -17,7 +17,7 @@ library(tidyverse)
 Phase1_InitialData <- read_csv(file = "data/data_raw/meta/Phase1_InitialData.csv")
 Phase1_TempSettings <- read_csv("data/data_raw/meta/Phase1_TempSettings.csv")
 
-Phase2_InitialData <- read_csv(file = "data/data_raw/meta/Phase2_InitialData.csv")
+Phase2_InitialData <- read_csv("data/data_raw/meta/Phase2_InitialData.csv")
 Phase2_TempSettings <- read_csv("data/data_raw/meta/Phase2_TempSettings.csv")
 
 
